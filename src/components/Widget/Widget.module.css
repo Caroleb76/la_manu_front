@@ -1,0 +1,13 @@
+.title {
+    color: var(--primary-color);
+    text-transform: capitalize;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+.widgetContent {
+height: 5rem;
+border-radius: var(--radius);
+box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+
+
+}

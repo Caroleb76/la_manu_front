@@ -8,7 +8,8 @@
   box-sizing: border-box;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   color :var(--text-color);
-  background-color: var(--background-color);
+
+ 
 
 }
 
@@ -22,9 +23,19 @@
   --error-color: #dc3545;
   --success-color : #198754;
  --radius : 10px;
+ --text-xs : 0.8rem;
+ --text-sm : 0.8rem;
+ --text-md : 0.8rem;
+ --text-lg : 1rem;
+ --text-xl : 2rem;
+
  
 
 
+}
+
+body{
+  background-color: var(--background-color);
 }
 button{
   padding: 1rem 2rem;
@@ -32,3 +43,17 @@ button{
   background-color: var(--primary-color);
   color : var(--background-color);
 }
+
+input[type=email], input[type=password], input[type=text]{
+  padding : 0.5rem 0.5rem;
+  width:100%;
+  border-radius: var(--radius);
+  background-color: rgba(243,147,54,0.2);
+}
+
+label {
+  display : block;
+  margin-bottom: 0.2rem;
+  margin-left: 0.4rem;
+}
+

@@ -1,0 +1,31 @@
+.pageContainer {
+    
+    display : flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    gap : 3rem;
+    & > h1{
+        text-transform: uppercase;
+        font-size: var(--text-xl);
+    }
+    >img{
+        max-width: 20%;
+    }
+}
+.loginForm {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    gap : 1rem;
+    & a {
+        font-size: var(--text-xs);
+
+    }
+    
+}
+.fullWidth {
+    width: 100%;
+    text-align: end;
+}

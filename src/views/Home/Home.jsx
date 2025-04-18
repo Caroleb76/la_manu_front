@@ -1,11 +1,15 @@
 import React from "react";
+import Widget from "../../components/Widget/Widget";
 import styles from "./Home.module.css";
 
 export default function Home() {
   return (
-    <div className={styles.text_red}>
-      Home
-      <button>essai</button>
+    <div>
+      <Widget titre="calendrier" />
+      <section className={styles.twoColumnSection}>
+        <Widget titre="alertes" />
+        <Widget titre="widget" />
+      </section>
     </div>
   );
 }

@@ -1,1 +1,5 @@
-.text_red {color :red}
+.twoColumnSection{ 
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 3rem;
+}
