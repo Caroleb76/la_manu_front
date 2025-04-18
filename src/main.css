@@ -8,10 +8,12 @@
   box-sizing: border-box;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   color :var(--text-color);
-  background-color: var(--background-color);
+
 
 }
-
+body{
+  background-color: var(--background-color);
+}
 :root {
   --primary-color :#3763AD;
   --secondary-color :#F39336;
@@ -22,6 +24,7 @@
   --error-color: #dc3545;
   --success-color : #198754;
  --radius : 10px;
+ --active-menu-item-bg-color : rgba(243, 147, 54, 0.35);
  
 
 
