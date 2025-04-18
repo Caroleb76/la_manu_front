@@ -6,4 +6,29 @@
   font-size: 100%;
   font:inherit;
   box-sizing: border-box;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color :var(--text-color);
+  background-color: var(--background-color);
+
+}
+
+:root {
+  --primary-color :#3763AD;
+  --secondary-color :#F39336;
+  --text-color : #545461 ;
+  --background-color :#F8F9FA;
+  --inactive-color : #868686;
+  --warning-color :  #ffc107;
+  --error-color: #dc3545;
+  --success-color : #198754;
+ --radius : 10px;
+ 
+
+
+}
+button{
+  padding: 1rem 2rem;
+  border-radius: var(--radius);
+  background-color: var(--primary-color);
+  color : var(--background-color);
 }
