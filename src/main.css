@@ -9,10 +9,11 @@
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   color :var(--text-color);
 
- 
 
 }
-
+body{
+  background-color: var(--background-color);
+}
 :root {
   --primary-color :#3763AD;
   --secondary-color :#F39336;
@@ -23,13 +24,9 @@
   --error-color: #dc3545;
   --success-color : #198754;
  --radius : 10px;
- --text-xs : 0.8rem;
- --text-sm : 0.8rem;
- --text-md : 0.8rem;
- --text-lg : 1rem;
- --text-xl : 2rem;
-
+ --active-menu-item-bg-color : rgba(243, 147, 54, 0.35);
  
+
 
 
 }
