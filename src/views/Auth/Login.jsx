@@ -3,6 +3,7 @@ import logo from "/src/assets/img/Logo.svg";
 import styles from "./Auth.module.css";
 
 export default function Login() {
+
   return (
     <div className={styles.pageContainer}>
       <img src={logo} alt="logo de l'IFEN" />
