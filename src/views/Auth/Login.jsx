@@ -1,28 +1,50 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import logo from "/src/assets/img/Logo.svg";
 import styles from "./Auth.module.css";
+import { login } from "../../helpers/auth";
+import { UserContext } from "../../../context/userContext";
 
 export default function Login() {
 
+
+    const [email,setEmail] = useState("");
+    const [password,setPassword] = useState("");
+    const [error,setError]=useState(null);
+    const {getUser,updateUser}= useContext(UserContext);
+    async function handleLogin (e){
+      e.preventDefault();
+      setError(null);
+     let response= await login(email,password);
+     if(!response.success) {
+      setError(response.message);
+      return;
+     }else{
+      updateUser(response.data.user);
+     }
+    }
   return (
     <div className={styles.pageContainer}>
       <img src={logo} alt="logo de l'IFEN" />
       <h1>Bienvenue dans l'espace vacataires</h1>
       <form action="" className={styles.loginForm}>
+        {
+          error && 
+          <p style={{color:"red",fontWeight:"bold"}}>{error}</p>
+        }
         <div>
           <label htmlFor="email">Adresse email</label>
-          <input type="email" name="email" id="" />
+          <input type="email" name="email" id="" value={email} onInput={e=> setEmail(e.target.value)} />
         </div>
 
         <div>
           <label htmlFor="password">Mot de passe</label>
-          <input type="password" name="password" id="" />
+          <input type="password" name="password" id="" value={password} onInput={e=> setPassword(e.target.value)} />
           <div className={styles.fullWidth}>
             <a href="#">Mot de passe oublié</a>
           </div>
         </div>
 
-        <button type="submit">Se connecter</button>
+        <button type="submit" onClick={handleLogin}>Se connecter</button>
       </form>
     </div>
   );

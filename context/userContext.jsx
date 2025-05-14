@@ -10,6 +10,7 @@ const UserProvider = ({children})=>{
         if(user) return user;
         const token = localStorage.getItem(TOKEN_KEY);
         //TODO call the api
+        // call authMe to get user with the token
         // update the user
         console.log("the user is ",user);
         
@@ -18,9 +19,12 @@ const UserProvider = ({children})=>{
     }
     
     async function updateUser(userParam){
-        if(!user || !user?.token) return;
+        console.log("user is ",userParam);
+        
+        if(!userParam || !userParam?.token) return;
         setUser(userParam);
-        localStorage.setItem(TOKEN_KEY,user.token);
+
+        localStorage.setItem(TOKEN_KEY,userParam.token);
     }
 
     return (
