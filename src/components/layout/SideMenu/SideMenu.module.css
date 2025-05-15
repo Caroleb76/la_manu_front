@@ -45,8 +45,18 @@ a{
     background-color: var(--active-menu-item-bg-color);
     border-radius: 0px 10px 10px 0px;
     transition: all 0.2s ease-in-out;
+    z-index: -1;
 }
 .active p{
     color: var(--primary-color);
     font-weight: bold;
+}
+.menuItemContent{
+    display:  flex;
+    align-items: center;
+    gap: 0.5rem;
+
+}
+.menuItemContent *{
+    padding: 0;
 }
