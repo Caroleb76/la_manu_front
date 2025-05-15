@@ -8,7 +8,7 @@ const AuthGuard = ({children})=>{
     let navigate = useNavigate();
     useEffect(()=>{
         getUser().then(user=>{
-            console.log("user in useEffect is ",user);
+            
             if(user == null){
                 navigate("/login");
             }else{

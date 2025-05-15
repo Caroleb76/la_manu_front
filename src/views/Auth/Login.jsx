@@ -3,6 +3,7 @@ import logo from "/src/assets/img/Logo.svg";
 import styles from "./Auth.module.css";
 import { login } from "../../helpers/auth";
 import { UserContext } from "../../../context/userContext";
+import { useNavigate } from "react-router";
 
 export default function Login() {
 
@@ -11,6 +12,7 @@ export default function Login() {
     const [password,setPassword] = useState("");
     const [error,setError]=useState(null);
     const {getUser,updateUser}= useContext(UserContext);
+    const navigate= useNavigate();
     async function handleLogin (e){
       e.preventDefault();
       setError(null);
@@ -20,6 +22,7 @@ export default function Login() {
       return;
      }else{
       updateUser(response.data.user);
+      navigate("/dashboard/main");
      }
     }
   return (

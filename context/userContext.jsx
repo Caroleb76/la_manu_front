@@ -1,34 +1,41 @@
 
 import { createContext, useState } from "react";
+import { TOKEN_KEY } from "../src/utils/constants";
+import { authMe } from "../src/helpers/auth";
 
 
 const UserContext= createContext();
 const UserProvider = ({children})=>{
     const [user, setUser] = useState(null);
-    const TOKEN_KEY= "token"
     async function getUser (){
         if(user) return user;
-        const token = localStorage.getItem(TOKEN_KEY);
         //TODO call the api
         // call authMe to get user with the token
         // update the user
-        console.log("the user is ",user);
+        const responseUser= await authMe();
+        await updateUser(responseUser);
         
-        return user;
+        return responseUser;
 
     }
     
     async function updateUser(userParam){
-        console.log("user is ",userParam);
+        
         
         if(!userParam || !userParam?.token) return;
         setUser(userParam);
 
         localStorage.setItem(TOKEN_KEY,userParam.token);
     }
+    
+    function signout(){
+        setUser(null);
+        localStorage.removeItem(TOKEN_KEY);
+
+    }
 
     return (
-        <UserContext.Provider value={{getUser,updateUser}}>
+        <UserContext.Provider value={{getUser,updateUser,signout}}>
             {children}
         </UserContext.Provider>
     )

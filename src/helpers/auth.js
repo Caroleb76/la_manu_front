@@ -1,3 +1,4 @@
+import { TOKEN_KEY } from "../utils/constants";
 
 // api
 const apiUrl= import.meta.env.VITE_API_URL;
@@ -17,16 +18,33 @@ async function  login (email,password){
     body: raw,
     redirect: 'follow'
     };
-    console.log(endpoint);
+   
     
     const response =await fetch(endpoint, requestOptions);   
     const responseJson = await response.json();
-    console.log(responseJson);
+    
     
     return responseJson;
     
 
 }
 
+async function authMe(){
+    const token = localStorage.getItem(TOKEN_KEY);
+    if(!token) return null;
+    let endpoint = `${apiUrl}/auth/authMe`;
+    let myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    let requestOptions = {
+    method: 'GET',
+    headers: myHeaders
+    };
+    const response =await fetch(endpoint, requestOptions);   
+    const responseJson = await response.json();
+    
+    
+    return responseJson?.data;
+}
 
-export {login};
+
+export {login,authMe};
