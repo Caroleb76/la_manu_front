@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import logo from "/src/assets/img/Logo.svg";
 import styles from "./Auth.module.css";
 import { login } from "../../helpers/auth";
@@ -13,6 +13,12 @@ export default function Login() {
     const [error,setError]=useState(null);
     const {getUser,updateUser}= useContext(UserContext);
     const navigate= useNavigate();
+
+    useEffect(()=>{
+      getUser().then(user=>{
+        if(user) navigate("/dashboard/main");
+      });
+    },[])
     async function handleLogin (e){
       e.preventDefault();
       setError(null);
