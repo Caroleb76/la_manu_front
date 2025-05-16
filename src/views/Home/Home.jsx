@@ -1,6 +1,6 @@
 import Widget from "../../components/Widget/Widget";
 import styles from "./Home.module.css";
-import DataGrid from "../../components/DataGrid";
+import DataGrid from "../../components/DataGrid/DataGrid";
 
 export default function Home() {
   return (

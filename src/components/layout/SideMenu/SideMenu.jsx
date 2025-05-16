@@ -62,7 +62,7 @@ function SideMenu() {
           </NavLink>
 
           <NavLink
-            to="/dashboard/formatinos"
+            to="/dashboard/formations"
             className={({ isActive }) =>
               ` ${styles.menuItem} ${isActive ? styles.active : ""}`
             }

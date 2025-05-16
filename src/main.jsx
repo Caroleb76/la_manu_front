@@ -25,7 +25,10 @@ createRoot(document.getElementById("root")).render(
 
             <Route path="dashboard" element={<Dashboard />}>
               <Route path="main" element={<Home />} />
-              {/* <Route path="users" element={<Users />} /> */}
+               <Route path="users" element={<Users />} />
+               <Route path="notifications" element={< > </>} />
+               <Route path="formations" element={< > </>} />
+               <Route path="contracts" element={< > </>} />
               <Route path="profile" element={<Profile />} />
             </Route>
           </Route>
