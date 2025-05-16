@@ -5,12 +5,14 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 import Home from "./views/Home/Home";
 import Signup from "./views/Auth/Signup";
 import Login from "./views/Auth/Login";
-import Dashboard from "./views/dashboard/Dashboard";
+import Dashboard from "./views/Dashboard/Dashboard";
 import Users from "./views/Users/users";
 import { UserProvider, UserContext } from "../context/userContext";
 import AuthGuard from "./components/auth/AuthGuard";
 import AboutUs from "../aboutus";
 import Profile from "./views/Profile/Profile"
+import Contracts from "./views/Contracts/Contracts"
+import Notifications from "./views/Notifications/Notifications";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -26,9 +28,9 @@ createRoot(document.getElementById("root")).render(
             <Route path="dashboard" element={<Dashboard />}>
               <Route path="main" element={<Home />} />
                <Route path="users" element={<Users />} />
-               <Route path="notifications" element={< > </>} />
+               <Route path="notifications" element={<Notifications/>} />
                <Route path="formations" element={< > </>} />
-               <Route path="contracts" element={< > </>} />
+               <Route path="contracts" element={<Contracts />} />
               <Route path="profile" element={<Profile />} />
             </Route>
           </Route>
