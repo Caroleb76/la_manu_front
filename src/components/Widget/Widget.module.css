@@ -1,9 +1,4 @@
-.title {
-    color: var(--primary-color);
-    text-transform: capitalize;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-}
+
 .widgetContent {
 height: 5rem;
 border-radius: var(--radius);

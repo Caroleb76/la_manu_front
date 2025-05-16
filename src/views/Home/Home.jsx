@@ -1,4 +1,3 @@
-import React from "react";
 import Widget from "../../components/Widget/Widget";
 import styles from "./Home.module.css";
 import DataGrid from "../../components/DataGrid";
