@@ -5,7 +5,7 @@ const apiUrl= import.meta.env.VITE_API_URL;
 
 
 async function apiClient(endpoint,{method="GET",headers=[],body,params}={}){
-    const url = `${apiUrl}/${endpoint}`;
+    let url = `${apiUrl}/${endpoint}`;
 
     const token= localStorage.getItem(TOKEN_KEY);
 

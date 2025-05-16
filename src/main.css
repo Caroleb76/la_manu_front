@@ -26,13 +26,18 @@ body{
  --radius : 10px;
  --active-menu-item-bg-color : rgba(243, 147, 54, 0.35);
  
-
-
+/* Data grid styling customizing */
+--ag-header-background-color: white;
+--ag-header-height: 3.5rem;
+--ag-row-height: 3.3rem; 
+--ag-background-color: white;
+--ag-border-color: none;
 
 }
 
 body{
   background-color: var(--background-color);
+  
 }
 button{
   padding: 1rem 2rem;
@@ -54,3 +59,35 @@ label {
   margin-left: 0.4rem;
 }
 
+/* grid styling */
+.ag-header-cell-text {
+  font-weight: bold;
+  color: var(--secondary-color);
+
+}
+.ag-cell-value {
+  color: black;
+}
+
+.ag-row{
+  border-bottom: none;
+  
+}
+.ag-row::after{
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 1%;
+  width: 98%;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.217);
+}
+.ag-input-field-input, .ag-text-field-input{
+  padding-left: calc(var(--ag-spacing) * 1.5 + 12px)!important;
+
+}
+.ag-cell-value, .ag-group-value{
+font-size: 12px;
+}
+.ag-row-hover{
+  background-color: var(--active-menu-item-bg-color);
+}
