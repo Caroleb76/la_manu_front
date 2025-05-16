@@ -7,9 +7,9 @@ function Notifications() {
     const colDefs = [
         { field: "Titre", filter: true },
         { field: "Priorité", filter: true },
-        { field: "Contenu", filter: false },
-        { field: "Date de début", filter: true },
-        { field: "Date de fin", filter: true },
+        { field: "Contenu", filter: true },
+        { field: "Date de début", filter: false },
+        { field: "Date de fin", filter: false },
     ];
 
     useEffect(() => {
