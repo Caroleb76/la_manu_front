@@ -11,6 +11,7 @@ import { UserProvider, UserContext } from "../context/userContext";
 import AuthGuard from "./components/auth/AuthGuard";
 import AboutUs from "../aboutus";
 import Profile from "./views/Profile/Profile"
+import PopupCReateUser from "./views/PopupCreateUser/PopupCreateUser"
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -19,17 +20,22 @@ createRoot(document.getElementById("root")).render(
         <Routes>
         <Route index element={<AuthGuard />} />
           <Route path="about" element={<AboutUs />} />
+             <Route path="test" element={<PopupCReateUser />} />
           <Route element={<AuthGuard />}>
             <Route path="signup" element={<Signup />} />
             <Route path="login" element={<Login />} />
+           
 
             <Route path="dashboard" element={<Dashboard />}>
               <Route path="main" element={<Home />} />
                <Route path="users" element={<Users />} />
+              
                <Route path="notifications" element={< > </>} />
                <Route path="formations" element={< > </>} />
                <Route path="contracts" element={< > </>} />
               <Route path="profile" element={<Profile />} />
+
+             
             </Route>
           </Route>
         </Routes>

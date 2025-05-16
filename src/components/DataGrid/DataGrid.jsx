@@ -1,7 +1,6 @@
-import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
+import {AllCommunityModule, ModuleRegistry} from "ag-grid-community"
 import { AgGridReact } from "ag-grid-react";
-import { useEffect, useState } from "react";
-import usersHelper from "../../helpers/usersHelper";
+
 import styles from "./DataGrid.module.css";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
