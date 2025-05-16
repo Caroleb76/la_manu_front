@@ -34,6 +34,13 @@ body{
 body{
   background-color: var(--background-color);
 }
+.title {
+    color: var(--primary-color);
+    text-transform: capitalize;
+    font-weight: bold;
+    margin-bottom: 0.5rem;}
+
+    
 button{
   padding: 1rem 2rem;
   border-radius: var(--radius);
@@ -41,7 +48,31 @@ button{
   color : var(--background-color);
 }
 
-input[type=email], input[type=password], input[type=text]{
+input[type=email], input[type=password], input[type=text], input[type=tel], input[type=date]{
+  padding : 0.5rem 0.5rem;
+  width:100%;
+  border-radius: var(--radius);
+  background-color: rgba(243,147,54,0.2);
+
+
+}
+
+input::placeholder{
+  color: var(--inactive-color);
+  font-size: small;
+}
+
+.inputCheckbox{
+display:flex;
+align-items:center ;
+}
+
+.contentPadding{
+  padding: 1rem;
+}
+
+
+select{
   padding : 0.5rem 0.5rem;
   width:100%;
   border-radius: var(--radius);

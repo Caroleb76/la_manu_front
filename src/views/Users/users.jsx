@@ -1,9 +1,7 @@
-function Users() {
-    return ( 
-        <>
-        USERSasdasd
-        </>
-     );
-}
 
-export default Users;
+
+export default function Users() {
+  return (
+    <div>users</div>
+  )
+}
