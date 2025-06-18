@@ -1,7 +1,7 @@
 import PopupForm from "../../components/forms/PopupForm/Popupform";
 import styles from "./PopupCreateUser.module.css";
 
-function Profile() {
+function PopupCreateUser() {
   return (
     <div className={`contentPadding ${styles.borderPopup}`}>
       <div>
@@ -12,4 +12,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default PopupCreateUser;
