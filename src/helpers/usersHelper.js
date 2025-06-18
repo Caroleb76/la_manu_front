@@ -11,7 +11,15 @@ async function getUsers (offset=0,limit=10){
 
 }
 
+async function createUser (user){
+
+    const response= await apiClient("users/",{method:"POST",body:user});
+    return response;
+
+}
+
 
 export default {
-    getUsers
+    getUsers,
+    createUser  
 }

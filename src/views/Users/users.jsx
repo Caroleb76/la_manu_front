@@ -17,7 +17,7 @@ function Users() {
     async function getUsers() {
       const response = await usersHelper.getUsers();
       const responseUsers = response.data;
-      console.log(responseUsers);
+      // console.log(responseUsers);
 
       setUsers(
         responseUsers.map((user) => ({
@@ -29,7 +29,7 @@ function Users() {
       );
     }
     getUsers();
-  }, []);
+  }, [userCreationMode]);
 
 
 
