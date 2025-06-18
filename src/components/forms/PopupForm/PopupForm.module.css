@@ -1,0 +1,20 @@
+ .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr ;
+    gap: 2rem;
+  } 
+
+  .popupSection {
+padding-top: 2rem;                 
+padding-bottom: 2rem;
+  }
+
+
+  .popupButtons{
+    display :flex;
+    justify-content: space-evenly;
+
+
+  }
+
+  
