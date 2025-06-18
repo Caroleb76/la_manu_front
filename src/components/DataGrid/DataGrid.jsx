@@ -2,6 +2,7 @@ import {AllCommunityModule, ModuleRegistry} from "ag-grid-community"
 import { AgGridReact } from "ag-grid-react";
 
 import styles from "./DataGrid.module.css";
+import { useEffect, useState } from "react";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 const DataGrid = ({data,colDefs,actions}) => {

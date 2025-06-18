@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import DataGrid from "../../components/DataGrid/DataGrid";
 import usersHelper from "../../helpers/usersHelper";
 import Styles from "./User.module.css";
-
+import PopupCreateUser from "../PopupCreateUser/PopupCreateUser";
 function Users() {
   const [users, setUsers] = useState([]);
+  const [userCreationMode, setUserCreationMode] = useState(false);
   const colDefs = [
     { field: "Email", filter: true },
     { field: "Nom", filter: true },
@@ -29,9 +30,16 @@ function Users() {
     }
     getUsers();
   }, []);
+
+
+
+
   return (
     <div className={Styles.mainContainer}>
-      <button className={Styles.addButton}>Créer</button>
+      {
+        userCreationMode && <PopupCreateUser onClose={() => setUserCreationMode(false)}/>
+      }
+      <button className={Styles.addButton} onClick={() => setUserCreationMode(true)}>Créer</button>
       <DataGrid colDefs={colDefs} data={users} />
     </div>
   );
