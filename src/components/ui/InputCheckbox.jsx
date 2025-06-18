@@ -1,13 +1,11 @@
-export default function InputCheckbox({name, label, checked, ...etc}) {
-  return (
-    <div className="inputCheckbox">
-
-      <input type="checkbox" name={name} checked={checked} {...etc}/>
-      <label htmlFor={name}>{label}
-   
-      </label>
-      
-    </div>
-  );
+export default function InputCheckbox({ name, label, checked, error, ...etc }) {
+    return (
+        <div className="inputCheckbox">
+            <label htmlFor={name}>
+                <input type="checkbox" name={name} checked={checked} {...etc} />
+                {label}
+            </label>
+            <p className="inputError">{error}</p>
+        </div>
+    );
 }
-

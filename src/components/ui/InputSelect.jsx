@@ -1,5 +1,5 @@
 
-export default function InputSelect({label, defaultValue, value, name, onChange, children, ...etc}) {
+export default function InputSelect({label, defaultValue, value, name, onChange, children, error, ...etc}) {
   return (
     <div>
             <label htmlFor={name}>{label}</label>
@@ -9,6 +9,9 @@ export default function InputSelect({label, defaultValue, value, name, onChange,
               </option>
            {children}
             </select>
+            <p className="inputError">
+          {error}
+        </p>
           </div>
   )
 }
