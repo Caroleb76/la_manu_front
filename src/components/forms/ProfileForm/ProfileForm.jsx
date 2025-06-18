@@ -2,9 +2,21 @@ import styles from "./ProfileForm.module.css";
 import InputText from "../../ui/InputText";
 import InputCheckbox from "../../ui/InputCheckbox";
 import InputSelect from "../../ui/InputSelect";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
+import { UserContext } from "../../../../context/userContext.jsx"
 
 export default function ProfileForm() {
+  const { getUser } = useContext(UserContext)
+  async function getUserFromContext() {
+    const user = await getUser()
+    console.log (user)
+    return user
+  }
+  useEffect(() => {
+    getUserFromContext()
+  },[])
+
+
   const [selectedFileType, setSelectedFileType] = useState(null);
   return (
     <div>
@@ -35,7 +47,7 @@ export default function ProfileForm() {
           <InputText
             label="Nom d'usage"
             name="birthName"
-             placeHolder="Nom de famille"
+            placeHolder="Nom de famille"
             value=""
             minLength={2}
             maxLength={50}
@@ -44,7 +56,7 @@ export default function ProfileForm() {
           <InputText
             label="Prénom"
             name="firstName"
-             placeHolder="Ex : Pierre"
+            placeHolder="Ex : Pierre"
             value=""
             minLength={2}
             maxLength={50}
@@ -52,14 +64,14 @@ export default function ProfileForm() {
           <InputText
             label="Date de naissance"
             type="date"
-             placeHolder="Ex : 25/03/1966"
+            placeHolder="Ex : 25/03/1966"
             name="birthDate"
             value=""
           />
           <InputText
             label="Lieu de naissance"
             name="birthPlace"
-             placeHolder="Ex : Le Havre"
+            placeHolder="Ex : Le Havre"
             value=""
             minLength={2}
             maxLength={50}
@@ -68,7 +80,7 @@ export default function ProfileForm() {
           <InputText
             label="Numéro de sécurité sociale"
             name="socialSecurity"
-             placeHolder="Ex : 1591176365125 56"
+            placeHolder="Ex : 1591176365125 56"
             value=""
             minLength={15}
             maxLength={15}
@@ -82,7 +94,7 @@ export default function ProfileForm() {
             <InputText
               label="Adresse"
               name="address"
-               placeHolder="Ex : 11 rue des Lilas"
+              placeHolder="Ex : 11 rue des Lilas"
               value=""
               minLength={2}
               maxLength={100}
@@ -91,7 +103,7 @@ export default function ProfileForm() {
             <InputText
               label="Code postal"
               name="postalCode"
-               placeHolder="Ex : 76600"
+              placeHolder="Ex : 76600"
               value=""
               minLength={5}
               maxLength={5}
@@ -100,7 +112,7 @@ export default function ProfileForm() {
             <InputText
               label="Ville"
               name="city"
-               placeHolder="Ex : Le Havre"
+              placeHolder="Ex : Le Havre"
               value=""
               minLength={2}
               maxLength={50}
@@ -108,7 +120,7 @@ export default function ProfileForm() {
             <InputText
               label="Téléphone"
               type="tel"
-               placeHolder="Ex : 06xxxxxxxx"
+              placeHolder="Ex : 06xxxxxxxx"
               name="phone"
               value=""
               minLength={8}
@@ -118,7 +130,7 @@ export default function ProfileForm() {
             <InputText
               label="Email"
               name="email"
-               placeHolder="Ex : Pierredupont@gmail.fr"
+              placeHolder="Ex : Pierredupont@gmail.fr"
               value=""
               minLength={5}
               maxLength={50}
@@ -143,7 +155,7 @@ export default function ProfileForm() {
             <InputText
               label="Employeur"
               name="employer"
-               placeHolder="Employeur actuel principal"
+              placeHolder="Employeur actuel principal"
               value=""
               minLength={2}
               maxLength={50}
@@ -152,14 +164,14 @@ export default function ProfileForm() {
             <InputText
               label="Emploi"
               name="occupation"
-               placeHolder="Poste actuel"
+              placeHolder="Poste actuel"
               value=""
               minLength={2}
               maxLength={50}
             />
             <InputText
               label="Nombre de CV de votre véhicule"
-               placeHolder="Ex : 5"
+              placeHolder="Ex : 5"
               name="horsePower"
               value=""
             />
@@ -186,17 +198,17 @@ export default function ProfileForm() {
               )}
             </div>
             <div>
-            {selectedFileType === "diplome" && (
-            <InputText
-              label="Nom de diplôme"
-              name="diploma"
-               placeHolder="Ex : licence sociologie"
-              value=""
-              minLength={2}
-              maxLength={50}
-            />
-             )}
-             </div>
+              {selectedFileType === "diplome" && (
+                <InputText
+                  label="Nom de diplôme"
+                  name="diploma"
+                  placeHolder="Ex : licence sociologie"
+                  value=""
+                  minLength={2}
+                  maxLength={50}
+                />
+              )}
+            </div>
             <div className={styles.profileButtons}>
 
               <button> + </button>

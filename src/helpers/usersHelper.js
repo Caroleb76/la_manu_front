@@ -18,8 +18,15 @@ async function createUser (user){
 
 }
 
+async function blockUser (id,data){
+
+    const response= await apiClient("users/block/"+id,{method:"PUT",body:data});
+    return response;
+
+}
 
 export default {
     getUsers,
-    createUser  
+    createUser,
+    blockUser
 }

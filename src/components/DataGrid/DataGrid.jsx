@@ -1,11 +1,13 @@
 import {AllCommunityModule, ModuleRegistry} from "ag-grid-community"
 import { AgGridReact } from "ag-grid-react";
+import { Icon } from "@iconify/react";
+
 
 import styles from "./DataGrid.module.css";
 import { useEffect, useState } from "react";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
-const DataGrid = ({data,colDefs,actions}) => {
+const DataGrid = ({data,colDefs,renderIconWithCondition,onActionClick}) => {
   const [columnDefs, setColumnDefs] = useState([]);
   // I should implement a way to add actions dynamically 
   useEffect(() => {
@@ -20,7 +22,14 @@ const DataGrid = ({data,colDefs,actions}) => {
         filter: false,
         cellRenderer: (params) => (
           <div style={{ position: "relative" }}>
-            <p className={styles.actions} onClick={() => console.log(params.data)}>...</p>
+            <div className={styles.actions} onClick={() => onActionClick(params.data)}>
+               <Icon
+                              className={styles.menuIcon}
+                              icon={renderIconWithCondition (params.data) ||""}
+                              width={"1.8rem"}
+                              fill={"green"}
+                            />
+            </div>
           </div>
         ),
       },)

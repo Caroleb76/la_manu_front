@@ -21,10 +21,12 @@ function Users() {
 
       setUsers(
         responseUsers.map((user) => ({
+          id: user.id,
           Nom: user.lastName,
           Prenom: user.firstName,
           Email: user.email,
           Role: user.role.name,
+          blocked: user.blocked
         }))
       );
     }
@@ -32,7 +34,12 @@ function Users() {
   }, [userCreationMode]);
 
 
-
+async function blockUser (data){ 
+  data.blocked=!data.blocked
+  console.log(data)
+  const response = await usersHelper.blockUser(data.id, data)
+  console.log (response)
+}
 
   return (
     <div className={Styles.mainContainer}>
@@ -40,7 +47,7 @@ function Users() {
         userCreationMode && <PopupCreateUser onClose={() => setUserCreationMode(false)}/>
       }
       <button className={Styles.addButton} onClick={() => setUserCreationMode(true)}>Créer</button>
-      <DataGrid colDefs={colDefs} data={users} />
+      <DataGrid colDefs={colDefs} data={users} onActionClick={blockUser} renderIconWithCondition={(user)=>{return user.blocked? "material-symbols:lock-outline":"material-symbols:lock-open-right-outline-sharp"}}/>
     </div>
   );
 }
