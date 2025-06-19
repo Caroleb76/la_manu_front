@@ -46,9 +46,10 @@ const DataGrid = ({data,colDefs,renderIconWithCondition,onActionClick}) => {
      height: "90%", width: "100%",
       }}>
   <AgGridReact
-    rowData={data}
+    dataSource={data}
     columnDefs={columnDefs}
     pagination={true}
+    
     paginationPageSize={12}
     defaultColDef={{
       flex: 1,

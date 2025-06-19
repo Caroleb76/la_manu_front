@@ -7,6 +7,7 @@ async function getUsers (offset=0,limit=10){
         offset,limit
     };
     const response= await apiClient("users/",{method:"GET",params});
+    console.log(response)
     return response;
 
 }
