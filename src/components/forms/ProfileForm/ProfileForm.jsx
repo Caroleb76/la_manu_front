@@ -2,7 +2,7 @@ import styles from "./ProfileForm.module.css";
 import InputText from "../../ui/InputText";
 import InputCheckbox from "../../ui/InputCheckbox";
 import InputSelect from "../../ui/InputSelect";
-import { useContext, useEffect, useState, useRef } from "react";
+import { useContext, useEffect, useState, } from "react";
 import { UserContext } from "../../../../context/userContext.jsx";
 import { convertDateToStandardString } from "../../../utils/dates.js";
 import { useForm } from "react-hook-form";
@@ -112,11 +112,8 @@ export default function ProfileForm() {
         <section className={styles.profileSection}>
           <h2 className="title">Documents demandés</h2>
           <div className={styles.grid}>
-
             <div className={styles.fileSection}>
-
             </div>
-
             {hasPermisB &&
               <div className={styles.fileSection}>
                 <h3>Carte grise</h3>
@@ -133,7 +130,7 @@ export default function ProfileForm() {
               </div>
             </div>
           </div>
-          <button type="submit"> valider les modifications </button>
+          <button type="submit" className="btn-success"> valider les modifications </button>
 
           {/* <div className={styles.grid4Col}>
             <InputSelect label="Type de fichier" onChange={(e) => setSelectedFileType(e.target.value)}>

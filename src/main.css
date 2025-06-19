@@ -48,7 +48,7 @@ body{
 
     
 button,
-.button {
+.btn {
   padding: 1rem 2rem;
   border-radius: var(--radius);
   background-color: var(--primary-color);
@@ -56,12 +56,34 @@ button,
   cursor: pointer;
   border: none; /* utile pour <button> natif */
   text-align: center;
+ margin: 0;
+ width: fit-content;
 }
 
 button:hover,
-.button:hover {
+.btn:hover {
   opacity: 0.8;
 }
+.btn-error {
+  background-color: var(--error-color);
+}
+
+.btn-success {
+  background-color: var(--success-color);
+}
+
+.btn-secondary {
+  background-color: var(--secondary-color);
+}
+
+.btn-warning {
+  background-color: var(--warning-color);
+}
+
+.btn-inactive {
+  background-color: var(--inactive-color);
+}
+
 
 input[type=email], input[type=password], input[type=text], input[type=tel], input[type=date]{
   padding : 0.5rem 0.5rem;
