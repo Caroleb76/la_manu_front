@@ -28,13 +28,14 @@ export default function ProfileForm() {
   useEffect(() => {
     async function loadUser() {
       const userData = await getUser();
+      console.log(userData)
       if (userData) {
         reset({
           ...userData,
           birthDate: convertDateToStandardString(new Date(userData.birthDate)),
-          address: "",
-          postalCode: "",
-          city: "",
+          address: userData.address.address,
+          postalCode: userData.address.postalCode,
+          city: userData.address.city,
           profilePicture: "",
           diploma: "",
         });

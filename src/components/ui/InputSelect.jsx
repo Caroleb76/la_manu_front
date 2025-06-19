@@ -1,6 +1,6 @@
 export default function InputSelect({
     label,
-    defaultValue,
+
     value,
     name,
     onChange,
@@ -14,7 +14,7 @@ export default function InputSelect({
             <select
                 name={name}
                 value={value}
-                defaultValue={defaultValue ? defaultValue : "default"}
+
                 onChange={onChange}
                 {...etc}
             >
