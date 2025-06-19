@@ -2,34 +2,42 @@ import styles from "./ProfileForm.module.css";
 import InputText from "../../ui/InputText";
 import InputCheckbox from "../../ui/InputCheckbox";
 import InputSelect from "../../ui/InputSelect";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { UserContext } from "../../../../context/userContext.jsx";
 import { convertDateToStandardString } from "../../../utils/dates.js";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import InputFile from "../../ui/InputFile"
+import { handleNameInitials } from "../../../utils/initials.js";
 
 
 import { profileSchema } from "./profileSchema"; // Make sure this path matches your project
 
 export default function ProfileForm() {
   const { getUser } = useContext(UserContext);
-  const [selectedFileType, setSelectedFileType] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [initials, setInitials] = useState("")
 
   const {
     register,
     reset,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(profileSchema),
   });
+
+  const hasPermisB = watch("permisB")
+
 
   useEffect(() => {
     async function loadUser() {
       const userData = await getUser();
       console.log(userData)
       if (userData) {
+        const formattedInitials = handleNameInitials(userData.firstName + " " + userData.lastName)
+        setInitials(formattedInitials)
         reset({
           ...userData,
           birthDate: convertDateToStandardString(new Date(userData.birthDate)),
@@ -52,15 +60,19 @@ export default function ProfileForm() {
       <form onSubmit={handleSubmit((data) => console.log(data))}>
         <section className={`${styles.grid} ${styles.profileSection}`}>
           <div className={styles.profileIconTitleWrapper}>
-            <div className={styles.profileIconWrapper}>
-              <div className={styles.profileIcon}>
-                <p>AB</p>
+            <input hidden type="file" id="avatarFile" {...register("avatar")} />
+            <label htmlFor="avatarFile">
+              <div className={styles.profileIconWrapper} >
+                <div className={styles.profileIcon} >
+                  <p>{initials}</p>
+                </div>
               </div>
-            </div>
+            </label>
+            {errors.avatar && (<p className="inputError">{errors.avatar?.message}</p>)}
             <h2 className="title">Etat civil</h2>
           </div>
 
-          <InputSelect label="Civilité" {...register("gender")} error={errors.gender?.message}> 
+          <InputSelect label="Civilité" {...register("gender")} error={errors.gender?.message}>
             <option value="madame">Madame</option>
             <option value="monsieur">Monsieur</option>
           </InputSelect>
@@ -99,7 +111,31 @@ export default function ProfileForm() {
 
         <section className={styles.profileSection}>
           <h2 className="title">Documents demandés</h2>
-          <div className={styles.grid4Col}>
+          <div className={styles.grid}>
+
+            <div className={styles.fileSection}>
+
+            </div>
+
+            {hasPermisB &&
+              <div className={styles.fileSection}>
+                <h3>Carte grise</h3>
+                <div className={styles.fileSectionDiploma}>
+                  <InputFile {...register("carteGrise")} error={errors.carteGrise?.message} />
+                </div>
+              </div>}
+            <div className={styles.fileSection}>
+              <h3>Diplômes</h3>
+              <div className={styles.fileSectionDiploma}>
+                <InputText label="Intitulé du diplôme" {...register("diploma")} error={errors.diploma?.message} />
+                <InputFile  {...register("diplomeFile")} error={errors.diplomaFile?.message} />
+                <button type="button"> Ajouter </button>
+              </div>
+            </div>
+          </div>
+          <button type="submit"> valider les modifications </button>
+
+          {/* <div className={styles.grid4Col}>
             <InputSelect label="Type de fichier" onChange={(e) => setSelectedFileType(e.target.value)}>
               <option value="diplome">Diplôme</option>
               <option value="photoDeProfil">Photo de profil</option>
@@ -119,7 +155,7 @@ export default function ProfileForm() {
               <button type="button"> + </button>
               <button type="submit"> Ajouter </button>
             </div>
-          </div>
+          </div> */}
         </section>
       </form>
     </div>
