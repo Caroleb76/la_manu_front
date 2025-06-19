@@ -14,10 +14,13 @@ import Profile from "./views/Profile/Profile"
 import Contracts from "./views/Contracts/Contracts"
 import Notifications from "./views/Notifications/Notifications";
 import PopupCReateUser from "./views/PopupCreateUser/PopupCreateUser"
+import { NotificaitonProvider } from "../context/notificationContext";
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+
+
     <UserProvider>
+      <NotificaitonProvider>
       <BrowserRouter>
         <Routes>
         <Route index element={<AuthGuard />} />
@@ -41,6 +44,7 @@ createRoot(document.getElementById("root")).render(
           </Route>
         </Routes>
       </BrowserRouter>
+      </NotificaitonProvider>
     </UserProvider>
-  </StrictMode>
+ 
 );

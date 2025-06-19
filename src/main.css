@@ -128,3 +128,28 @@ font-size: 12px;
 .ag-row-hover{
   background-color: var(--active-menu-item-bg-color);
 }
+
+/* notification styling */
+.notification-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+}
+
+.notification {
+  margin-bottom: 10px;
+  padding: 12px 16px;
+  border-radius: 6px;
+  color: white;
+  animation: fadeIn 0.3s ease;
+}
+
+.notification.success { background: #28a745; }
+.notification.error { background: #dc3545; }
+.notification.info { background: #007bff; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
