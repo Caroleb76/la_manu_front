@@ -4,6 +4,7 @@ import styles from "./Auth.module.css";
 import { login } from "../../helpers/auth";
 import { UserContext } from "../../../context/userContext";
 import { useNavigate } from "react-router";
+import { useNotification } from "../../../context/notificationContext";
 
 export default function Login() {
 
@@ -13,7 +14,7 @@ export default function Login() {
     const [error,setError]=useState(null);
     const {getUser,updateUser}= useContext(UserContext);
     const navigate= useNavigate();
-
+    const {notify}= useNotification();
     useEffect(()=>{
       getUser().then(user=>{
         if(user) navigate("/dashboard/main");
@@ -27,6 +28,7 @@ export default function Login() {
       setError(response.message);
       return;
      }else{
+      notify("Bienvenue dans votre espace vacataires","success");
       updateUser(response.data.user);
       navigate("/dashboard/main");
      }

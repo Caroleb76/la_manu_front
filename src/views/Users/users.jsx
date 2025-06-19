@@ -3,12 +3,14 @@ import DataGrid from "../../components/DataGrid/DataGrid";
 import usersHelper from "../../helpers/usersHelper";
 import Styles from "./User.module.css";
 import PopupCreateUser from "../PopupCreateUser/PopupCreateUser";
+import { useNotification } from "../../../context/notificationContext";
 
 function Users() {
   const [userCreationMode, setUserCreationMode] = useState(false);
   const dataGridRef = null;
   const [reloadTrigger, setReloadTrigger] = useState(0);
   const pageNumberRef= useRef(0);
+  const {notify}= useNotification();
   const colDefs = [
     { field: "Email", filter: true },
     { field: "Nom", filter: true },
@@ -24,6 +26,7 @@ function Users() {
   const onUserCreated = () => {
     setUserCreationMode(false);
     refreshDataGrid();
+    notify("L'utilisateur a bien été ajouté", "success");
   }
   const getDataSource = useMemo(() => ({
     getRows: async (params) => {
@@ -52,6 +55,7 @@ function Users() {
     const updatedUser = { ...data, blocked: !data.blocked };
     await usersHelper.blockUser(updatedUser.id, updatedUser);
     refreshDataGrid();
+    notify("L'utilisateur a bien été modifié", "success");
   };
 
   return (
