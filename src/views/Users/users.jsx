@@ -1,11 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import DataGrid from "../../components/DataGrid/DataGrid";
 import usersHelper from "../../helpers/usersHelper";
 import Styles from "./User.module.css";
 import PopupCreateUser from "../PopupCreateUser/PopupCreateUser";
+
 function Users() {
-  const [users, setUsers] = useState([]);
   const [userCreationMode, setUserCreationMode] = useState(false);
+  const dataGridRef = null;
+  const [reloadTrigger, setReloadTrigger] = useState(0);
+  const pageNumberRef= useRef(0);
   const colDefs = [
     { field: "Email", filter: true },
     { field: "Nom", filter: true },
@@ -13,41 +16,59 @@ function Users() {
     { field: "Role", filter: true },
     { field: "Actions", filter: false },
   ];
-  useEffect(() => {
-    async function getUsers() {
-      const response = await usersHelper.getUsers();
-      const responseUsers = response.data;
-      // console.log(responseUsers);
 
-      setUsers(
-        responseUsers.map((user) => ({
-          id: user.id,
-          Nom: user.lastName,
-          Prenom: user.firstName,
-          Email: user.email,
-          Role: user.role.name,
-          blocked: user.blocked
-        }))
-      );
-    }
-    getUsers();
-  }, [userCreationMode]);
+  function refreshDataGrid() {
+    setReloadTrigger(prev => prev + 1);
+    if (dataGridRef?.current) dataGridRef.current.refreshData();
+  }
+  const onUserCreated = () => {
+    setUserCreationMode(false);
+    refreshDataGrid();
+  }
+  const getDataSource = useMemo(() => ({
+    getRows: async (params) => {
 
+      const offset = params.startRow;
+      const pageSize = params.endRow - params.startRow;
+      
+      // console.log("Requête : offset=", offset, "limit=", pageSize, "page=", pageNumberRef.current);
+      // pageNumberRef.current=Math.floor(offset/pageSize);
+      const response = await usersHelper.getUsers( offset, pageSize);
+      const rows = response.data.users.map((user) => ({
+        id: user.id,
+        Nom: user.lastName,
+        Prenom: user.firstName,
+        Email: user.email,
+        Role: user.role.name,
+        blocked: user.blocked,
+      }));
+      
+      params.successCallback(rows, response.data.total);
 
-async function blockUser (data){ 
-  data.blocked=!data.blocked
-  console.log(data)
-  const response = await usersHelper.blockUser(data.id, data)
-  console.log (response)
-}
+    },
+  }), [reloadTrigger]);
+
+  const blockUser = async (data) => {
+    const updatedUser = { ...data, blocked: !data.blocked };
+    await usersHelper.blockUser(updatedUser.id, updatedUser);
+    refreshDataGrid();
+  };
 
   return (
     <div className={Styles.mainContainer}>
-      {
-        userCreationMode && <PopupCreateUser onClose={() => setUserCreationMode(false)}/>
-      }
+      {userCreationMode && <PopupCreateUser onClose={() => setUserCreationMode(false)} onUserCreated={onUserCreated} />}
       <button className={Styles.addButton} onClick={() => setUserCreationMode(true)}>Créer</button>
-      <DataGrid colDefs={colDefs} data={users} onActionClick={blockUser} renderIconWithCondition={(user)=>{return user.blocked? "material-symbols:lock-outline":"material-symbols:lock-open-right-outline-sharp"}}/>
+
+      <DataGrid
+        colDefs={colDefs}
+        data={getDataSource}
+        onActionClick={blockUser}
+        renderIconWithCondition={(user) =>
+          user?.blocked
+            ? "material-symbols:lock-outline"
+            : "material-symbols:lock-open-right-outline-sharp"
+        }
+      />
     </div>
   );
 }

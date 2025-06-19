@@ -1,7 +1,7 @@
 import PopupForm from "../../components/forms/PopupForm/Popupform";
 import styles from "./PopupCreateUser.module.css";
 import { Icon } from "@iconify/react";
-function PopupCreateUser({onClose}) {
+function PopupCreateUser({onClose,onUserCreated}) {
   
   return (
     <div className={styles.blockUI} >
@@ -10,7 +10,7 @@ function PopupCreateUser({onClose}) {
       <div>
         <h2 className="title">Nouvel Utilisateur</h2>
       </div>
-      <PopupForm />
+      <PopupForm onUserCreated={onUserCreated} />
     </div>
 
     </div>

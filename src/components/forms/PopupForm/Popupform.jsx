@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import rolesHelper from "../../../helpers/rolesHelper";
 import usersHelper from "../../../helpers/usersHelper";
 
-export default function ProfileForm() {
+export default function ProfileForm({onUserCreated}) {
   const [roles, setRoles] = useState([]);
   const [formData, setFormData] = useState({
     firstName: '',
@@ -39,6 +39,7 @@ export default function ProfileForm() {
     const response = await usersHelper.createUser(formData);
     if (response.success) {
       alert("utilisateur créer");
+      onUserCreated();
       setFormData({
         firstName: '',
         lastName: '',
