@@ -5,7 +5,18 @@
     grid-column: span 2;
     
   }
- 
-  .actions:hover{
+ .actions{
+    display: flex;
+    height: 100%;
+    align-items: center;
+    
+ }
+.green path{
+    fill: green;
+}
+.red path{
+    fill: red;
+}
+  .actions svg:hover{
     cursor: pointer;
   }

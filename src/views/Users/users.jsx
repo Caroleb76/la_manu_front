@@ -9,7 +9,6 @@ function Users() {
   const [userCreationMode, setUserCreationMode] = useState(false);
   const dataGridRef = null;
   const [reloadTrigger, setReloadTrigger] = useState(0);
-  const pageNumberRef= useRef(0);
   const {notify}= useNotification();
   const colDefs = [
     { field: "Email", filter: true },

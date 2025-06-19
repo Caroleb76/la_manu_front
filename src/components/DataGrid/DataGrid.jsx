@@ -7,12 +7,11 @@ import styles from "./DataGrid.module.css";
 import { useEffect, useState } from "react";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
-const DataGrid = ({ data, colDefs, renderIconWithCondition, onActionClick }) => {
+const DataGrid = ({ data, colDefs, renderIconWithCondition, onActionClick, iconStyle }) => {
   const [columnDefs, setColumnDefs] = useState([]);
   // I should implement a way to add actions dynamically 
   useEffect(() => {
     let newDefs = [...colDefs];
-
     if (colDefs.filter((colDef) => colDef.field === "Actions").length > 0) {
 
       newDefs = newDefs.filter((colDef) => colDef.field !== "Actions");
@@ -21,21 +20,24 @@ const DataGrid = ({ data, colDefs, renderIconWithCondition, onActionClick }) => 
         field: "Actions",
         filter: false,
         cellRenderer: (params) => (
-          <div style={{ position: "relative" }}>
-            <div className={styles.actions} onClick={() => onActionClick(params.data)}>
+          <div style={{ position: "relative", height: "100%" }}>
+            <div className={styles.actions}  >
               <Icon
-                className={styles.menuIcon}
+                onClick={() => onActionClick ? onActionClick(params.data) : {}}
                 icon={renderIconWithCondition(params.data) || ""}
-                width={"1.8rem"}
-                fill={"green"}
+                width="1.8rem"
+                style={{
+                  color: iconStyle ? iconStyle(params.data).color : "inherit",
+                }}
               />
+
             </div>
           </div>
         ),
       },)
 
-      setColumnDefs(newDefs);
     }
+    setColumnDefs(newDefs);
 
   }, []);
 
@@ -51,6 +53,7 @@ const DataGrid = ({ data, colDefs, renderIconWithCondition, onActionClick }) => 
         cacheBlockSize={10}
         paginationPageSize={10}
         pagination={true}
+        paginationPageSizeSelector={[10, 20, 30]}
         rowModelType="infinite"
         defaultColDef={{
           flex: 1,
@@ -59,6 +62,7 @@ const DataGrid = ({ data, colDefs, renderIconWithCondition, onActionClick }) => 
           resizable: true,
 
         }}
+
       />
     </div>
 
