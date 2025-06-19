@@ -47,14 +47,19 @@ body{
     margin-bottom: 0.5rem;}
 
     
-button{
+button,
+.button {
   padding: 1rem 2rem;
   border-radius: var(--radius);
   background-color: var(--primary-color);
-  color : var(--background-color);
+  color: var(--background-color);
   cursor: pointer;
+  border: none; /* utile pour <button> natif */
+  text-align: center;
 }
-button:hover {
+
+button:hover,
+.button:hover {
   opacity: 0.8;
 }
 
@@ -64,6 +69,11 @@ input[type=email], input[type=password], input[type=text], input[type=tel], inpu
   border-radius: var(--radius);
   background-color: rgba(243,147,54,0.2);
 }
+input[type=file]{
+  display: none;
+
+}
+
 input:focus{
   outline: solid 2px var(--primary-color);
 }
@@ -77,6 +87,14 @@ input::placeholder{
 display:flex;
 align-items:center ;
 }
+
+.inputError{
+  color:var(--error-color);
+  font-size: small;
+}
+
+
+
 
 .contentPadding{
   padding: 1rem;

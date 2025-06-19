@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import styles from "./Navbar.module.css";
 import { UserContext } from "../../../../context/userContext";
 import { useNavigate } from "react-router";
+import { handleNameInitials } from "../../../utils/initials";
 function Navbar() {
   const { signout, getUser } = useContext(UserContext);
   const [user, setUser] = useState(null);
@@ -11,7 +12,7 @@ function Navbar() {
 
   useEffect(() => {
     getUser().then((user) => {
-      let initials = handleNameInitials(user.firstName); //TODO get full name
+      let initials = handleNameInitials(user.firstName+" "+user.lastName); //TODO get full name
       user.initials = initials;
       
 
@@ -31,18 +32,7 @@ function Navbar() {
     };
   }, []);
 
-  function handleNameInitials(name) {
-    if (!name) return "?";
-    const words = name.split(" ");
-    let initials = "";
-    for (let i = 0; i < words.length; i++) {
-      initials += words[i][0].toUpperCase();
-    }
-    if (initials.length > 2) initials = initials.slice(0, 2);
-    if (initials.length < 2)
-      initials += words[words.length - 1][1].toUpperCase();
-    return initials;
-  }
+
   function handleLogout() {
     signout();
     navigate("/login");
