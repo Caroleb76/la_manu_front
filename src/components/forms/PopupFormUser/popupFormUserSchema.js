@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const popupUserSchema = z.object({
+export const popupFormUserSchema = z.object({
 
 
 

@@ -4,49 +4,39 @@ import InputSelect from "../../ui/InputSelect";
 import { useEffect, useState } from "react";
 import rolesHelper from "../../../helpers/rolesHelper";
 import usersHelper from "../../../helpers/usersHelper";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { popupFormUserSchema } from "./popupFormUserSchema.js"
+import { DevTool } from "@hookform/devtools";
 
-export default function PopupFormUser({onUserCreated}) {
+export default function PopupFormUser({ onUserCreated }) {
   const [roles, setRoles] = useState([]);
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    role: ''
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(popupFormUserSchema),
   });
   useEffect(() => {
     async function loadRoles() {
       const response = await rolesHelper.getRoles();
       setRoles(response.data);
-      
+
 
     }
     loadRoles();
 
   }, [])
 
-  function handleFormChange(e) {
-    const { name, value } = e.target;
 
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  }
+  async function onSubmit(data) {
 
-  async function hahndleSubmit(e) {
-    e.preventDefault();
-    const response = await usersHelper.createUser(formData);
+    const response = await usersHelper.createUser(data);
     if (response.success) {
       onUserCreated();
-      setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-        role: ''
-      });
-    }else{
+    } else {
       alert(response.message);
     }
   }
@@ -54,58 +44,53 @@ export default function PopupFormUser({onUserCreated}) {
   return (
     <div className={styles.borderPopup}>
 
-      <form action="" onSubmit={hahndleSubmit}>
+      <form action="" onSubmit={handleSubmit(onSubmit)}>
 
         <section className={`${styles.grid} ${styles.popupSection}`}>
           <InputText
             label="Nom"
-            name="lastName"
             placeholder="Nom de famille"
-            value={formData.lastName}
-            onChange={handleFormChange}
-
-            maxLength={50}
+            {...register("lastName")}
+            error={errors.lastName?.message}
           />
 
           <InputText
             label="Prénom"
-            name="firstName"
             placeholder="Ex : Pierre"
-            value={formData.firstName}
-            onChange={handleFormChange}
-            minLength={2}
-            maxLength={50}
+            {...register("firstName")}
+            error={errors.firstName?.message}
           />
+
           <InputText
             label="Email"
-            name="email"
+            type="email"
             placeholder="Ex : Pierredupont@gmail.fr"
-            value={formData.email}
-            onChange={handleFormChange}
-            minLength={5}
-            maxLength={50}
+            {...register("email")}
+            error={errors.email?.message}
           />
 
           <InputText
             label="Mot de passe"
-            name="password"
-            placeholder="minimum 8 caractères dont 1 maj et 1 chiffre"
             type="password"
-            value={formData.password}
-            onChange={handleFormChange}
-            minLength={8}
-            maxLength={15}
+            placeholder="minimum 8 caractères dont 1 maj et 1 chiffre"
+            {...register("password")}
+            error={errors.password?.message}
           />
 
-          <InputSelect label="Rôle" name="role" value={formData.role} onChange={handleFormChange}>
+          <InputSelect
+            label="Rôle"
+            {...register("role")}
+            error={errors.role?.message}>
             {roles.map((role) => (
               <option key={role.id} value={role.id}>{role.name}</option>
             ))}
+
           </InputSelect>
         </section>
         <div className={styles.popupButtons}>
           <button> Créer </button>
         </div>
+        <DevTool control={control} />
       </form>
     </div>
   );
