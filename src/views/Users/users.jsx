@@ -12,10 +12,10 @@ function Users() {
   const [searchText, setSearchText] = useState("");
   const {notify}= useNotification();
   const colDefs = [
-    { field: "Email", filter: true },
-    { field: "Nom", filter: true },
-    { field: "Prenom", filter: true },
-    { field: "Role", filter: true },
+    { field: "Email", filter: false},
+    { field: "Nom", filter: false },
+    { field: "Prenom", filter: false },
+    { field: "Role", filter: false },
     { field: "Actions", filter: false },
   ];
 
