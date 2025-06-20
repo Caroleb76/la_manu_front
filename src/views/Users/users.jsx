@@ -2,8 +2,9 @@ import { useMemo, useRef, useState } from "react";
 import DataGrid from "../../components/DataGrid/DataGrid";
 import usersHelper from "../../helpers/usersHelper";
 import Styles from "./User.module.css";
-import PopupCreateUser from "../PopupCreateUser/PopupCreateUser";
 import { useNotification } from "../../../context/notificationContext";
+import PopupFormUser from "../../components/forms/PopupFormUser/PopupformUser.jsx"
+import PopupWrapper from "../../components/popups/PopupWrapper";
 
 function Users() {
   const [userCreationMode, setUserCreationMode] = useState(false);
@@ -66,7 +67,11 @@ function Users() {
 
   return (
     <div className={Styles.mainContainer}>
-      {userCreationMode && <PopupCreateUser onClose={() => setUserCreationMode(false)} onUserCreated={onUserCreated} />}
+      {userCreationMode && 
+      <PopupWrapper title="Créer un utilisateur" onClose={() => setUserCreationMode(false)}>
+        <PopupFormUser  onUserCreated={onUserCreated}  />
+        </PopupWrapper>
+     }
       <button className={Styles.addButton} onClick={() => setUserCreationMode(true)}>Créer</button>
       <input type="text" placeholder="Rechercher" value={searchText} onChange={(e) =>  onSearchTextChange(e)} />
       <DataGrid

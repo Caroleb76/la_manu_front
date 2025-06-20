@@ -1,5 +1,10 @@
+# En cours:
+- popup création type formation en cours (carole)
+
+
 # Priority High
 - gérer les fichiers dans le formulaire "profil"
+
 
 # Priority Medium
 - Sortable columns not working
@@ -10,3 +15,7 @@
 
 # Priority Very low 
 - Adapter l'appli pour mobile (repenser l'interface des grids)
+
+
+# Terminé
+- refactoriser popup views pour éviter les répétitions (via popup wrapper)
