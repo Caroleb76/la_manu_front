@@ -9,6 +9,7 @@ function Users() {
   const [userCreationMode, setUserCreationMode] = useState(false);
   const dataGridRef = null;
   const [reloadTrigger, setReloadTrigger] = useState(0);
+  const [searchText, setSearchText] = useState("");
   const {notify}= useNotification();
   const colDefs = [
     { field: "Email", filter: true },
@@ -27,6 +28,12 @@ function Users() {
     refreshDataGrid();
     notify("L'utilisateur a bien été ajouté", "success");
   }
+
+  const onSearchTextChange = (e) => {
+    setSearchText(e.target.value);
+    if(e.target.value.length < 3 && e.target.value.length > 0) return;
+    refreshDataGrid();
+  }
   const getDataSource = useMemo(() => ({
     getRows: async (params) => {
 
@@ -35,7 +42,7 @@ function Users() {
       
       // console.log("Requête : offset=", offset, "limit=", pageSize, "page=", pageNumberRef.current);
       // pageNumberRef.current=Math.floor(offset/pageSize);
-      const response = await usersHelper.getUsers( offset, pageSize);
+      const response = await usersHelper.getUsers( offset, pageSize, searchText);
       const rows = response.data.users.map((user) => ({
         id: user.id,
         Nom: user.lastName,
@@ -61,7 +68,7 @@ function Users() {
     <div className={Styles.mainContainer}>
       {userCreationMode && <PopupCreateUser onClose={() => setUserCreationMode(false)} onUserCreated={onUserCreated} />}
       <button className={Styles.addButton} onClick={() => setUserCreationMode(true)}>Créer</button>
-
+      <input type="text" placeholder="Rechercher" value={searchText} onChange={(e) =>  onSearchTextChange(e)} />
       <DataGrid
         colDefs={colDefs}
         data={getDataSource}
