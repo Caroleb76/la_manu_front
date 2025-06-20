@@ -3,6 +3,8 @@ import { useState, useEffect, useMemo } from "react";
 import formationsHelper from "../../helpers/sessionFormationsHelper";
 import Styles from "./Formations.module.css";
 
+
+
 function Formations() {
     const colDefs = [
         { field: "Formation", filter: true },

@@ -6,7 +6,7 @@ import PopupCreateNotification from "../PopupCreateNotification/PopupCreateNotif
 export default function Home() {
   return (
     <div>
-
+   
       <Widget titre="calendrier" />
       <section className={styles.twoColumnSection}>
         <Widget titre="alertes" />
