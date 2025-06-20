@@ -1,11 +1,11 @@
-import styles from "./PopupForm.module.css";
+import styles from "./PopupFormUser.module.css";
 import InputText from "../../ui/InputText";
 import InputSelect from "../../ui/InputSelect";
 import { useEffect, useState } from "react";
 import rolesHelper from "../../../helpers/rolesHelper";
 import usersHelper from "../../../helpers/usersHelper";
 
-export default function PopupForm({onUserCreated}) {
+export default function PopupFormUser({onUserCreated}) {
   const [roles, setRoles] = useState([]);
   const [formData, setFormData] = useState({
     firstName: '',
