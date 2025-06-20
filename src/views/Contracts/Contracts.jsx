@@ -1,9 +1,10 @@
 import DataGrid from "../../components/DataGrid/DataGrid";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import contractsHelper from "../../helpers/contractsHelper";
+import styles from "./Contracts.module.css";
 
 export default function Contracts() {
-    const [contracts, setContracts] = useState([]);
+
     const colDefs = [
         { field: "Nom Prénom", filter: true },
         { field: "Formation", filter: true },
@@ -12,34 +13,49 @@ export default function Contracts() {
         { field: "Heures", filter: false },
         { field: "Signé", filter: false },
         { field: "Déclaré", filter: false },
-        { field: "Interventions validées", filter: false },
+        { field: "I.validées", filter: false },
     ];
 
-    useEffect(() => {
-        async function getContracts() {
-            const response = await contractsHelper.getContracts();
-            const responseContracts = response.data;
-            console.log("contracts", responseContracts);
-            setContracts(
-                //TODO: complete this
-                responseContracts.map((contract) => ({
+    const [reloadTrigger, setReloadTrigger] = useState(0);
+    const getDataSource = useMemo(() => ({
+        getRows: async (params) => {
+
+            const offset = params.startRow;
+            const pageSize = params.endRow - params.startRow;
+
+            const response = await contractsHelper.getContracts(offset, pageSize);
+
+            const rows = response.data.contracts.map((contract) => ({
                     "Nom Prénom": contract.user.firstName + " " + contract.user.lastName,
                     "Formation": contract.sessionFormation.formation.name,
                     "Date de Début": new Date(contract.startDate).toLocaleDateString(),
                     "Date de Fin": new Date(contract.endDate).toLocaleDateString(),
-                    "Heures": contract.intervention , //somme des temps des interventions
+                    "Heures": contract.intervention, //somme des temps des interventions
                     "Signé": contract.signed,
-                    "Déclaré" : contract.declared,
-                    "Interventions validées": contract.validated, //true si toutes les interventions sont validées
+                    "Déclaré": contract.declared,
+                    "I.validées": contract.validated, //true si toutes les interventions sont validées
                 }))
-            );
-        }
-        getContracts();
-    }, []);
+            // console.log(rows, response.data.total);
+
+            params.successCallback(rows, response.data.total);
+
+        },
+    }), [reloadTrigger]);
+
     return (
-        <div>
-            <title>Contracts</title>
-            <DataGrid colDefs={colDefs} data={contracts} />
-        </div>
+        <>
+            <div className={styles.mainContainer}>
+
+                <DataGrid colDefs={colDefs} data={getDataSource}
+                />
+            </div>
+
+        </>
     );
 }
+
+
+
+
+
+

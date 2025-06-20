@@ -15,6 +15,7 @@ import Contracts from "./views/Contracts/Contracts"
 import Notifications from "./views/Notifications/Notifications";
 import PopupCReateUser from "./views/PopupCreateUser/PopupCreateUser"
 import { NotificaitonProvider } from "../context/notificationContext";
+import Formations from "./views/Formations/Formations";
 
 createRoot(document.getElementById("root")).render(
 
@@ -35,7 +36,7 @@ createRoot(document.getElementById("root")).render(
               <Route path="main" element={<Home />} />
                <Route path="users" element={<Users />} />
                <Route path="notifications" element={<Notifications/>} />
-               <Route path="formations" element={< > </>} />
+               <Route path="formations" element={<Formations/>} />
                <Route path="contracts" element={<Contracts />} />
               <Route path="profile" element={<Profile />} />
 

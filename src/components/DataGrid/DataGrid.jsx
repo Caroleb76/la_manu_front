@@ -24,7 +24,7 @@ const DataGrid = ({ data, colDefs, renderIconWithCondition, onActionClick, iconS
             <div className={styles.actions}  >
               <Icon
                 onClick={() => onActionClick ? onActionClick(params.data) : {}}
-                icon={renderIconWithCondition(params.data) || ""}
+                icon= {renderIconWithCondition ? renderIconWithCondition(params.data) :  ""}
                 width="1.8rem"
                 style={{
                   color: iconStyle ? iconStyle(params.data).color : "inherit",
