@@ -1,11 +1,11 @@
-import styles from "./PopupForm.module.css";
+import styles from "./PopupFormNotification.module.css";
 import InputText from "../../ui/InputText";
 import InputSelect from "../../ui/InputSelect";
 import { useEffect, useState } from "react";
-import rolesHelper from "../../../helpers/rolesHelper";
+
 import usersHelper from "../../../helpers/usersHelper";
 
-export default function PopupForm({onUserCreated}) {
+export default function PopupFormNotification({ onUserCreated }) {
   const [roles, setRoles] = useState([]);
   const [formData, setFormData] = useState({
     firstName: '',
@@ -18,7 +18,7 @@ export default function PopupForm({onUserCreated}) {
     async function loadRoles() {
       const response = await rolesHelper.getRoles();
       setRoles(response.data);
-      
+
 
     }
     loadRoles();
@@ -47,7 +47,7 @@ export default function PopupForm({onUserCreated}) {
         password: '',
         role: ''
       });
-    }else{
+    } else {
       alert(response.message);
     }
   }
@@ -58,52 +58,42 @@ export default function PopupForm({onUserCreated}) {
       <form action="" onSubmit={hahndleSubmit}>
 
         <section className={`${styles.grid} ${styles.popupSection}`}>
-          <InputText
-            label="Nom"
-            name="lastName"
-            placeholder="Nom de famille"
-            value={formData.lastName}
-            onChange={handleFormChange}
 
-            maxLength={50}
+        
+ <InputText
+            label="Date de publication"
+            name="startDate"
+            type="date"
+            value={formData.startDate}
+            
           />
 
-          <InputText
-            label="Prénom"
-            name="firstName"
-            placeholder="Ex : Pierre"
-            value={formData.firstName}
-            onChange={handleFormChange}
-            minLength={2}
-            maxLength={50}
+  <InputText
+            label="Date d'expiration"
+            name="endDate"
+            type="date"
+            value={formData.endDate}
+            
           />
-          <InputText
-            label="Email"
-            name="email"
-            placeholder="Ex : Pierredupont@gmail.fr"
-            value={formData.email}
-            onChange={handleFormChange}
-            minLength={5}
-            maxLength={50}
-          />
-
-          <InputText
-            label="Mot de passe"
-            name="password"
-            placeholder="minimum 8 caractères dont 1 maj et 1 chiffre"
-            type="password"
-            value={formData.password}
-            onChange={handleFormChange}
-            minLength={8}
-            maxLength={15}
-          />
-
-          <InputSelect label="Rôle" name="role" value={formData.role} onChange={handleFormChange}>
+  <InputSelect label="Priorité" name="priority" value={formData.role} onChange={handleFormChange}>
             {roles.map((role) => (
               <option key={role.id} value={role.id}>{role.name}</option>
             ))}
           </InputSelect>
+
+                 
         </section>
+         <InputText
+            label="Contenu"
+            name="content"
+            placeholder="contenu de la notification"
+            value={formData.text}
+            onChange={handleFormChange}
+            minLength={5}
+            maxLength={250}
+            
+          />
+
         <div className={styles.popupButtons}>
           <button> Créer </button>
         </div>
