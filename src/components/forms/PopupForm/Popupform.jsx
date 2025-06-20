@@ -38,7 +38,6 @@ export default function ProfileForm({onUserCreated}) {
     e.preventDefault();
     const response = await usersHelper.createUser(formData);
     if (response.success) {
-      alert("utilisateur créer");
       onUserCreated();
       setFormData({
         firstName: '',

@@ -26,8 +26,9 @@ export default function Contracts() {
             const response = await contractsHelper.getContracts(offset, pageSize);
 
             const rows = response.data.contracts.map((contract) => ({
-                    "Nom Prénom": contract.user.firstName + " " + contract.user.lastName,
-                    "Formation": contract.sessionFormation.formation.name,
+                    id: contract.id,
+                    "Nom Prénom": contract.User.firstName + " " + contract.User.lastName,
+                    "Formation": contract.SessionFormation.Formation.name,
                     "Date de Début": new Date(contract.startDate).toLocaleDateString(),
                     "Date de Fin": new Date(contract.endDate).toLocaleDateString(),
                     "Heures": contract.intervention, //somme des temps des interventions

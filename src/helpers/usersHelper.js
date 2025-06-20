@@ -1,10 +1,10 @@
 import apiClient from "./apiClient";
 
 
-async function getUsers (offset=0,limit=10){
+async function getUsers (offset=0,limit=10,searchText=""){
 
     const params= {
-        offset,limit
+        offset,limit,searchText
     };
     // console.log(params);
     

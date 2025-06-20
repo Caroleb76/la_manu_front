@@ -1,16 +1,15 @@
 import DataGrid from "../../components/DataGrid/DataGrid";
 import { useState, useEffect, useMemo } from "react";
 import formationsHelper from "../../helpers/sessionFormationsHelper";
-import styles from "./Formations.module.css";
+import Styles from "./Formations.module.css";
 
 function Formations() {
     const colDefs = [
-        { field: "Titre", filter: true },
-        { field: "Priorité", filter: true },
-        { field: "Contenu", filter: true },
-        { field: "Date de début", filter: false },
-        { field: "Date de fin", filter: false },
-        { field: "Actions", filter: false },
+        { field: "Formation", filter: true },
+        { field: "Numero", filter: true },
+        { field: "Début", filter: true },
+        { field: "Fin", filter: false },
+        { field: "Lieu", filter: false },
     ];
     const [reloadTrigger, setReloadTrigger] = useState(0);
     const getDataSource = useMemo(() => ({
@@ -31,13 +30,13 @@ function Formations() {
   Formation     Formation? @relation(fields: [formationId], references: [id])
   Address       Address?   @relation(fields: [addressId], references: [id])
              */
-            const rows = response.data.sessionFormations.map((notification) => ({
-                id: notification.id,
-                Formation: notification.formation.name,
-                Numero: notification.serialNumber,
-                "Début": new Date(notification.startDate).toLocaleDateString(),
-                "Fin": new Date(notification.endDate).toLocaleDateString(),
-                Lieu: notification.address.city,
+            const rows = response.data.sessionFormations.map((session) => ({
+                id: session.id,
+                Formation: session.Formation.name,
+                Numero: session.serialNumber,
+                "Début": new Date(session.startDate).toLocaleDateString(),
+                "Fin": new Date(session.endDate).toLocaleDateString(),
+                Lieu: session.Address.city,
             }))
             // console.log(rows, response.data.total);
 
@@ -48,10 +47,15 @@ function Formations() {
 
     return (
         <>
-            <div className={styles.mainContainer}>
+
+            <div className={Styles.buttonContainer}>
+                <button className={Styles.addButton} onClick={() =>{}}>Créer un type de formation</button>
+            <button className={Styles.addButton} onClick={() =>{}}>Créer une session</button>
+            </div>
+            <div className={Styles.mainContainer}>
 
                 <DataGrid colDefs={colDefs} data={getDataSource}
-                    />
+                />
             </div>
 
         </>
