@@ -7,6 +7,8 @@ import Styles from "./Formations.module.css";
 import PopupWrapper from "../../components/popups/PopupWrapper";
 import PopupFormSession from "../../components/forms/PopupFormSession/PopupformSession.jsx"
 
+
+
 function Formations() {
     const [sessionCreationMode, setSessionCreationMode] =
         useState(false);
