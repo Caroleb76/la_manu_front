@@ -1,4 +1,4 @@
-import PopupForm from "../../components/forms/PopupForm/Popupform";
+import PopupFormUser from "../../components/forms/PopupFormUser/PopupformUser";
 import styles from "./PopupCreateUser.module.css";
 import { Icon } from "@iconify/react";
 function PopupCreateUser({onClose,onUserCreated}) {
@@ -10,7 +10,7 @@ function PopupCreateUser({onClose,onUserCreated}) {
       <div>
         <h2 className="title">Nouvel Utilisateur</h2>
       </div>
-      <PopupForm onUserCreated={onUserCreated} />
+      <PopupFormUser onUserCreated={onUserCreated} />
     </div>
 
     </div>
