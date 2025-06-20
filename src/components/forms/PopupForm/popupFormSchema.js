@@ -1,34 +1,33 @@
 import { z } from 'zod';
 
-export const popupFormSchema = z.object({
+export const popupUserSchema = z.object({
 
 
 
-  firstName: z
-    .string()
-    .min(2, 'Le titre doit contenir au moins 2 caractères.')
-    .max(50, 'Le titre est trop long.'),
+    firstName: z
+        .string()
+        .min(2, 'Le prénom doit contenir au moins 2 caractères.')
+        .max(50, 'Le prénom est trop long.'),
 
-  priority: z
-    .coerce.number()
-    .min(1, 'Une priorité est obligatoire')
-    .max(3)
-    .nonnegative(),
+    lastName: z
+        .string()
+        .min(2, 'Le nom doit contenir au moins 2 caractères.')
+        .max(50, 'Le nom est trop long.'),
 
-
-  startDate: z
-    .string()
-    .min(1, 'La date de publication est requise.'),
-
-  endDate: z
-  .string()
-  .min(1, 'La date de fin est requise.'),
+    email: z
+        .string()
+        .email('L’email est invalide.'),
 
 
-  content: z
-    .string()
-    .min(2, 'Le contenu doit contenir au moins 2 caractères.')
-    .max(250, 'Le contenu est trop long.'),
+    password: z
+        .string()
+        .min(1, 'Le mot de passe est requis.'),
+
+    role: z
+        .string()
+        .min(1, 'Le rôle est requis.'),
+
+
 
 
 });
