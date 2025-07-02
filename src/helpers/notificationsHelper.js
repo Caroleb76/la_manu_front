@@ -1,17 +1,23 @@
 import apiClient from "./apiClient";
 
 
-async function getNotifications (offset=0,limit=10){
+async function getNotifications (offset=0,limit=10,searchText=""){
 
     const params= {
-        offset,limit
+        offset,limit,searchText
     };
     const response= await apiClient("notification/",{method:"GET",params});
     return response;
 
 }
 
+async function deleteNotification(id) {
+    const response = await apiClient("notification/"+id,{method:"DELETE"});
+    return response;
+}
+
 
 export default {
-    getNotifications
+    getNotifications,
+    deleteNotification
 }

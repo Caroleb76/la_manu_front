@@ -7,7 +7,7 @@ import styles from "./DataGrid.module.css";
 import { useEffect, useState } from "react";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
-const DataGrid = ({ data, colDefs, renderIconWithCondition, onActionClick, iconStyle }) => {
+const DataGrid = ({ data, colDefs, renderIconWithCondition, onActionClick, iconStyle,pageSize=10 }) => {
   const [columnDefs, setColumnDefs] = useState([]);
   // I should implement a way to add actions dynamically 
   useEffect(() => {
@@ -51,7 +51,7 @@ const DataGrid = ({ data, colDefs, renderIconWithCondition, onActionClick, iconS
         datasource={data}
         columnDefs={columnDefs}
         cacheBlockSize={10}
-        paginationPageSize={10}
+        paginationPageSize={pageSize}
         pagination={true}
         paginationPageSizeSelector={[10, 20, 30]}
         rowModelType="infinite"
@@ -60,7 +60,6 @@ const DataGrid = ({ data, colDefs, renderIconWithCondition, onActionClick, iconS
           filter: true,
           sortable: true,
           resizable: true,
-
         }}
 
       />

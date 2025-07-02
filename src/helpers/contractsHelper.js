@@ -1,10 +1,10 @@
 import apiClient from "./apiClient";
 
 
-async function getContracts (offset=0,limit=10){
+async function getContracts (offset=0,limit=10,searchText=""){
 
     const params= {
-        offset,limit
+        offset,limit,searchText
     };
     const response= await apiClient("contracts/",{method:"GET",params});
     return response;

@@ -2,6 +2,7 @@ import DataGrid from "../../components/DataGrid/DataGrid";
 import { useState, useEffect, useMemo } from "react";
 import notificationsHelper from "../../helpers/notificationsHelper";
 import styles from "./Notifications.module.css";
+import { useNotification } from "../../../context/notificationContext";
 
 function Notifications() {
     const colDefs = [
@@ -12,39 +13,68 @@ function Notifications() {
         { field: "Date de fin", filter: false },
         { field: "Actions", filter: false },
     ];
-      const [reloadTrigger, setReloadTrigger] = useState(0);
+
+    const [searchText, setSearchText] = useState("");
+    const [pageSize, setPageSize] = useState(10);
+    const [reloadTrigger, setReloadTrigger] = useState(0);
+      const {notify}= useNotification();
     const getDataSource = useMemo(() => ({
         getRows: async (params) => {
 
             const offset = params.startRow;
             const pageSize = params.endRow - params.startRow;
 
-            const response = await notificationsHelper.getNotifications(offset, pageSize);
-            
+            const response = await notificationsHelper.getNotifications(offset, pageSize, searchText);
+
             const rows = response.data.notifications.map((notification) => ({
-                id : notification.id,
+                id: notification.id,
                 Titre: notification.title,
                 Priorité: notification.priority,
                 Contenu: notification.content,
-                isActive   :  new Date(notification.endDate) > new Date()   ,
+                isActive: new Date(notification.endDate) > new Date(),
                 "Date de début": new Date(notification.startDate).toLocaleDateString(),
                 "Date de fin": new Date(notification.endDate).toLocaleDateString(),
             }))
+            if (searchText.length > 0) {
+                setPageSize(rows.length);
+            } else {
+                setPageSize(pageSize);
+            }
             // console.log(rows, response.data.total);
-            
+
             params.successCallback(rows, response.data.total);
 
         },
     }), [reloadTrigger]);
-   
+
+    const onSearchTextChange = (e) => {
+        setSearchText(e.target.value);
+        if (e.target.value.length < 3 && e.target.value.length > 0) return;
+        setReloadTrigger(prev => prev + 1);
+    }
+
+    const onDeleteNotification = async (notificaiton) => {
+        
+        
+        const response = await notificationsHelper.deleteNotification(notificaiton.id);
+        if (response && response.success) {
+            setReloadTrigger(prev => prev + 1);
+            notify("La notification a bien été supprimée", "success");
+        }else{
+            notify("Une erreur est survenue", "error");
+        }
+    }
+
     return (
         <>
             <div className={styles.mainContainer}>
+                <input type="text" placeholder="Rechercher" value={searchText} onChange={(e) => onSearchTextChange(e)} />
+                <DataGrid  pageSize={pageSize}
+                onActionClick={onDeleteNotification}
+                colDefs={colDefs} data={getDataSource}
 
-            <DataGrid colDefs={colDefs} data={getDataSource} 
-            renderIconWithCondition={(row) => row?.isActive ?    "material-symbols:check-circle"
-    : "material-symbols:cancel" }
-             iconStyle={(row) => row?.isActive ? { color: "green" } : { color: "red" }}  />
+                    renderIconWithCondition={(row) => "material-symbols:delete-rounded"}
+                    iconStyle={(row) => { return { color: "red" } }} />
             </div>
 
         </>

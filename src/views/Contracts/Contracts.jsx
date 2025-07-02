@@ -13,19 +13,25 @@ export default function Contracts() {
         { field: "Heures", filter: false },
         { field: "Signé", filter: false },
         { field: "Déclaré", filter: false },
-        { field: "I.validées", filter: false },
+        { field: "Interventions", filter: false },
     ];
 
     const [reloadTrigger, setReloadTrigger] = useState(0);
+    const [searchText, setSearchText] = useState("");
+    const [pageSize, setPageSize] = useState(10);
     const getDataSource = useMemo(() => ({
         getRows: async (params) => {
 
             const offset = params.startRow;
             const pageSize = params.endRow - params.startRow;
 
-            const response = await contractsHelper.getContracts(offset, pageSize);
+            const response = await contractsHelper.getContracts(offset, pageSize, searchText);
 
-            const rows = response.data.contracts.map((contract) => ({
+            const rows = response.data.contracts.map((contract) => {
+                const hasUnvalidatedInterventions = contract?.Interventions?.some(
+                    (intervention) => !intervention.validatedByAdmin || !intervention.validatedByFormateur
+                );
+                return {
                     id: contract.id,
                     "Nom Prénom": contract.User.firstName + " " + contract.User.lastName,
                     "Formation": contract.SessionFormation.Formation.name,
@@ -34,8 +40,15 @@ export default function Contracts() {
                     "Heures": contract.intervention, //somme des temps des interventions
                     "Signé": contract.signed,
                     "Déclaré": contract.declared,
-                    "I.validées": contract.validated, //true si toutes les interventions sont validées
-                }))
+                    "Interventions": hasUnvalidatedInterventions,
+                }
+            }
+            );
+            if (searchText.length > 0) {
+                setPageSize(rows.length);
+            } else {
+                setPageSize(pageSize);
+            }
             // console.log(rows, response.data.total);
 
             params.successCallback(rows, response.data.total);
@@ -43,11 +56,16 @@ export default function Contracts() {
         },
     }), [reloadTrigger]);
 
+    const onSearchTextChange = (e) => {
+        setSearchText(e.target.value);
+        setReloadTrigger(reloadTrigger + 1);
+    };
+
     return (
         <>
             <div className={styles.mainContainer}>
-
-                <DataGrid colDefs={colDefs} data={getDataSource}
+                <input type="text" placeholder="Rechercher" value={searchText} onChange={(e) => onSearchTextChange(e)} />
+                <DataGrid pageSize={pageSize} colDefs={colDefs} data={getDataSource}
                 />
             </div>
 

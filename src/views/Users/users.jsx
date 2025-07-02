@@ -11,6 +11,7 @@ function Users() {
   const [reloadTrigger, setReloadTrigger] = useState(0);
   const [searchText, setSearchText] = useState("");
   const {notify}= useNotification();
+  const [pageSize, setPageSize] = useState(10);
   const colDefs = [
     { field: "Email", filter: true },
     { field: "Nom", filter: true },
@@ -51,7 +52,11 @@ function Users() {
         Role: user.role.name,
         blocked: user.blocked,
       }));
-      
+      if(searchText.length > 0 ){
+        setPageSize(rows.length);
+      }else{
+        setPageSize(pageSize);
+      }
       params.successCallback(rows, response.data.total);
 
     },
@@ -70,6 +75,7 @@ function Users() {
       <button className={Styles.addButton} onClick={() => setUserCreationMode(true)}>Créer</button>
       <input type="text" placeholder="Rechercher" value={searchText} onChange={(e) =>  onSearchTextChange(e)} />
       <DataGrid
+      pageSize={pageSize}
         colDefs={colDefs}
         data={getDataSource}
         onActionClick={blockUser}

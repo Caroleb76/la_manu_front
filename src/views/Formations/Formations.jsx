@@ -12,7 +12,7 @@ function Formations() {
         { field: "Lieu", filter: false },
     ];
     const [reloadTrigger, setReloadTrigger] = useState(0);
-    const getDataSource = useMemo(() => ({
+    const getDataSource = () => ({
         getRows: async (params) => {
 
             const offset = params.startRow;
@@ -43,7 +43,7 @@ function Formations() {
             params.successCallback(rows, response.data.total);
 
         },
-    }), [reloadTrigger]);
+    })
 
     return (
         <>
@@ -54,7 +54,7 @@ function Formations() {
             </div>
             <div className={Styles.mainContainer}>
 
-                <DataGrid colDefs={colDefs} data={getDataSource}
+                <DataGrid colDefs={colDefs} data={getDataSource()}
                 />
             </div>
 
