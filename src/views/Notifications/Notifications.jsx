@@ -58,10 +58,10 @@ function Notifications() {
         setReloadTrigger(prev => prev + 1);
     }
 
-    const onDeleteNotification = async (notificaiton) => {
+    const onDeleteNotification = async (notification) => {
         
         
-        const response = await notificationsHelper.deleteNotification(notificaiton.id);
+        const response = await notificationsHelper.deleteNotification(notification.id);
         if (response && response.success) {
             setReloadTrigger(prev => prev + 1);
             notify("La notification a bien été supprimée", "success");

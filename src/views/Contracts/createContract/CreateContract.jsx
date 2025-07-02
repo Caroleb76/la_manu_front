@@ -1,19 +1,21 @@
-import DataGrid from "../../components/DataGrid/DataGrid";
+import DataGrid from "../../../components/DataGrid/DataGrid";
 import { useState, useEffect, useMemo } from "react";
-import contractsHelper from "../../helpers/contractsHelper";
-import styles from "./Contracts.module.css";
+import contractsHelper from "../../../helpers/contractsHelper";
+import notificationsHelper from "../../../helpers/notificationsHelper";
+import styles from "./createContract.module.css";
+import PopupWrapper from "../../../components/popups/PopupWrapper.jsx";
+import { useNotification } from "../../../../context/notificationContext";
 
 export default function Contracts() {
-
+    const [interventionCreationMode, setInterventionCreationMode] = useState(false);
     const colDefs = [
-        { field: "Nom Prénom", filter: true },
-        { field: "Formation", filter: true },
-        { field: "Date de Début", filter: false },
-        { field: "Date de Fin", filter: false },
-        { field: "Heures", filter: false },
-        { field: "Signé", filter: false },
-        { field: "Déclaré", filter: false },
-        { field: "Interventions", filter: false },
+        { field: "Module", filter: true },
+        { field: "Date", filter: true },
+        { field: "AM/PM/J", filter: false },
+        { field: "Durée", filter: false },
+        { field: "Catégorie", filter: false },
+        { field: "Tarif horaire", filter: false },
+        { field: "Montant", filter: false },
     ];
 
     const [reloadTrigger, setReloadTrigger] = useState(0);
@@ -60,13 +62,45 @@ export default function Contracts() {
         setSearchText(e.target.value);
         setReloadTrigger(reloadTrigger + 1);
     };
+    const onDeleteNotification = async (notification) => {
+
+
+        const response = await notificationsHelper.deleteNotification(notification.id);
+        if (response && response.success) {
+            setReloadTrigger(prev => prev + 1);
+            notify("La notification a bien été supprimée", "success");
+        } else {
+            notify("Une erreur est survenue", "error");
+        }
+    }
+
+    const onNotificationCreated = () => {
+        setNotificationCreationMode(false);
+        setReloadTrigger(prev => prev + 1);
+        notify("La notification a bien été ajoutée", "success");
+    }
 
     return (
         <>
-            <a href="/dashboard/contracts/create" className="btn" >
-                Créer un type de contrat
-            </a>
             <div className={styles.mainContainer}>
+                {interventionCreationMode && (
+                    <>
+                        <PopupWrapper
+                            title="Créer une intervention"
+                            onClose={() => setInterventionCreationMode(false)}
+                        >
+                            <PopupFormNotification
+                                onInterventionCreated={onInterventionCreated}
+                            />
+                        </PopupWrapper>
+                    </>
+                )}
+                <button
+                    className={styles.addButton}
+                    onClick={() => setInterventionCreationMode(true)}
+                >
+                    Créer
+                </button>
                 <input type="text" placeholder="Rechercher" value={searchText} onChange={(e) => onSearchTextChange(e)} />
                 <DataGrid pageSize={pageSize} colDefs={colDefs} data={getDataSource}
                 />
