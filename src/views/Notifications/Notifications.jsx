@@ -2,9 +2,15 @@ import DataGrid from "../../components/DataGrid/DataGrid";
 import { useState, useEffect, useMemo } from "react";
 import notificationsHelper from "../../helpers/notificationsHelper";
 import styles from "./Notifications.module.css";
+import PopupWrapper from "../../components/popups/PopupWrapper.jsx";
 import { useNotification } from "../../../context/notificationContext";
+import PopupFormNotification from "../../components/forms/PopupFormNotification/PopupformNotification.jsx";
 
 function Notifications() {
+    const [notificationCreationMode, setNotificationCreationMode] =
+        useState(false);
+    const { notify } = useNotification();
+    const dataGridRef = null;
     const colDefs = [
         { field: "Titre", filter: true },
         { field: "Priorité", filter: true },
@@ -17,7 +23,6 @@ function Notifications() {
     const [searchText, setSearchText] = useState("");
     const [pageSize, setPageSize] = useState(10);
     const [reloadTrigger, setReloadTrigger] = useState(0);
-      const {notify}= useNotification();
     const getDataSource = useMemo(() => ({
         getRows: async (params) => {
 
@@ -65,9 +70,33 @@ function Notifications() {
         }
     }
 
+    const onNotificationCreated = () => {
+        setNotificationCreationMode(false);
+        setReloadTrigger(prev => prev + 1);
+        notify("La notification a bien été ajoutée", "success");
+    }
+
     return (
         <>
             <div className={styles.mainContainer}>
+                      {notificationCreationMode && (
+                    <>
+                        <PopupWrapper
+                        title="Créer une notification"
+                            onClose={() => setNotificationCreationMode(false)}
+                        >
+                            <PopupFormNotification
+                                onNotificationCreated={onNotificationCreated}
+                            />
+                        </PopupWrapper>
+                    </>
+                )}
+                <button
+                    className={styles.addButton}
+                    onClick={() => setNotificationCreationMode(true)}
+                >
+                    Créer
+                </button>
                 <input type="text" placeholder="Rechercher" value={searchText} onChange={(e) => onSearchTextChange(e)} />
                 <DataGrid  pageSize={pageSize}
                 onActionClick={onDeleteNotification}
@@ -76,7 +105,6 @@ function Notifications() {
                     renderIconWithCondition={(row) => "material-symbols:delete-rounded"}
                     iconStyle={(row) => { return { color: "red" } }} />
             </div>
-
         </>
     );
 }

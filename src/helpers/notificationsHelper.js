@@ -11,6 +11,13 @@ async function getNotifications (offset=0,limit=10,searchText=""){
 
 }
 
+async function createNotification (notification){
+
+    const response= await apiClient("notification/",{method:"POST",body:notification});
+    return response;
+
+}
+
 async function deleteNotification(id) {
     const response = await apiClient("notification/"+id,{method:"DELETE"});
     return response;
@@ -19,5 +26,6 @@ async function deleteNotification(id) {
 
 export default {
     getNotifications,
-    deleteNotification
+    deleteNotification,
+    createNotification
 }

@@ -2,8 +2,9 @@ import { useMemo, useRef, useState } from "react";
 import DataGrid from "../../components/DataGrid/DataGrid";
 import usersHelper from "../../helpers/usersHelper";
 import Styles from "./User.module.css";
-import PopupCreateUser from "../PopupCreateUser/PopupCreateUser";
 import { useNotification } from "../../../context/notificationContext";
+import PopupFormUser from "../../components/forms/PopupFormUser/PopupformUser.jsx"
+import PopupWrapper from "../../components/popups/PopupWrapper";
 
 function Users() {
   const [userCreationMode, setUserCreationMode] = useState(false);
@@ -13,10 +14,10 @@ function Users() {
   const {notify}= useNotification();
   const [pageSize, setPageSize] = useState(10);
   const colDefs = [
-    { field: "Email", filter: true },
-    { field: "Nom", filter: true },
-    { field: "Prenom", filter: true },
-    { field: "Role", filter: true },
+    { field: "Email", filter: false},
+    { field: "Nom", filter: false },
+    { field: "Prenom", filter: false },
+    { field: "Role", filter: false },
     { field: "Actions", filter: false },
   ];
 
@@ -71,7 +72,11 @@ function Users() {
 
   return (
     <div className={Styles.mainContainer}>
-      {userCreationMode && <PopupCreateUser onClose={() => setUserCreationMode(false)} onUserCreated={onUserCreated} />}
+      {userCreationMode && 
+      <PopupWrapper title="Créer un utilisateur" onClose={() => setUserCreationMode(false)}>
+        <PopupFormUser  onUserCreated={onUserCreated}  />
+        </PopupWrapper>
+     }
       <button className={Styles.addButton} onClick={() => setUserCreationMode(true)}>Créer</button>
       <input type="text" placeholder="Rechercher" value={searchText} onChange={(e) =>  onSearchTextChange(e)} />
       <DataGrid

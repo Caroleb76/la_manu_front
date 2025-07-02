@@ -13,7 +13,6 @@ import AboutUs from "../aboutus";
 import Profile from "./views/Profile/Profile"
 import Contracts from "./views/Contracts/Contracts"
 import Notifications from "./views/Notifications/Notifications";
-import PopupCReateUser from "./views/PopupCreateUser/PopupCreateUser"
 import { NotificaitonProvider } from "../context/notificationContext";
 import Formations from "./views/Formations/Formations";
 
@@ -26,7 +25,6 @@ createRoot(document.getElementById("root")).render(
         <Routes>
         <Route index element={<AuthGuard />} />
           <Route path="about" element={<AboutUs />} />
-             <Route path="test" element={<PopupCReateUser />} />
           <Route element={<AuthGuard />}>
             <Route path="signup" element={<Signup />} />
             <Route path="login" element={<Login />} />
