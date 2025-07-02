@@ -2,7 +2,7 @@ import DataGrid from "../../../components/DataGrid/DataGrid";
 import { useState, useEffect, useMemo } from "react";
 import contractsHelper from "../../../helpers/contractsHelper";
 import notificationsHelper from "../../../helpers/notificationsHelper";
-import styles from "./createContract.module.css";
+import styles from "./CreateContract.module.css";
 import PopupWrapper from "../../../components/popups/PopupWrapper.jsx";
 import { useNotification } from "../../../../context/notificationContext";
 
