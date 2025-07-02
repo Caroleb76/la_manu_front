@@ -60,10 +60,10 @@ export default function PopupFormTypeFormation({ onTypeFormationCreated }) {
           />
 
           <InputText
-            label="Contenu"
-            placeholder="contenu de la formation"
-            {...register("content")}
-            error={errors.content?.message}
+            label="Description"
+            placeholder="description de la formation"
+            {...register("description")}
+            error={errors.description?.message}
           />
 
 

@@ -13,7 +13,7 @@ import PopupFormTypeFormation from "../../components/forms/PopupFormTypeFormatio
 function Formations() {
     const [sessionCreationMode, setSessionCreationMode] =
         useState(false);
-    const [formationCreationMode, setFormationCreationMode] =
+    const [typeFormationCreationMode, setTypeFormationCreationMode] =
         useState(false);
     const { notify } = useNotification();
     const dataGridRef = null;
@@ -21,7 +21,13 @@ function Formations() {
     const onSessionCreated = () => {
         setSessionCreationMode(false);
         refreshDataGrid();
-        notify("La notification a bien été ajoutée", "success");
+        notify("La session de formation a bien été ajoutée", "success");
+    };
+
+     const onTypeFormationCreated = () => {
+        setTypeFormationCreationMode(false);
+        refreshDataGrid();
+        notify("Le type de formation a bien été ajouté", "success");
     };
     const colDefs = [
         { field: "Formation", filter: true },
@@ -70,8 +76,8 @@ Address       Address?   @relation(fields: [addressId], references: [id])
     return (
         <>
             <div className={Styles.buttonContainer}>
-                {formationCreationMode && (
-                    <PopupWrapper title="Créer un type de formation" onClose={() => setFormationCreationMode(false)}>
+                {typeFormationCreationMode && (
+                    <PopupWrapper title="Créer un type de formation" onClose={() => setTypeFormationCreationMode(false)}>
                         <PopupFormTypeFormation onTypeFormationCreated={onTypeFormationCreated} />
                     </PopupWrapper>
                 )}
@@ -80,7 +86,7 @@ Address       Address?   @relation(fields: [addressId], references: [id])
                         <PopupFormSession onSessionCreated={onSessionCreated} />
                     </PopupWrapper>
                 )}
-                <button className={Styles.addButton} onClick={() => setFormationCreationMode(true)}>
+                <button className={Styles.addButton} onClick={() => setTypeFormationCreationMode(true)}>
                     Créer un type de formation
                 </button>
                 <button
