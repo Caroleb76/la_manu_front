@@ -6,107 +6,106 @@ import usersHelper from "../../../helpers/usersHelper";
 import rolesHelper from "../../../helpers/rolesHelper";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { popupNotificationSchema } from "./popupNotificationSchema.js"
+import { popupNotificationSchema } from "./popupNotificationSchema.js";
 import { DevTool } from "@hookform/devtools";
 import { useNotification } from "../../../../context/notificationContext.jsx";
 import notificationsHelper from "../../../helpers/notificationsHelper.js";
-
+import {
+    convertDateToStandardString,
+    convertDateToStandardStringPlusOne,
+} from "../../../utils/date.js";
 export default function PopupFormNotification({ onNotificationCreated }) {
-  const setRoles = useState([]);
-  const {notify}=useNotification();
-  const {
-    register,
-    reset,
-    handleSubmit,
-    watch,
-    control,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(popupNotificationSchema),
-  });
- 
-  const selectedStartDate=watch("startDate")
+    const setRoles = useState([]);
+    const { notify } = useNotification();
+    const {
+        register,
+        reset,
+        handleSubmit,
+        watch,
+        control,
+        formState: { errors },
+    } = useForm({
+        resolver: zodResolver(popupNotificationSchema),
+    });
 
-  useEffect(() => {
-    async function loadRoles() {
-      const response = await rolesHelper.getRoles();
-      setRoles(response.data);
+    const selectedStartDate = watch("startDate");
 
+    useEffect(() => {
+        async function loadRoles() {
+            const response = await rolesHelper.getRoles();
+            setRoles(response.data);
+        }
+        loadRoles();
+    }, []);
 
+    async function onSubmit(data) {
+        const response = await notificationsHelper.createNotification(data);
+        if (response.success) {
+            onNotificationCreated();
+            reset();
+        } else {
+            notify(response.message, "error");
+        }
     }
-    loadRoles();
 
-  }, [])
+    return (
+        <div className={styles.borderPopup}>
+            <form action="" onSubmit={handleSubmit(onSubmit)}>
+                <section className={`${styles.grid} ${styles.popupSection}`}>
+                    <InputText
+                        label="Titre"
+                        placeholder="Titre de la notification"
+                        {...register("title")}
+                        error={errors.title?.message}
+                    />
 
+                    <InputSelect
+                        label="Priorité"
+                        {...register("priority")}
+                        error={errors.priority?.message}
+                    >
+                        <option value="">
+                            -- Sélectionner une priorité --
+                        </option>
+                        <option value="1">Haute</option>
+                        <option value="2">Moyenne</option>
+                        <option value="3">Basse</option>
+                    </InputSelect>
 
-  async function onSubmit(data) {
-    const response = await notificationsHelper.createNotification(data);
-    if (response.success) {
-      onNotificationCreated();
-      reset();
-    } else {
-      notify(response.message,"error")
-    }
-  }
+                    <InputText
+                        label="Date de publication"
+                        type="date"
+                        min={convertDateToStandardString(new Date())}
+                        {...register("startDate")}
+                        error={errors.startDate?.message}
+                    />
 
+                    <InputText
+                        label="Date d'expiration"
+                        type="date"
+                        min={
+                            selectedStartDate
+                                ? convertDateToStandardStringPlusOne(
+                                      new Date(selectedStartDate)
+                                  )
+                                : undefined
+                        }
+                        {...register("endDate")}
+                        error={errors.endDate?.message}
+                    />
+                </section>
+                <InputText
+                    label="Contenu"
+                    placeholder="contenu de la notification"
+                    {...register("content")}
+                    error={errors.content?.message}
+                />
 
-  return (
-    <div className={styles.borderPopup}>
-
-      <form action="" onSubmit={handleSubmit(onSubmit)}>
-
-        <section className={`${styles.grid} ${styles.popupSection}`}>
-
-          <InputText
-            label="Titre"
-            placeholder="Titre de la notification"
-            {...register("title")}
-            error={errors.title?.message}
-          />
-
-          <InputSelect label="Priorité"
-            {...register("priority")}
-            error={errors.priority?.message}>
-            <option value="">-- Sélectionner une priorité --</option>
-            <option value="1">Haute</option>
-            <option value="2">Moyenne</option>
-            <option value="3">Basse</option>
-          </InputSelect>
-
-
-          <InputText
-            label="Date de publication"
-            type="date"
-              min={new Date()}
-            {...register("startDate")}
-            error={errors.startDate?.message}
-
-          />
-
-          <InputText
-            label="Date d'expiration"
-            type="date"
-            min={selectedStartDate}
-            {...register("endDate")}
-            error={errors.endDate?.message}
-
-          />
-
-
-
-        </section>
-        <InputText
-          label="Contenu"
-          placeholder="contenu de la notification"
-          {...register("content")}
-          error={errors.content?.message}
-        />
-
-        <div className={styles.popupButtons}>
-          <button> Créer </button>
+                <div className={styles.popupButtons}>
+                    <button> Créer </button>
+                </div>
+                <DevTool control={control} />
+            </form>
         </div>
-        <DevTool control={control} />
-      </form>
-    </div>
-  );
+    );
 }
