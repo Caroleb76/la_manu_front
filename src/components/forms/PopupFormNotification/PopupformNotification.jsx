@@ -77,6 +77,7 @@ export default function PopupFormNotification({ onNotificationCreated }) {
           <InputText
             label="Date de publication"
             type="date"
+              min={new Date()}
             {...register("startDate")}
             error={errors.startDate?.message}
 

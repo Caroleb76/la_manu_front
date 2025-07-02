@@ -6,7 +6,7 @@ import styles from "./createContract.module.css";
 import PopupWrapper from "../../../components/popups/PopupWrapper.jsx";
 import { useNotification } from "../../../../context/notificationContext";
 
-export default function Contracts() {
+export default function CreateContract() {
     const [interventionCreationMode, setInterventionCreationMode] = useState(false);
     const colDefs = [
         { field: "Module", filter: true },

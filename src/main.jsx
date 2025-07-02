@@ -15,7 +15,7 @@ import Contracts from "./views/Contracts/Contracts"
 import Notifications from "./views/Notifications/Notifications";
 import { NotificaitonProvider } from "../context/notificationContext";
 import Formations from "./views/Formations/Formations";
-import CreateContracts from "./views/Contracts/createContract/CreateContract"
+import CreateContract from "./views/Contracts/createContract/CreateContract"
 
 createRoot(document.getElementById("root")).render(
 
@@ -38,7 +38,7 @@ createRoot(document.getElementById("root")).render(
               <Route path="formations" element={<Formations />} />
               <Route path="contracts"  >
                 <Route index element={<Contracts />} />
-                <Route path="create" element={<CreateContracts />} />
+                <Route path="create" element={<CreateContract />} />
               </Route>
 
               <Route path="profile" element={<Profile />} />
