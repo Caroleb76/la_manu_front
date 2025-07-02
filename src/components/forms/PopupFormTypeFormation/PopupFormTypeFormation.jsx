@@ -5,7 +5,7 @@ import usersHelper from "../../../helpers/usersHelper.js";
 import rolesHelper from "../../../helpers/rolesHelper.js";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { popupTypeFormationSchema } from "./popupTypeFormationSchema.js"
+import { popupFormTypeFormationSchema } from "./popupFormTypeFormationSchema.js"
 import { DevTool } from "@hookform/devtools";
 
 export default function PopupFormTypeFormation({ onTypeFormationCreated }) {
@@ -17,7 +17,7 @@ export default function PopupFormTypeFormation({ onTypeFormationCreated }) {
     control,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(popupTypeFormationSchema),
+    resolver: zodResolver(popupFormTypeFormationSchema),
   });
 
 

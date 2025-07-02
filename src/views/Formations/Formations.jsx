@@ -6,11 +6,14 @@ import { useNotification } from "../../../context/notificationContext";
 import Styles from "./Formations.module.css";
 import PopupWrapper from "../../components/popups/PopupWrapper";
 import PopupFormSession from "../../components/forms/PopupFormSession/PopupformSession.jsx"
+import PopupFormTypeFormation from "../../components/forms/PopupFormTypeFormation/PopupFormTypeFormation.jsx";
 
 
 
 function Formations() {
     const [sessionCreationMode, setSessionCreationMode] =
+        useState(false);
+    const [formationCreationMode, setFormationCreationMode] =
         useState(false);
     const { notify } = useNotification();
     const dataGridRef = null;
@@ -34,30 +37,30 @@ function Formations() {
             const offset = params.startRow;
             const pageSize = params.endRow - params.startRow;
 
-                const response = await formationsHelper.getSessions(
-                    offset,
-                    pageSize
-                );
-                /**
-             * serialNumber  String
-  startDate     DateTime?
-  endDate       DateTime?
+            const response = await formationsHelper.getSessions(
+                offset,
+                pageSize
+            );
+            /**
+         * serialNumber  String
+startDate     DateTime?
+endDate       DateTime?
 
-  formationId   String?
-  addressId     String?
+formationId   String?
+addressId     String?
 
-  Formation     Formation? @relation(fields: [formationId], references: [id])
-  Address       Address?   @relation(fields: [addressId], references: [id])
-             */
-                const rows = response.data.sessionFormations.map((session) => ({
-                    id: session.id,
-                    Formation: session.Formation.name,
-                    Numero: session.serialNumber,
-                    Début: new Date(session.startDate).toLocaleDateString(),
-                    Fin: new Date(session.endDate).toLocaleDateString(),
-                    Lieu: session.Address.city,
-                }));
-                // console.log(rows, response.data.total);
+Formation     Formation? @relation(fields: [formationId], references: [id])
+Address       Address?   @relation(fields: [addressId], references: [id])
+         */
+            const rows = response.data.sessionFormations.map((session) => ({
+                id: session.id,
+                Formation: session.Formation.name,
+                Numero: session.serialNumber,
+                Début: new Date(session.startDate).toLocaleDateString(),
+                Fin: new Date(session.endDate).toLocaleDateString(),
+                Lieu: session.Address.city,
+            }));
+            // console.log(rows, response.data.total);
 
             params.successCallback(rows, response.data.total);
 
@@ -67,12 +70,17 @@ function Formations() {
     return (
         <>
             <div className={Styles.buttonContainer}>
-                {sessionCreationMode && (
-                    <PopupWrapper title="Créer une session" onClose={() => setSessionCreationMode(false)}>
-                        <PopupFormSession  onSessionCreated={onSessionCreated} />
+                {formationCreationMode && (
+                    <PopupWrapper title="Créer un type de formation" onClose={() => setFormationCreationMode(false)}>
+                        <PopupFormTypeFormation onTypeFormationCreated={onTypeFormationCreated} />
                     </PopupWrapper>
                 )}
-                <button className={Styles.addButton} onClick={() => {}}>
+                {sessionCreationMode && (
+                    <PopupWrapper title="Créer une session" onClose={() => setSessionCreationMode(false)}>
+                        <PopupFormSession onSessionCreated={onSessionCreated} />
+                    </PopupWrapper>
+                )}
+                <button className={Styles.addButton} onClick={() => setFormationCreationMode(true)}>
                     Créer un type de formation
                 </button>
                 <button
