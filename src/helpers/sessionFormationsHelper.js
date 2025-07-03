@@ -11,7 +11,15 @@ async function getSessions (offset=0,limit=10){
 
 }
 
+async function getSessionById (sessionId){
+
+    const response= await apiClient(`SessionFormation/${sessionId}`,{method:"GET"});
+    return response;
+
+}
+
 
 export default {
-     getSessions
+     getSessions,
+     getSessionById,
 }

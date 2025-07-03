@@ -18,7 +18,14 @@ async function getUsers (props){
     return response;
 
 }
+async function getUserById (userId){
+   
+    
+    const response= await apiClient(`users/${userId}`,{method:"GET"});
+    // console.log(response)
+    return response;
 
+}
 async function createUser (user){
 
     const response= await apiClient("users/",{method:"POST",body:user});
@@ -37,5 +44,6 @@ async function blockUser (id,data){
 export default {
     getUsers,
     createUser,
-    blockUser
+    blockUser,
+    getUserById,
 }

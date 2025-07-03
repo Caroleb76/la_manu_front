@@ -14,7 +14,7 @@ className,
             <select
                 name={name}
                 value={value}
-
+defaultValue={"default"}
                 onChange={onChange}
                 {...etc}
             >
