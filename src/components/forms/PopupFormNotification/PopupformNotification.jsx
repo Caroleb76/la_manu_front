@@ -88,7 +88,7 @@ export default function PopupFormNotification({ onNotificationCreated }) {
                                 ? convertDateToStandardStringPlusOne(
                                       new Date(selectedStartDate)
                                   )
-                                : undefined
+                                : convertDateToStandardStringPlusOne(new Date())
                         }
                         {...register("endDate")}
                         error={errors.endDate?.message}

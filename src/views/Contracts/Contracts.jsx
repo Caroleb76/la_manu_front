@@ -64,7 +64,7 @@ export default function Contracts() {
 
     return (
         <>
-            <Link to="/dashboard/contracts/create" className="btn" >
+            <Link to="/dashboard/contracts/create" className="btn btn-add" >
                 Créer un contrat
             </Link>
             <div className={styles.mainContainer}>

@@ -1,11 +1,16 @@
 import apiClient from "./apiClient";
 
 
-async function getUsers (offset=0,limit=10,searchText=""){
+async function getUsers (props){
+    // offset=0,limit=10,searchText="",role=null
 
-    const params= {
-        offset,limit,searchText
-    };
+    const params = {
+  offset: props.offset ?? 0,
+  limit: props.limit ?? 10,
+   role: props.role ?? null,
+   searchText: props.searchText ?? null
+};
+
     // console.log(params);
     
     const response= await apiClient("users/",{method:"GET",params});
@@ -20,6 +25,7 @@ async function createUser (user){
     return response;
 
 }
+
 
 async function blockUser (id,data){
 
