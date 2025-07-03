@@ -24,7 +24,7 @@ export default function ContractCreateForm({ onSessionCreated }) {
             const response = await usersHelper.getUsers({ role: "FORMATEUR" });
             if (response) {
                 setFormateurs(response.data.users)
-                console.log(response.data.users)
+                // console.log(response.data.users)
             }
 
             return response
@@ -33,9 +33,8 @@ export default function ContractCreateForm({ onSessionCreated }) {
             const response = await sessionFormationsHelper.getSessions();
             if (response) {
                 setSessionsFormation(response.data.sessionFormations)
-                console.log(sessionsFormation)
+               
             }
-
             return response
         }
         getFormateurs()
@@ -190,13 +189,14 @@ export default function ContractCreateForm({ onSessionCreated }) {
                         <h2 className="title">Session de formation</h2>
                         <div className={styles.grid}>
                             {/* TODO Compléter le menu de recherche des vacataires */}
-                            {/* <InputSelect className={styles.twoColumns}
+                             <InputSelect className={styles.twoColumns}
                                 label="Session de formation">
-                                {sessionsFormation && setSessionsFormation.map((session) => (
+                                 {sessionsFormation && sessionsFormation.map((session) => (
                                     // <option value={session.id} key={session.id}>{session.Formation.name} {session.serialNumber}</option>
-                                    <option value={session.id} key={session.id}> {session.serialNumber}</option>
+                                    <option value={session.id} key={session.id}> {session.Formation.name} - {session.serialNumber}</option>
                                 ))}
-                            </InputSelect> */}
+                              
+                            </InputSelect> 
 
                             <InputText
                                 label="Date de début du contrat"
