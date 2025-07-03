@@ -10,24 +10,36 @@ import { contractCreateSchema } from "./contractCreateSchema.js"
 import { DevTool } from "@hookform/devtools";
 import DataGrid from "../../../components/DataGrid/DataGrid";
 import contractsHelper from "../../../helpers/contractsHelper";
+import sessionFormationsHelper from "../../../helpers/sessionFormationsHelper.js"
 
 export default function ContractCreateForm({ onSessionCreated }) {
     const setRoles = useState([]);
     const [reloadTrigger, setReloadTrigger] = useState(0);
     const [pageSize, setPageSize] = useState(10);
-    const [formateurs, setFormateurs] = useState(null);
-    
+    const [formateurs, setFormateurs] = useState([]);
+    const [sessionsFormation, setSessionsFormation] = useState([]);
+
     useEffect(() => {
         const getFormateurs = async () => {
-        const response = await usersHelper.getUsers({role:"FORMATEUR"});
-        if (response) {
-            setFormateurs(response)
-            console.log(response)
+            const response = await usersHelper.getUsers({ role: "FORMATEUR" });
+            if (response) {
+                setFormateurs(response.data.users)
+                console.log(response.data.users)
+            }
+
+            return response
         }
-        return response
-    }
-        const response = getFormateurs()
-        
+        const getSessionsList = async () => {
+            const response = await sessionFormationsHelper.getSessions();
+            if (response) {
+                setSessionsFormation(response.data.sessionFormations)
+                console.log(sessionsFormation)
+            }
+
+            return response
+        }
+        getFormateurs()
+        getSessionsList()
     }, [])
     const colDefs = [
         { field: "Module", filter: true },
@@ -120,7 +132,13 @@ export default function ContractCreateForm({ onSessionCreated }) {
                             {/* TODO Compléter le menu de recherche des vacataires */}
                             <InputSelect className={styles.twoColumns}
                                 label="Recherche d'un vacataire">
-                                <option value="">-- Sélectionner une priorité --</option>
+
+                                {
+                                    formateurs && formateurs.map((formateur) => (
+                                        <option value={formateur.id} key={formateur.id}>{formateur.lastName} {formateur.firstName}</option>
+                                    ))
+
+                                }
                             </InputSelect>
 
                             <InputText
@@ -172,10 +190,13 @@ export default function ContractCreateForm({ onSessionCreated }) {
                         <h2 className="title">Session de formation</h2>
                         <div className={styles.grid}>
                             {/* TODO Compléter le menu de recherche des vacataires */}
-                            <InputSelect className={styles.twoColumns}
+                            {/* <InputSelect className={styles.twoColumns}
                                 label="Session de formation">
-                                <option value="">-- Sélectionner une priorité --</option>
-                            </InputSelect>
+                                {sessionsFormation && setSessionsFormation.map((session) => (
+                                    // <option value={session.id} key={session.id}>{session.Formation.name} {session.serialNumber}</option>
+                                    <option value={session.id} key={session.id}> {session.serialNumber}</option>
+                                ))}
+                            </InputSelect> */}
 
                             <InputText
                                 label="Date de début du contrat"
