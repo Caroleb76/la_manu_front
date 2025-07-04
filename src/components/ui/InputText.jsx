@@ -1,6 +1,6 @@
-export default function InputText({name, label, type, value, onChange,error, ...etc}) {
+export default function InputText({name, label, type, value, onChange,error,className, ...etc}) {
   return (
-    <div>
+    <div className={className}>
       <label htmlFor={name}>{label}</label>
       <input type={type ? type : "text"} name={name} value={value} onChange={onChange} {...etc} />
        {error && (

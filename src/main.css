@@ -84,7 +84,13 @@ button:hover,
   background-color: var(--inactive-color);
 }
 
-
+.btn-add{
+    padding: 0.3rem;
+    font-size: 0.8rem;
+    /* min-width: 6.5rem; */
+    height: 1.5rem;
+    align-self: flex-end;
+}
 input[type=email], input[type=password], input[type=text], input[type=tel], input[type=date]{
   padding : 0.5rem 0.5rem;
   width:100%;
@@ -134,6 +140,11 @@ label {
   display : block;
   margin-bottom: 0.2rem;
   margin-left: 0.4rem;
+}
+
+a{
+  color:inherit;
+ background-color:inherit;
 }
 
 /* grid styling */
@@ -241,3 +252,4 @@ font-size: 12px;
   from { opacity: 0; transform: translateY(-10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+

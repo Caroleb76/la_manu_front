@@ -1,6 +1,6 @@
 export default function InputSelect({
     label,
-
+className,
     value,
     name,
     onChange,
@@ -9,12 +9,12 @@ export default function InputSelect({
     ...etc
 }) {
     return (
-        <div>
+        <div className={className}>
             <label htmlFor={name}>{label}</label>
             <select
                 name={name}
                 value={value}
-
+defaultValue={"default"}
                 onChange={onChange}
                 {...etc}
             >

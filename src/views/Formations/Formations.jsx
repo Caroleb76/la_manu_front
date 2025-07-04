@@ -6,11 +6,14 @@ import { useNotification } from "../../../context/notificationContext";
 import Styles from "./Formations.module.css";
 import PopupWrapper from "../../components/popups/PopupWrapper";
 import PopupFormSession from "../../components/forms/PopupFormSession/PopupformSession.jsx"
+import PopupFormTypeFormation from "../../components/forms/PopupFormTypeFormation/PopupFormTypeFormation.jsx";
 
 
 
 function Formations() {
     const [sessionCreationMode, setSessionCreationMode] =
+        useState(false);
+    const [typeFormationCreationMode, setTypeFormationCreationMode] =
         useState(false);
     const { notify } = useNotification();
     const [selectedSession, setSelectedSession] = useState(null);
@@ -76,6 +79,11 @@ function Formations() {
     return (
         <>
             <div className={Styles.buttonContainer}>
+                {typeFormationCreationMode && (
+                    <PopupWrapper title="Créer un type de formation" onClose={() => setTypeFormationCreationMode(false)}>
+                        <PopupFormTypeFormation onTypeFormationCreated={onTypeFormationCreated} />
+                    </PopupWrapper>
+                )}
                 {sessionCreationMode && (
                     <PopupWrapper title={selectedSession ? "Modifier la session" : "Créer une session"}
                         onClose={() => onClosePopup()}>

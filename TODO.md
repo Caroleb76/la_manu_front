@@ -8,6 +8,7 @@
 
 # Priority Medium
 - Sortable columns not working
+- voir pour les dates de publication des notifications ( date du jour en mini et pour expiration date du jour +1 en mini)
 
 
 # Priority Low
