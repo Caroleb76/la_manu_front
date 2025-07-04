@@ -185,6 +185,54 @@ font-size: 12px;
   animation: fadeIn 0.3s ease;
 }
 
+.searchDropdown{
+  padding: 0px;
+  margin: 0;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  list-style-type: none;
+  border-radius: var(--radius);
+  animation: fadeIn 0.3s ease;
+  z-index: 9999;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  color: black;
+  cursor: pointer;
+}
+.searchDropdown li{
+  padding: 0.5rem;
+  font-size: 0.8rem;
+}
+.searchDropdown li:hover{
+  background-color: var(--active-menu-item-bg-color);
+}
+
+
+.spinner{
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+.spinner::after{
+  content: "";
+  border: 5px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 5px solid var(--primary-color);
+  width: 15px;
+  height: 15px;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 .notification.success { background: #28a745; }
 .notification.error { background: #dc3545; }
 .notification.info { background: #007bff; }

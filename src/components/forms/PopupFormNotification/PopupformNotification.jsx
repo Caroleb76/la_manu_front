@@ -1,9 +1,9 @@
 import styles from "./PopupFormNotification.module.css";
-import InputText from "../../ui/InputText";
-import InputSelect from "../../ui/InputSelect";
+import InputText from "../../ui/InputText.jsx";
+import InputSelect from "../../ui/InputSelect.jsx";
 import { useEffect, useState } from "react";
-import usersHelper from "../../../helpers/usersHelper";
-import rolesHelper from "../../../helpers/rolesHelper";
+import usersHelper from "../../../helpers/usersHelper.js";
+import rolesHelper from "../../../helpers/rolesHelper.js";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { popupNotificationSchema } from "./popupNotificationSchema.js"
@@ -11,7 +11,7 @@ import { DevTool } from "@hookform/devtools";
 import { useNotification } from "../../../../context/notificationContext.jsx";
 import notificationsHelper from "../../../helpers/notificationsHelper.js";
 
-export default function PopupFormNotification({ onNotificationCreated }) {
+export default function PopupformNotification({ onNotificationCreated }) {
   const setRoles = useState([]);
   const {notify}=useNotification();
   const {
@@ -27,16 +27,6 @@ export default function PopupFormNotification({ onNotificationCreated }) {
  
   const selectedStartDate=watch("startDate")
 
-  useEffect(() => {
-    async function loadRoles() {
-      const response = await rolesHelper.getRoles();
-      setRoles(response.data);
-
-
-    }
-    loadRoles();
-
-  }, [])
 
 
   async function onSubmit(data) {

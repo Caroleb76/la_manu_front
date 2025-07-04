@@ -4,7 +4,8 @@ import notificationsHelper from "../../helpers/notificationsHelper";
 import styles from "./Notifications.module.css";
 import PopupWrapper from "../../components/popups/PopupWrapper.jsx";
 import { useNotification } from "../../../context/notificationContext";
-import PopupFormNotification from "../../components/forms/PopupFormNotification/PopupformNotification.jsx";
+import PopupformNotification from "../../components/forms/PopupFormNotification/PopupformNotification.jsx";
+
 
 function Notifications() {
     const [notificationCreationMode, setNotificationCreationMode] =
@@ -85,7 +86,7 @@ function Notifications() {
                         title="Créer une notification"
                             onClose={() => setNotificationCreationMode(false)}
                         >
-                            <PopupFormNotification
+                            <PopupformNotification
                                 onNotificationCreated={onNotificationCreated}
                             />
                         </PopupWrapper>
@@ -102,7 +103,7 @@ function Notifications() {
                 onActionClick={onDeleteNotification}
                 colDefs={colDefs} data={getDataSource}
 
-                    renderIconWithCondition={(row) => "material-symbols:delete-rounded"}
+                    renderIconWithCondition={(row) => "ic:baseline-delete-outline"}
                     iconStyle={(row) => { return { color: "red" } }} />
             </div>
         </>

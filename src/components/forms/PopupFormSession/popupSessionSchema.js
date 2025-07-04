@@ -3,31 +3,31 @@ import { z } from 'zod';
 export const popupSessionSchema = z.object({
 
 
-  title: z
+  formationId: z
     .string()
-    .min(2, 'Le titre doit contenir au moins 2 caractères.')
-    .max(50, 'Le titre est trop long.'),
+    .min(2, 'Le formation choisie est requise.')
+    .max(250),
 
-  priority: z
-    .coerce.number()
+  serialNumber: z
+    .coerce.string()
     .min(1, 'Une priorité est obligatoire')
-    .max(3)
-    .nonnegative(),
+    .max(200, 'Le contenu est trop long.'),
 
-
-  startDate: z
-    .string()
-    .min(1, 'La date de publication est requise.'),
-
-  endDate: z
+addressId: z
   .string()
-  .min(1, 'La date de fin est requise.'),
+  .min(2, 'Le contenu doit contenir au moins 2 caractères.')
+  .max(250, 'Le contenu est trop long.'),
 
 
-  content: z
-    .string()
-    .min(2, 'Le contenu doit contenir au moins 2 caractères.')
-    .max(250, 'Le contenu est trop long.'),
+startDate: z
+  .coerce.date({
+    errorMap: () => ({ message: "La date de début est invalide." })
+  }),
+
+endDate: z
+  .coerce.date({
+    errorMap: () => ({ message: "La date de fin est invalide." })
+  }),
 
 
 });

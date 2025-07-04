@@ -11,7 +11,15 @@ async function getSessions (offset=0,limit=10){
 
 }
 
+async function createSessionFormation(sessionFormation){
+
+    const response= await apiClient("SessionFormation/",{method:"POST",body:sessionFormation});
+    return response;
+    
+}
+
 
 export default {
-     getSessions
+     getSessions,
+     createSessionFormation
 }

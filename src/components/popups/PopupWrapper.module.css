@@ -14,11 +14,12 @@
     height: auto;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    /* justify-content: center; */
     align-items: center;
-   background-color: white;
-   padding: 3rem;
-
+    background-color: white;
+    padding: 3rem;
+    overflow-y: auto;
+    max-height: 70%;
   }
 
   .blockUI{
