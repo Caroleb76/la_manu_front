@@ -1,113 +1,107 @@
 import DataGrid from "../../components/DataGrid/DataGrid";
 import { useState, useEffect, useMemo, useRef } from "react";
-import formationsHelper from "../../helpers/sessionFormationsHelper";
+import formationHelper from "../../helpers/formationHelper";
 import notificationsHelper from "../../helpers/notificationsHelper";
 import { useNotification } from "../../../context/notificationContext";
 import Styles from "./Formations.module.css";
 import PopupWrapper from "../../components/popups/PopupWrapper";
-import PopupFormSession from "../../components/forms/PopupFormSession/PopupformSession.jsx"
+import PopupFormSession from "../../components/forms/PopupFormSession/PopupformSession.jsx";
 import PopupFormTypeFormation from "../../components/forms/PopupFormTypeFormation/PopupFormTypeFormation.jsx";
 
+export default function Formations() {
+    const [formationCreationMode, setFormationCreationMode] = useState(false);
 
-
-function Formations() {
-    const [sessionCreationMode, setSessionCreationMode] =
-        useState(false);
-    const [typeFormationCreationMode, setTypeFormationCreationMode] =
-        useState(false);
     const { notify } = useNotification();
-    const [selectedSession, setSelectedSession] = useState(null);
+    const [selectedFormation, setSelectedFormation] = useState(null);
     const popuRef = useRef(null);
-    let sessions = [];
-    const onSessionCreated = () => {
-        setSessionCreationMode(false);
+    let formations = [];
+    const onFormationCreated = () => {
+        setFormationCreationMode(false);
         refreshDataGrid();
-        notify("La session a bien été ajoutée", "success");
+        
     };
     const colDefs = [
-        { field: "Formation", filter: true },
-        { field: "Numero", filter: true },
-        { field: "Début", filter: true },
-        { field: "Fin", filter: false },
-        { field: "Lieu", filter: false },
+        { field: "Nom", filter: true },
+        { field: "Description", filter: false },
         { field: "Actions", filter: false },
     ];
 
     const refreshDataGrid = () => {
-        setReloadTrigger(prev => prev + 1);
-    }
+        setReloadTrigger((prev) => prev + 1);
+    };
     const [reloadTrigger, setReloadTrigger] = useState(0);
-    const getDataSource = useMemo(() => ({
+    const getDataSource = useMemo(
+        () => ({
+            getRows: async (params) => {
+                const offset = params.startRow;
+                const pageSize = params.endRow - params.startRow;
 
-        getRows: async (params) => {
+                const response = await formationHelper.getFormations(
+                    offset,
+                    pageSize
+                );
+                console.log(response);
+                formations = response.data.formations;
+                const rows = response.data.formations.map((formation) => ({
+                    id: formation.id,
+                    Nom: formation.name,
+                    Description: formation.description,
+                }));
+console.log(rows, response.data.total);
+                params.successCallback(rows, response.data.total);
+            },
+        }),
+        [reloadTrigger]
+    );
 
-            const offset = params.startRow;
-            const pageSize = params.endRow - params.startRow;
-
-            const response = await formationsHelper.getSessions(
-                offset,
-                pageSize
-            );
-            sessions = response.data.sessionFormations;
-            const rows = response.data.sessionFormations.map((session) => ({
-                id: session.id,
-                Formation: session.Formation.name,
-                Début: new Date(session.startDate).toLocaleDateString(),
-                Fin: new Date(session.endDate).toLocaleDateString(),
-                Lieu: session.Address.city,
-                Numero: session.serialNumber,
-            }));
-            // console.log(rows, response.data.total);
-
-            params.successCallback(rows, response.data.total);
-
-        },
-    }), [reloadTrigger]);
-
-    const onModifySession = (session) => {
-        const selectedSession = sessions.find((s) => s.id === session.id);
-        selectedSession.startDate = new Date(selectedSession.startDate).toISOString().split("T")[0];
-        selectedSession.endDate = new Date(selectedSession.endDate).toISOString().split("T")[0];
-        setSelectedSession(selectedSession);
+    const onModifyFormation = (formation) => {
+        const selectedFormation = formations.find((s) => s.id === formation.id);
+        setSelectedFormation(selectedFormation);
         popuRef.current.click();
-    }
+    };
     const onClosePopup = () => {
-        setSessionCreationMode(false)
-        setSelectedSession(null);
-    }
+        setFormationCreationMode(false);
+        setSelectedFormation(null);
+    };
 
     return (
         <>
             <div className={Styles.buttonContainer}>
-                {typeFormationCreationMode && (
-                    <PopupWrapper title="Créer un type de formation" onClose={() => setTypeFormationCreationMode(false)}>
-                        <PopupFormTypeFormation onTypeFormationCreated={onTypeFormationCreated} />
-                    </PopupWrapper>
-                )}
-                {sessionCreationMode && (
-                    <PopupWrapper title={selectedSession ? "Modifier la session" : "Créer une session"}
-                        onClose={() => onClosePopup()}>
-                        <PopupFormSession onSessionCreated={onSessionCreated} session={selectedSession} />
+                {formationCreationMode && (
+                    <PopupWrapper
+                        title={
+                            selectedFormation
+                                ? "Modifier la formation"
+                                : "Créer une formation"
+                        }
+                        onClose={() => onClosePopup()}
+                    >
+                        <PopupFormTypeFormation
+                            onFormationCreated={onFormationCreated}
+                            formation={selectedFormation}
+                        />
                     </PopupWrapper>
                 )}
 
                 <button
                     className={Styles.addButton}
                     ref={popuRef}
-                    onClick={() => setSessionCreationMode(true)}
+                    onClick={() => setFormationCreationMode(true)}
                 >
-                    Créer une session
+                    Créer un type de formation
                 </button>
             </div>
             <div className={Styles.mainContainer}>
-
-                <DataGrid colDefs={colDefs} data={getDataSource}
-                    onActionClick={(session) => { onModifySession(session) }}
-                    renderIconWithCondition={(session) => "ic:outline-edit"}
+                <DataGrid
+                    colDefs={colDefs}
+                    data={getDataSource}
+                    onActionClick={(formation) => {
+                        onModifyFormation(formation);
+                    }}
+                    renderIconWithCondition={(formation) => "ic:outline-edit"}
                 />
             </div>
         </>
     );
 }
 
-export default Formations;

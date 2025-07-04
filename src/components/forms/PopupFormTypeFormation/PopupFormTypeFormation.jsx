@@ -7,8 +7,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { popupFormTypeFormationSchema } from "./popupFormTypeFormationSchema.js"
 import { DevTool } from "@hookform/devtools";
+import formationHelper from "../../../helpers/formationHelper.js";
+import { useNotification } from "../../../../context/notificationContext.jsx";
 
-export default function PopupFormTypeFormation({ onTypeFormationCreated }) {
+export default function PopupFormTypeFormation({ onFormationCreated, formation }) {
   const setRoles = useState([]);
   const {
     register,
@@ -17,10 +19,11 @@ export default function PopupFormTypeFormation({ onTypeFormationCreated }) {
     control,
     formState: { errors },
   } = useForm({
+    values: formation,
     resolver: zodResolver(popupFormTypeFormationSchema),
   });
 
-
+  const {notify}=useNotification();
 
   useEffect(() => {
     async function loadRoles() {
@@ -35,9 +38,18 @@ export default function PopupFormTypeFormation({ onTypeFormationCreated }) {
 
 
   async function onSubmit(data) {
-    const response = await usersHelper.createTypeFormation(data);
+    let response=null;
+    if(formation){ // edit
+      data.id=formation.id
+      response = await formationHelper.updateFormation(data);
+
+    }else{ // creation
+
+      response = await formationHelper.createFormation(data);
+    }
     if (response.success) {
-      onTypeFormationCreated();
+      formation ? notify("Formation modifiée", "success"):notify("La formation a bien été ajoutée", "success");
+      onFormationCreated();
       reset();
     } else {
       alert(response.message);
@@ -71,7 +83,7 @@ export default function PopupFormTypeFormation({ onTypeFormationCreated }) {
 
 
         <div className={styles.popupButtons}>
-          <button> Créer </button>
+          <button> {formation ? "Modifier" : "Créer"} </button>
         </div>
         <DevTool control={control} />
       </form>

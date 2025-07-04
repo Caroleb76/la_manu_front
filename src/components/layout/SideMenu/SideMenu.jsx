@@ -78,6 +78,24 @@ function SideMenu() {
             </div>
           </NavLink>
 
+
+          <NavLink
+            to="/dashboard/sessions"
+            className={({ isActive }) =>
+              ` ${styles.menuItem} ${isActive ? styles.active : ""}`
+            }
+          >
+            <div className={styles.menuItemContent}>
+              <Icon
+                className={styles.menuIcon}
+                icon="hugeicons:calendar-03"
+                width={"1.8rem"}
+                fill={"green"}
+              />
+              <p>Sessions de formation</p>
+            </div>
+          </NavLink>
+
           <NavLink
             to="/dashboard/contracts"
             className={({ isActive }) =>
