@@ -9,14 +9,20 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import InputFile from "../../ui/InputFile"
 import { handleNameInitials } from "../../../utils/initials.js";
-
+import { useNotification } from "../../../../context/notificationContext.jsx";
 
 import { profileSchema } from "./profileSchema"; // Make sure this path matches your project
+import usersHelper from "../../../helpers/usersHelper.js";
+import { set } from "zod/v4-mini";
 
 export default function ProfileForm() {
-  const { getUser } = useContext(UserContext);
+  const { getUser, updateUser } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true);
   const [initials, setInitials] = useState("")
+  const [profilePicture, setProfilePicture] = useState(null);
+  const [files, setFiles] = useState([]);
+  const [user, setUser] = useState(null);
+  const serverUrl = import.meta.env.VITE_SERVER_URL;
 
   const {
     register,
@@ -29,15 +35,14 @@ export default function ProfileForm() {
   });
 
   const hasPermisB = watch("permisB")
-
+  const { notify } = useNotification();
 
   useEffect(() => {
     async function loadUser() {
       const userData = await getUser();
-      console.log(userData)
+      // console.log(userData)
       if (userData) {
-        const formattedInitials = handleNameInitials(userData.firstName + " " + userData.lastName)
-        setInitials(formattedInitials)
+
         reset({
           ...userData,
           birthDate: convertDateToStandardString(new Date(userData.birthDate)),
@@ -47,24 +52,65 @@ export default function ProfileForm() {
           profilePicture: "",
           diploma: "",
         });
+        setUser(userData);
+        const formattedInitials = handleNameInitials(userData.firstName + " " + userData.lastName)
+        console.log(formattedInitials);
+
+        setInitials(formattedInitials)
       }
       setIsLoading(false);
     }
     loadUser();
   }, [getUser, reset]);
 
+  const onSubmit = async (data) => {
+    const formData = new FormData();
+    console.log("Form data:", data);
+
+    const { profilePicture, carteGrise, diplomeFile, ...userData } = data;
+
+    formData.append("user", JSON.stringify(userData));
+
+
+    files.forEach((fileObj) => {
+      formData.append(fileObj.name, fileObj.file);
+    });
+
+    try {
+      const response = await usersHelper.updateUser(user.id, formData);
+      console.log("Update response:", response);
+      notify("Profil mis à jour", "success");
+      updateUser(userData);
+         const formattedInitials = handleNameInitials(userData.firstName + " " + userData.lastName)
+        console.log(formattedInitials);
+
+        setInitials(formattedInitials)
+
+    } catch (error) {
+      console.error("Update error:", error);
+    }
+  };
+
   if (isLoading) return <p>Chargement...</p>;
 
   return (
     <div>
-      <form onSubmit={handleSubmit((data) => console.log(data))}>
+      <form onSubmit={handleSubmit((data) => onSubmit(data))}>
         <section className={`${styles.grid} ${styles.profileSection}`}>
           <div className={styles.profileIconTitleWrapper}>
-            <input hidden type="file" id="avatarFile" {...register("avatar")} />
+            <input hidden type="file" id="avatarFile" accept="image/*" onChange={(e) => {
+              console.log("photo", e.target.files[0]);
+              setProfilePicture(e.target.files[0]);
+              setFiles(prev => [...prev, { name: "profilePicture", file: e.target.files[0] }]);
+            }} />
             <label htmlFor="avatarFile">
               <div className={styles.profileIconWrapper} >
                 <div className={styles.profileIcon} >
-                  <p>{initials}</p>
+                  {profilePicture ?
+                    <img className={styles.avatarImage} src={URL.createObjectURL(profilePicture)} alt="avatar" />
+                    : user.profilePicture ?
+                      <img className={styles.avatarImage} src={serverUrl + user.profilePicture} alt="avatar" /> :
+                      <p>{initials}</p>}
                 </div>
               </div>
             </label>

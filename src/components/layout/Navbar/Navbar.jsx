@@ -5,20 +5,23 @@ import { useNavigate } from "react-router";
 import { handleNameInitials } from "../../../utils/initials";
 function Navbar() {
   const { signout, getUser } = useContext(UserContext);
-  const [user, setUser] = useState(null);
   const [dropdown, setDropdown] = useState(false);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const wrapperRef = useRef(null);
-
+  const serverUrl = import.meta.env.VITE_SERVER_URL;
   useEffect(() => {
-    getUser().then((user) => {
+
+     getUser().then((user) => {
       let initials = handleNameInitials(user.firstName+" "+user.lastName); //TODO get full name
       user.initials = initials;
       
 
       setUser(user);
     });
-  }, []);
+
+
+  }, [user]);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -45,12 +48,17 @@ function Navbar() {
           onClick={() => setDropdown(!dropdown)}
           ref={wrapperRef}
         >
-          <p>{user?.initials}</p>
+          {
+            user?.profilePicture ? (
+              <img src={serverUrl + user.profilePicture} alt="avatar" />
+            ) : (
+              <p>{user?.initials}</p>
+            )
+          }
           {dropdown && (
             <div
-              className={`${styles.dropdownContent}, ${
-                dropdown ? styles.dropdownVisible : ""
-              }`}
+              className={`${styles.dropdownContent}, ${dropdown ? styles.dropdownVisible : ""
+                }`}
             >
               <div className={styles.dropdownItem}>
                 <p onClick={handleLogout}>Déconnexion</p>

@@ -1,39 +1,41 @@
 import { TOKEN_KEY } from "../utils/constants";
 
 // api
-const apiUrl= import.meta.env.VITE_API_URL;
+const apiUrl = import.meta.env.VITE_API_URL;
 
 
-async function apiClient(endpoint,{method="GET",headers=[],body,params}={}){
+async function apiClient(endpoint, { method = "GET", headers = [], body, params } = {}) {
     let url = `${apiUrl}/${endpoint}`;
 
-    const token= localStorage.getItem(TOKEN_KEY);
+    const token = localStorage.getItem(TOKEN_KEY);
 
-    if(params){
-        const query= new URLSearchParams(params).toString();
-        url+= `?${query}`;
+    if (params) {
+        const query = new URLSearchParams(params).toString();
+        url += `?${query}`;
     }
 
-    const config={
+    const config = {
         method,
-        headers:{
-            "Content-Type":"application/json",
+        headers: {
+            "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`,
             ...headers
         },
-        body: body? JSON.stringify(body) : undefined
+        body: body ? body instanceof FormData  ? body : JSON.stringify(body) : undefined
     };
-
+    if (config.body instanceof FormData) {
+        delete config.headers['Content-Type'];
+    }
     try {
-        const response = await fetch(url,config);
+        const response = await fetch(url, config);
         // if(!response.ok){
         //     const errorData=await response.json();
         //     throw new Error(errorData.data.message??"API Error");
         // }
-        const json= await response.json();
+        const json = await response.json();
         return json;
     } catch (error) {
-        console.error(`API Error [${method} ${url}]:`,error);
+        console.error(`API Error [${method} ${url}]:`, error);
         throw error;
     }
 }

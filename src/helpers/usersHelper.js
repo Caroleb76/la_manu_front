@@ -48,9 +48,16 @@ async function blockUser (id,data){
 
 }
 
+async function updateUser (id,data){
+    const response= await apiClient("users/"+id,{method:"POST",body:data});
+    return response;
+
+}
+
 export default {
     getUsers,
     createUser,
     blockUser,
     getUserById,
+    updateUser
 }
