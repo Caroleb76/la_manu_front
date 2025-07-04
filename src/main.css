@@ -183,7 +183,7 @@ font-size: 12px;
 /* notification styling */
 .notification-container {
   position: fixed;
-  top: 20px;
+  top: 50px;
   right: 20px;
   z-index: 9999;
 }
