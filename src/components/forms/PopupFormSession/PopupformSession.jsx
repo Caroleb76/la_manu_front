@@ -169,10 +169,12 @@ export default function PopupFormSession({ onSessionCreated, session }) {
 
           />
           <div style={{ display: "flex", gap: "0.5rem", alignItems: "flex-end" }}>
+
             <SearchDropDown label="Lieu" name="addressId"
               options={addressesOptions}
-              valueField={"label"}
+              //asd
               onChangeParam={(e) => { onAddressChange(e.target.value) }}
+              valueField={"label"}
               onSelect={(a) => {
                 console.log(a);
                 setSelectedAddress(a);
@@ -180,7 +182,7 @@ export default function PopupFormSession({ onSessionCreated, session }) {
                 setAddressSearchText(a.city);
                 setAddressesOptions([])
               }}
-              lodaing={loading}
+              loading={loading}
               value={addressSearchText}
               {...register("addressId")} />
 

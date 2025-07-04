@@ -1,5 +1,5 @@
 
-export default function SearchDropDown({name, label, type, value="", onChange,error, options,valueField=null, onSelect, onChangeParam,lodaing=false, ...etc}) {
+export default function SearchDropDown({name, label, type, value="", onChange,error, options,valueField=null, onSelect, onChangeParam,loading=false, ...etc}) {
   return (
     <div style={{ position: "relative" }}>
       <label htmlFor={name}>{label}</label>
@@ -13,7 +13,7 @@ export default function SearchDropDown({name, label, type, value="", onChange,er
           ))}
         </ul>
       )}
-        {lodaing && <div className="spinner"></div>}
+        {loading && <div className="spinner"></div>}
        {error && (
         <p className="inputError">
           {error}
