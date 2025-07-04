@@ -7,8 +7,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { popupFormTypeFormationSchema } from "./popupFormTypeFormationSchema.js"
 import { DevTool } from "@hookform/devtools";
+import formationHelper from "../../../helpers/formationHelper.js";
 
-export default function PopupFormTypeFormation({ onTypeFormationCreated }) {
+export default function PopupFormTypeFormation({ onFormationCreated, formation }) {
   const setRoles = useState([]);
   const {
     register,
@@ -17,6 +18,7 @@ export default function PopupFormTypeFormation({ onTypeFormationCreated }) {
     control,
     formState: { errors },
   } = useForm({
+    values: formation,
     resolver: zodResolver(popupFormTypeFormationSchema),
   });
 
@@ -35,9 +37,9 @@ export default function PopupFormTypeFormation({ onTypeFormationCreated }) {
 
 
   async function onSubmit(data) {
-    const response = await usersHelper.createTypeFormation(data);
+    const response = await formationHelper.createFormation(data);
     if (response.success) {
-      onTypeFormationCreated();
+      onFormationCreated();
       reset();
     } else {
       alert(response.message);

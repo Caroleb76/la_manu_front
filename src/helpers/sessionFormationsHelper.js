@@ -25,10 +25,17 @@ async function createSessionFormation(sessionFormation){
     return response;
     
 }
+async function updateSessionFormation(sessionFormation){
+    console.log("SessionFormation from helper",sessionFormation);
+    const response= await apiClient(`SessionFormation/${sessionFormation.id}`,{method:"PUT",body:sessionFormation});
+    return response;
+    
+}
 
 
 export default {
      getSessions,
      getSessionById,
-     createSessionFormation
+     createSessionFormation,
+     updateSessionFormation
 }
