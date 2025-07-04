@@ -4,7 +4,7 @@ import InputCheckbox from "../../ui/InputCheckbox";
 import InputSelect from "../../ui/InputSelect";
 import { useContext, useEffect, useState, } from "react";
 import { UserContext } from "../../../../context/userContext.jsx";
-import { convertDateToStandardString } from "../../../utils/dates.js";
+import { convertDateToStandardString } from "../../../utils/date.js";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import InputFile from "../../ui/InputFile"
