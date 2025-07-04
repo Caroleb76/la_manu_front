@@ -64,10 +64,12 @@ export default function Contracts() {
 
     return (
         <>
-            <Link to="/dashboard/contracts/create" className="btn btn-add" >
+         
+            <div className={styles.mainContainer}>
+   <Link to="/dashboard/contracts/create" className="btn btn-add" >
                 Créer un contrat
             </Link>
-            <div className={styles.mainContainer}>
+
                 <input type="text" placeholder="Rechercher" value={searchText} onChange={(e) => onSearchTextChange(e)} />
                 <DataGrid pageSize={pageSize} colDefs={colDefs} data={getDataSource}
                 />

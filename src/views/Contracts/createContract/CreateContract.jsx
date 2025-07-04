@@ -13,7 +13,7 @@ export default function CreateContract() {
 
     const [reloadTrigger, setReloadTrigger] = useState(0);
     const [searchText, setSearchText] = useState("");
- 
+
 
     const onSearchTextChange = (e) => {
         setSearchText(e.target.value);
@@ -40,9 +40,21 @@ export default function CreateContract() {
     return (
         <>
             <div className={styles.mainContainer}>
-                <ContractCreateForm onSessionCreated={() => { }} />
-                
-               
+                {interventionCreationMode && (
+                    <>
+                        <PopupWrapper
+                            title="Créer une notification"
+                            onClose={() => setInterventionCreationMode(false)}
+                        >
+                            <PopupformNotification
+                                onNotificationCreated={onInterventionCreated}
+                            />
+                        </PopupWrapper>
+                    </>
+                )}
+                <ContractCreateForm onSessionCreated={() => { }} showPopup={setInterventionCreationMode(true)} />
+
+
             </div>
 
         </>

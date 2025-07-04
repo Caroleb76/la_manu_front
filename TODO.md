@@ -1,5 +1,7 @@
 # En cours:
-- popup création type formation en cours (carole)
+- le 4/07 popup creation intervention à finir dans la page créer contrat
+a faire interface de creation de module de formation
+a faire interface de creation de catégorie d'intervention
 
 
 # Priority High

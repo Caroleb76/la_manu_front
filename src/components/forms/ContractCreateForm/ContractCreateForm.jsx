@@ -12,16 +12,16 @@ import DataGrid from "../../../components/DataGrid/DataGrid";
 import contractsHelper from "../../../helpers/contractsHelper";
 import sessionFormationsHelper from "../../../helpers/sessionFormationsHelper.js"
 
-export default function ContractCreateForm({ onSessionCreated }) {
+export default function ContractCreateForm({ onSessionCreated, showPopup }) {
     const setRoles = useState([]);
     const [reloadTrigger, setReloadTrigger] = useState(0);
     const [pageSize, setPageSize] = useState(10);
     const [formateurs, setFormateurs] = useState([]);
     const [sessionsFormation, setSessionsFormation] = useState([]);
     const [currentFormateurId, setCurrentFormateurId] = useState(null);
-     const [currentFormateur, setCurrentFormateur] = useState(null);
- const [currentSessionId, setCurrentSessionId] = useState(null);
-     const [currentSession, setCurrentSession] = useState(null);
+    const [currentFormateur, setCurrentFormateur] = useState(null);
+    const [currentSessionId, setCurrentSessionId] = useState(null);
+    const [currentSession, setCurrentSession] = useState(null);
 
     const handleChangeFormateur = (event) => {
         setCurrentFormateurId(event.target.value)
@@ -67,9 +67,9 @@ export default function ContractCreateForm({ onSessionCreated }) {
 
         }
         getFormateurData()
-    },[currentFormateurId])
+    }, [currentFormateurId])
 
-      useEffect(() => {
+    useEffect(() => {
         const getSessionData = async () => {
             const response = await sessionFormationsHelper.getSessionById(currentSessionId);
             console.log(response)
@@ -82,7 +82,7 @@ export default function ContractCreateForm({ onSessionCreated }) {
 
         }
         getSessionData()
-    },[currentSessionId])
+    }, [currentSessionId])
 
     const colDefs = [
         { field: "Module", filter: true },
@@ -137,14 +137,14 @@ export default function ContractCreateForm({ onSessionCreated }) {
         formState: { errors },
     } = useForm({
         resolver: zodResolver(contractCreateSchema),
-        values:{
-            lastName:currentFormateur ? currentFormateur.lastName : "",
-            firstName:currentFormateur ? currentFormateur.firstName : "",
+        values: {
+            lastName: currentFormateur ? currentFormateur.lastName : "",
+            firstName: currentFormateur ? currentFormateur.firstName : "",
             address: currentFormateur ? currentFormateur.address.address : "",
             postalCode: currentFormateur ? currentFormateur.address.postalCode : "",
             city: currentFormateur ? currentFormateur.address.city : "",
-            startDate: currentSession ? new Date(currentSession.startDate).toLocaleDateString(): "",
-            endDate: currentSession ? new Date(currentSession.endDate).toLocaleDateString(): "",
+            startDate: currentSession ? new Date(currentSession.startDate).toLocaleDateString() : "",
+            endDate: currentSession ? new Date(currentSession.endDate).toLocaleDateString() : "",
         }
     });
 
@@ -248,7 +248,7 @@ export default function ContractCreateForm({ onSessionCreated }) {
                         <div className={styles.grid}>
                             {/* TODO Compléter le menu de recherche des vacataires */}
                             <InputSelect className={styles.twoColumns}
-                                label="Session de formation" 
+                                label="Session de formation"
                                 onChange={handleChangeSession}>
                                 {sessionsFormation && sessionsFormation.map((session) => (
 
@@ -291,7 +291,7 @@ export default function ContractCreateForm({ onSessionCreated }) {
                 <section>
                     <div className={styles.interventionTitle}>
                         <h2 className="title">Interventions</h2>
-                        <button className={styles.btnPlus}> + </button>
+                        <button type="button" className={styles.btnPlus} onClick={showPopup}> + </button>
                     </div>
                     <DataGrid pageSize={pageSize} colDefs={colDefs} data={getDataSource}
                     />
