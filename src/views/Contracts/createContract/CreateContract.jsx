@@ -54,7 +54,7 @@ export default function CreateContract() {
                 )}
                 <ContractCreateForm
                     onSessionCreated={() => {}}
-                    showPopup={setInterventionCreationMode(true)}
+                    showPopup={() => setInterventionCreationMode(true)}
                 />
             </div>
         </>

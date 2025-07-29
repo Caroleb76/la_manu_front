@@ -13,7 +13,7 @@ import contractsHelper from "../../../helpers/contractsHelper";
 import sessionFormationsHelper from "../../../helpers/sessionFormationsHelper.js"
 
 export default function ContractCreateForm({ onSessionCreated, showPopup }) {
-    const setRoles = useState([]);
+    const [roles, setRoles] = useState([]);
     const [reloadTrigger, setReloadTrigger] = useState(0);
     const [pageSize, setPageSize] = useState(10);
     const [formateurs, setFormateurs] = useState([]);
@@ -137,14 +137,14 @@ export default function ContractCreateForm({ onSessionCreated, showPopup }) {
         formState: { errors },
     } = useForm({
         resolver: zodResolver(contractCreateSchema),
-        values: {
-            lastName: currentFormateur ? currentFormateur.lastName : "",
-            firstName: currentFormateur ? currentFormateur.firstName : "",
-            address: currentFormateur ? currentFormateur.address.address : "",
-            postalCode: currentFormateur ? currentFormateur.address.postalCode : "",
-            city: currentFormateur ? currentFormateur.address.city : "",
-            startDate: currentSession ? new Date(currentSession.startDate).toLocaleDateString() : "",
-            endDate: currentSession ? new Date(currentSession.endDate).toLocaleDateString() : "",
+        defaultValues: {
+            lastName:  "",
+            firstName:  "",
+            address:  "",
+            postalCode:  "",
+            city: "",
+            startDate: "",
+            endDate:  "",
         }
     });
 
@@ -160,6 +160,20 @@ export default function ContractCreateForm({ onSessionCreated, showPopup }) {
         loadRoles();
 
     }, [])
+
+    useEffect(() => {
+  if (currentFormateur || currentSession) {
+    reset({
+      lastName: currentFormateur?.lastName || "",
+      firstName: currentFormateur?.firstName || "",
+      address: currentFormateur?.address?.address || "",
+      postalCode: currentFormateur?.address?.postalCode || "",
+      city: currentFormateur?.address?.city || "",
+      startDate: currentSession ? new Date(currentSession.startDate).toLocaleDateString() : "",
+      endDate: currentSession ? new Date(currentSession.endDate).toLocaleDateString() : "",
+    });
+  }
+}, [currentFormateur, currentSession]);
 
 
     async function onSubmit(data) {
