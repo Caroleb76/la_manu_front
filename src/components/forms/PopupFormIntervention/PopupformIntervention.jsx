@@ -19,6 +19,7 @@ export default function PopupFormIntervention({ onInterventionCreated }) {
     const [roles, setRoles] = useState([]);
     const [modules, setModules] = useState([]);
     const [interventionsCategories, setInterventionsCategories] = useState([]);
+    const [extraCostsOptions, setExtraCostsOptions] = useState([]);
     const { notify } = useNotification();
     const {
         register,
@@ -37,7 +38,7 @@ export default function PopupFormIntervention({ onInterventionCreated }) {
             extraCostsState: [],
         }
     });
-    const extraCostsState = watch([]);
+ 
     const addExtraCosts = () => {
         setExtraCostsInput(prev => [...prev, ""])
     }
@@ -69,7 +70,7 @@ export default function PopupFormIntervention({ onInterventionCreated }) {
             const response = await extraCostsHelper.getExtraCosts();
             if (response) {
                  console.log("extracostsResponse",response.data)
-                setValue(extraCostsState,response.data)
+                setExtraCostsOptions(response.data)
                 // console.log(response.data.users)
             }
 
@@ -80,20 +81,19 @@ export default function PopupFormIntervention({ onInterventionCreated }) {
         getExtraCosts()
     }, [])
 
-    useEffect(() => {
-        setValue("extraCosts", extraCostsState)
-        console.log("extracostState",extraCostsState)
-    }, [extraCostsState, setValue])
-
+    useEffect(()=>{
+        console.log("errors",errors)
+    },[errors])
     async function onSubmit(data) {
-        console.log("submit")
-        const response = await interventionsHelper.createIntervention(data);
-        if (response.success) {
-            onInterventionCreated();
-            reset();
-        } else {
-            notify(response.message, "error");
-        }
+        console.log("submit",data)
+        onInterventionCreated(data)
+        // const response = await interventionsHelper.createIntervention(data);
+        // if (response.success) {
+        //     onInterventionCreated();
+        //     reset();
+        // } else {
+        //     notify(response.message, "error");
+        // }
     }
 
     return (
@@ -104,10 +104,10 @@ export default function PopupFormIntervention({ onInterventionCreated }) {
 
                     <InputSelect
                         label="Module"
-                        {...register("moduleFormationId")}
-                        error={errors.moduleFormationId?.message}
+                        {...register("moduleId")}
+                        error={errors.moduleId?.message}
                     >
-                        <option value="" >
+                        <option value="" hidden>
                             -- Sélectionner un module --
                         </option>
                         {modules?.map((module) => (
@@ -183,7 +183,7 @@ export default function PopupFormIntervention({ onInterventionCreated }) {
                             <option value="" hidden>
                                 -- Sélectionner un type de frais de déplacement --
                             </option>
-                            {extraCostsState?.map((cost) => (
+                            {extraCostsOptions?.map((cost) => (
                                 <option key={cost.id} value={cost.id}>
                                     {cost.category}
                                 </option>

@@ -5,8 +5,9 @@ export const popupInterventionSchema = z.object({
 
 
   moduleId: z
-    .number()
-    .nonnegative("l'identifiant est incorrect"),
+    .string("l'identifiant n'est pas une chaine de caracteres")
+    .uuid("identifiant incorrect"),
+
 
 
 
@@ -28,7 +29,7 @@ export const popupInterventionSchema = z.object({
 
   // toDo A adapter pour l'utilisation d'1 array
   extraCosts: z
-    .array(z.number(), "le type de frais est invalide"),
+    .array(z.string(), "le type de frais est invalide"),
 
   description: z
     .string()
