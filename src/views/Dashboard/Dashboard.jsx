@@ -6,18 +6,20 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../../context/userContext";
 import { useNotification } from "../../../context/notificationContext";
 function Dashboard() {
-  const {getUser}=useContext(UserContext);
+  const {user,loading}=useContext(UserContext);
   const navigate= useNavigate();
   const {notify}= useNotification();
   useEffect(() => {
-    getUser().then(user => {
-      if (!user) navigate("/login");
-    });
+    // if (!user && !loading) {
+    //   navigate("/login");
+    // }
 
-  }, [location]);
+  }, []);
   
 
   return <>
+  {
+    loading || !user ? <><p>loading....</p></> :
      <div className={styles.layoutContainer}>
         <SideMenu></SideMenu>
         <div className={styles.layoutContent}>
@@ -29,6 +31,7 @@ function Dashboard() {
             </main>
         </div>
      </div>
+  }
   </>;
 }
 

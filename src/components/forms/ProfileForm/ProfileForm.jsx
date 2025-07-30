@@ -15,8 +15,8 @@ import { profileSchema } from "./profileSchema"; // Make sure this path matches 
 import usersHelper from "../../../helpers/usersHelper.js";
 import { set } from "zod/v4-mini";
 
-export default function ProfileForm() {
-  const { getUser, updateUser } = useContext(UserContext);
+export default function ProfileForm({userId}) {
+  const { user: currentUser, updateUser } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true);
   const [initials, setInitials] = useState("")
   const [profilePicture, setProfilePicture] = useState(null);
@@ -39,7 +39,7 @@ export default function ProfileForm() {
 
   useEffect(() => {
     async function loadUser() {
-      const userData = await getUser();
+      const userData = userId ? await usersHelper.getUserById(userId) : currentUser;
       // console.log(userData)
       if (userData) {
 
@@ -54,18 +54,18 @@ export default function ProfileForm() {
         });
         setUser(userData);
         const formattedInitials = handleNameInitials(userData.firstName + " " + userData.lastName)
-        console.log(formattedInitials);
+        // console.log(formattedInitials);
 
         setInitials(formattedInitials)
       }
       setIsLoading(false);
     }
     loadUser();
-  }, [getUser, reset]);
+  }, [ reset]);
 
   const onSubmit = async (data) => {
     const formData = new FormData();
-    console.log("Form data:", data);
+    // console.log("Form data:", data);
 
     const { profilePicture, carteGrise, diplomeFile, ...userData } = data;
 
@@ -78,13 +78,14 @@ export default function ProfileForm() {
 
     try {
       const response = await usersHelper.updateUser(user.id, formData);
-      console.log("Update response:", response);
+      // console.log("Update response:", response);
       notify("Profil mis à jour", "success");
-      updateUser(userData);
+      updateUser(response.data.user);
          const formattedInitials = handleNameInitials(userData.firstName + " " + userData.lastName)
-        console.log(formattedInitials);
+        // console.log(formattedInitials);
 
         setInitials(formattedInitials)
+        setFiles([]);
 
     } catch (error) {
       console.error("Update error:", error);
@@ -154,52 +155,9 @@ export default function ProfileForm() {
             <InputText label="Nombre de CV de votre véhicule" {...register("horsePower")} error={errors.horsePower?.message} />
           </div>
         </section>
-
-        <section className={styles.profileSection}>
-          <h2 className="title">Documents demandés</h2>
-          <div className={styles.grid}>
-            <div className={styles.fileSection}>
-            </div>
-            {hasPermisB &&
-              <div className={styles.fileSection}>
-                <h3>Carte grise</h3>
-                <div className={styles.fileSectionDiploma}>
-                  <InputFile {...register("carteGrise")} error={errors.carteGrise?.message} />
-                </div>
-              </div>}
-            <div className={styles.fileSection}>
-              <h3>Diplômes</h3>
-              <div className={styles.fileSectionDiploma}>
-                <InputText label="Intitulé du diplôme" {...register("diploma")} error={errors.diploma?.message} />
-                <InputFile  {...register("diplomeFile")} error={errors.diplomaFile?.message} />
-                <button type="button"> Ajouter </button>
-              </div>
-            </div>
-          </div>
           <button type="submit" className="btn-success"> valider les modifications </button>
 
-          {/* <div className={styles.grid4Col}>
-            <InputSelect label="Type de fichier" onChange={(e) => setSelectedFileType(e.target.value)}>
-              <option value="diplome">Diplôme</option>
-              <option value="photoDeProfil">Photo de profil</option>
-            </InputSelect>
-
-            {selectedFileType === "diplome" && (
-              <>
-                <InputSelect label="Type de diplôme" {...register("diplomaType")} error={errors.diplomaType?.message}> 
-                  <option value="bac">Bac</option>
-                  <option value="bac+3">Bac+3</option>
-                </InputSelect>
-                <InputText label="Nom de diplôme" {...register("diploma")} error={errors.diploma?.message} />
-              </>
-            )}
-
-            <div className={styles.profileButtons}>
-              <button type="button"> + </button>
-              <button type="submit"> Ajouter </button>
-            </div>
-          </div> */}
-        </section>
+      
       </form>
     </div>
   );

@@ -4,24 +4,13 @@ import { UserContext } from "../../../../context/userContext";
 import { useNavigate } from "react-router";
 import { handleNameInitials } from "../../../utils/initials";
 function Navbar() {
-  const { signout, getUser } = useContext(UserContext);
+  const { signout, user} = useContext(UserContext);
   const [dropdown, setDropdown] = useState(false);
-  const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const wrapperRef = useRef(null);
   const serverUrl = import.meta.env.VITE_SERVER_URL;
-  useEffect(() => {
-
-     getUser().then((user) => {
-      let initials = handleNameInitials(user.firstName+" "+user.lastName); //TODO get full name
-      user.initials = initials;
-      
-
-      setUser(user);
-    });
 
 
-  }, [user]);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -50,7 +39,7 @@ function Navbar() {
         >
           {
             user?.profilePicture ? (
-              <img src={serverUrl + user.profilePicture} alt="avatar" />
+                <img src={serverUrl + user.profilePicture + `?${Date.now()}`} alt="avatar" />
             ) : (
               <p>{user?.initials}</p>
             )
