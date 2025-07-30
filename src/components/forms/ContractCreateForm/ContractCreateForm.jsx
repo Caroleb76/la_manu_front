@@ -6,88 +6,87 @@ import usersHelper from "../../../helpers/usersHelper.js";
 import rolesHelper from "../../../helpers/rolesHelper.js";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { contractCreateSchema } from "./contractCreateSchema.js"
+import { contractCreateSchema } from "./contractCreateSchema.js";
 import { DevTool } from "@hookform/devtools";
 import DataGrid from "../../DataGrid/DataGrid.jsx";
 
-import sessionFormationsHelper from "../../../helpers/sessionFormationsHelper.js"
+import sessionFormationsHelper from "../../../helpers/sessionFormationsHelper.js";
 
-export default function ContractCreateForm({ onSessionCreated, showPopup, pageSize, colDefs, getDataSource }) {
+export default function ContractCreateForm({
+    onSessionCreated,
+    showPopup,
+    interventions,
+    deleteIntervention,
+}) {
     const [roles, setRoles] = useState([]);
     const [reloadTrigger, setReloadTrigger] = useState(0);
-   
+
     const [formateurs, setFormateurs] = useState([]);
     const [sessionsFormation, setSessionsFormation] = useState([]);
     const [currentFormateurId, setCurrentFormateurId] = useState(null);
     const [currentFormateur, setCurrentFormateur] = useState(null);
     const [currentSessionId, setCurrentSessionId] = useState(null);
     const [currentSession, setCurrentSession] = useState(null);
-    
 
     const handleChangeFormateur = (event) => {
-        setCurrentFormateurId(event.target.value)
-        console.log(event.target.value)
-    }
+        setCurrentFormateurId(event.target.value);
+        console.log(event.target.value);
+    };
     const handleChangeSession = (event) => {
-        setCurrentSessionId(event.target.value)
-        console.log(event.target.value)
-    }
+        setCurrentSessionId(event.target.value);
+        console.log(event.target.value);
+    };
     useEffect(() => {
         const getFormateurs = async () => {
             const response = await usersHelper.getUsers({ role: "FORMATEUR" });
             if (response) {
-                setFormateurs(response.data.users)
+                setFormateurs(response.data.users);
                 // console.log(response.data.users)
             }
 
-            return response
-        }
+            return response;
+        };
 
         const getSessionsList = async () => {
             const response = await sessionFormationsHelper.getSessions();
             if (response) {
-                setSessionsFormation(response.data.sessionFormations)
-
+                setSessionsFormation(response.data.sessionFormations);
             }
-            return response
-        }
-        getFormateurs()
-        getSessionsList()
-    }, [])
+            return response;
+        };
+        getFormateurs();
+        getSessionsList();
+    }, []);
 
     useEffect(() => {
         const getFormateurData = async () => {
             const response = await usersHelper.getUserById(currentFormateurId);
-            console.log(response)
+            console.log(response);
             if (response) {
-                setCurrentFormateur(response.data)
+                setCurrentFormateur(response.data);
                 // console.log(response.data.users)
             }
 
-            return response
-
-        }
-        getFormateurData()
-    }, [currentFormateurId])
+            return response;
+        };
+        getFormateurData();
+    }, [currentFormateurId]);
 
     useEffect(() => {
         const getSessionData = async () => {
-            const response = await sessionFormationsHelper.getSessionById(currentSessionId);
-            console.log(response)
+            const response = await sessionFormationsHelper.getSessionById(
+                currentSessionId
+            );
+            console.log(response);
             if (response) {
-                setCurrentSession(response.data)
+                setCurrentSession(response.data);
                 // console.log(response.data.users)
             }
 
-            return response
-
-        }
-        getSessionData()
-    }, [currentSessionId])
-
-
-
-
+            return response;
+        };
+        getSessionData();
+    }, [currentSessionId]);
 
     const {
         register,
@@ -99,43 +98,43 @@ export default function ContractCreateForm({ onSessionCreated, showPopup, pageSi
     } = useForm({
         resolver: zodResolver(contractCreateSchema),
         defaultValues: {
-            lastName:  "",
-            firstName:  "",
-            address:  "",
-            postalCode:  "",
+            lastName: "",
+            firstName: "",
+            address: "",
+            postalCode: "",
             city: "",
             startDate: "",
-            endDate:  "",
-        }
+            endDate: "",
+        },
     });
 
-    const selectedStartDate = watch("startDate")
+    const selectedStartDate = watch("startDate");
 
     useEffect(() => {
         async function loadRoles() {
             const response = await rolesHelper.getRoles();
             setRoles(response.data);
-
-
         }
         loadRoles();
-
-    }, [])
+    }, []);
 
     useEffect(() => {
-  if (currentFormateur || currentSession) {
-    reset({
-      lastName: currentFormateur?.lastName || "",
-      firstName: currentFormateur?.firstName || "",
-      address: currentFormateur?.address?.address || "",
-      postalCode: currentFormateur?.address?.postalCode || "",
-      city: currentFormateur?.address?.city || "",
-      startDate: currentSession ? new Date(currentSession.startDate).toLocaleDateString() : "",
-      endDate: currentSession ? new Date(currentSession.endDate).toLocaleDateString() : "",
-    });
-  }
-}, [currentFormateur, currentSession]);
-
+        if (currentFormateur || currentSession) {
+            reset({
+                lastName: currentFormateur?.lastName || "",
+                firstName: currentFormateur?.firstName || "",
+                address: currentFormateur?.address?.address || "",
+                postalCode: currentFormateur?.address?.postalCode || "",
+                city: currentFormateur?.address?.city || "",
+                startDate: currentSession
+                    ? new Date(currentSession.startDate).toLocaleDateString()
+                    : "",
+                endDate: currentSession
+                    ? new Date(currentSession.endDate).toLocaleDateString()
+                    : "",
+            });
+        }
+    }, [currentFormateur, currentSession]);
 
     async function onSubmit(data) {
         const response = await usersHelper.createNotification(data);
@@ -147,25 +146,29 @@ export default function ContractCreateForm({ onSessionCreated, showPopup, pageSi
         }
     }
 
-
     return (
         <div className={styles.borderPopup}>
-
             <form action="" onSubmit={handleSubmit(onSubmit)}>
                 <div className={styles.grid}>
-                    <section >
+                    <section>
                         <h2 className="title">Informations personelles</h2>
                         <div className={styles.grid}>
                             {/* TODO Compléter le menu de recherche des vacataires */}
-                            <InputSelect className={styles.twoColumns}
-                                label="Recherche d'un vacataire" onChange={handleChangeFormateur}>
-
-                                {
-                                    formateurs && formateurs.map((formateur) => (
-                                        <option value={formateur.id} key={formateur.id}>{formateur.lastName} {formateur.firstName}</option>
-                                    ))
-
-                                }
+                            <InputSelect
+                                className={styles.twoColumns}
+                                label="Recherche d'un vacataire"
+                                onChange={handleChangeFormateur}
+                            >
+                                {formateurs &&
+                                    formateurs.map((formateur) => (
+                                        <option
+                                            value={formateur.id}
+                                            key={formateur.id}
+                                        >
+                                            {formateur.lastName}{" "}
+                                            {formateur.firstName}
+                                        </option>
+                                    ))}
                             </InputSelect>
 
                             <InputText
@@ -175,8 +178,6 @@ export default function ContractCreateForm({ onSessionCreated, showPopup, pageSi
                                 error={errors.lastName?.message}
                                 disabled
                             />
-
-
 
                             <InputText
                                 label="Prénom"
@@ -192,7 +193,6 @@ export default function ContractCreateForm({ onSessionCreated, showPopup, pageSi
                                 {...register("address")}
                                 error={errors.address?.message}
                                 disabled
-
                             />
 
                             <InputText
@@ -203,8 +203,6 @@ export default function ContractCreateForm({ onSessionCreated, showPopup, pageSi
                                 disabled
                             />
 
-
-
                             <InputText
                                 label="Ville"
                                 placeholder=""
@@ -212,24 +210,29 @@ export default function ContractCreateForm({ onSessionCreated, showPopup, pageSi
                                 error={errors.city?.message}
                                 disabled
                             />
-
                         </div>
-
                     </section>
 
                     <section>
-
                         <h2 className="title">Session de formation</h2>
                         <div className={styles.grid}>
                             {/* TODO Compléter le menu de recherche des vacataires */}
-                            <InputSelect className={styles.twoColumns}
+                            <InputSelect
+                                className={styles.twoColumns}
                                 label="Session de formation"
-                                onChange={handleChangeSession}>
-                                {sessionsFormation && sessionsFormation.map((session) => (
-
-                                    <option value={session.id} key={session.id}> {session.Formation.name} - {session.serialNumber}</option>
-                                ))}
-
+                                onChange={handleChangeSession}
+                            >
+                                {sessionsFormation &&
+                                    sessionsFormation.map((session) => (
+                                        <option
+                                            value={session.id}
+                                            key={session.id}
+                                        >
+                                            {" "}
+                                            {session.Formation.name} -{" "}
+                                            {session.serialNumber}
+                                        </option>
+                                    ))}
                             </InputSelect>
 
                             <InputText
@@ -239,8 +242,6 @@ export default function ContractCreateForm({ onSessionCreated, showPopup, pageSi
                                 error={errors.startDate?.message}
                                 disabled
                             />
-
-
 
                             <InputText
                                 label="Date de fin du contrat"
@@ -259,18 +260,70 @@ export default function ContractCreateForm({ onSessionCreated, showPopup, pageSi
                         </div>
                     </section>
                     <section className={styles.twoColumns}>
-                    <div className={styles.interventionTitle}>
-                        <h2 className="title">Interventions</h2>
-                        <button type="button" className={styles.btnPlus} onClick={showPopup}> + </button>
-                    </div>
-                    
-                </section>
+                        <div className={styles.interventionTitle}>
+                            <h2 className="title">Interventions</h2>
+                            <button
+                                type="button"
+                                className={styles.btnPlus}
+                                onClick={showPopup}
+                            >
+                                {" "}
+                                +{" "}
+                            </button>
+                        </div>
+                    </section>
                 </div>
 
-               
-              <DataGrid pageSize={pageSize} colDefs={colDefs} data={getDataSource}
+                {/* <DataGrid pageSize={pageSize} colDefs={colDefs} data={getDataSource}
                 />
-                
+                 */}
+
+                <table className={styles.table}>
+                    <tr>
+                        <th>Numero</th>
+                        <th>Module</th>
+                        <th>Date</th>
+                        <th>AM/PM/J</th>
+                        <th>Durée</th>
+                        <th>Catégorie</th>
+                        <th>Description</th>
+                        <th>Supprimer</th>
+                    </tr>
+                    {!interventions.length && <tr><td >Aucune intervention</td></tr>}
+                    {interventions.map((intervention, index) => (
+                        <tr key={index}>
+                            <td>{index + 1}</td>
+                            <td>{intervention.moduleId}</td>
+                            <td>{intervention.dateIntervention}</td>
+                            <td>
+                                {intervention.shift == "am"
+                                    ? "Matin"
+                                    : intervention.shift == "pm"
+                                    ? "Après-midi"
+                                    : "Journée"}
+                            </td>
+                            <td>{intervention.hours} heures</td>
+                            <td>{intervention.interventionCategoryId}</td>
+                            <td>{intervention.description}</td>
+                            <td>
+                                {index+1 == interventions.length - 1 ? (
+                                    ""
+                                ) : (
+                                    <button
+                                        type="button"
+                                        className="btn-sm"
+                                        onClick={() => deleteIntervention(index)}
+                                    >
+                                        {" "}
+                                        -{" "}
+                                    </button>
+                                )
+                                }
+                            </td>
+                        </tr>
+                    ))}
+                </table>
+
                 <div className={styles.popupButtons}>
                     <button> Valider </button>
                 </div>

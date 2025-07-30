@@ -19,12 +19,14 @@ export default function CreateContract() {
     const [pageSize, setPageSize] = useState(10);
 
     const [interventions, setInterventions] = useState([])
-    useEffect(() => {
-        console.log("intervention", interventions)
-    }, [interventions])
+ 
 
     const addIntervention = ((intervention) => {
         setInterventions(prev => [...prev, intervention])
+    })
+    const deleteLastIntervention = (() => {
+        setInterventions(prev => prev.length > 0 ? prev.slice(0, -1) : prev)
+
     })
 
     const colDefs = [
@@ -37,11 +39,6 @@ export default function CreateContract() {
     ];
     const getDataSource = useMemo(() => ({
         getRows: async (params) => {
-
-            const offset = params.startRow;
-            const pageSize = params.endRow - params.startRow;
-
-            const response = await contractsHelper.getContracts(offset, pageSize);
 
             const rows = interventions.map((intervention) => {
                 
@@ -60,10 +57,10 @@ export default function CreateContract() {
 
             // console.log(rows, response.data.total);
 
-            params.successCallback(rows, response.data.total);
+            // params.successCallback(rows, response.data.total);
 
         },
-    }), [reloadTrigger]);
+    }), [interventions]);
 
     const onSearchTextChange = (e) => {
         setSearchText(e.target.value);
@@ -103,9 +100,8 @@ export default function CreateContract() {
                     </>
                 )}
                 <ContractCreateForm 
-                    pageSize ={pageSize}
-                    colDefs={colDefs}
-                    getDataSource={getDataSource}
+                   interventions={interventions}
+                   deleteIntervention={deleteLastIntervention}
                     onSessionCreated={() => { }}
                     showPopup={() => setInterventionCreationMode(true)}
                 />

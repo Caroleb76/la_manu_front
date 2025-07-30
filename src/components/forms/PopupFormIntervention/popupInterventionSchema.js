@@ -17,7 +17,7 @@ export const popupInterventionSchema = z.object({
 
   hours: z
     .coerce.number()
-    .min(1, "Le nombre d'heure est requis."),
+    .min(0.5, "Le nombre d'heure est requis."),
 
   shift: z
     .enum(["am", "pm", "journee"], "La valeur est incorrecte"),

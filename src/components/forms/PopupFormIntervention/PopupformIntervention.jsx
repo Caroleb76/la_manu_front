@@ -127,6 +127,7 @@ export default function PopupFormIntervention({ onInterventionCreated }) {
                     <InputText
                         label="Nombre d'heure"
                         type="number"
+                        step="0.5"
                         {...register("hours")}
                         error={errors.hours?.message}
                     />
