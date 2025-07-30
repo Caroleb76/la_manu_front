@@ -1,6 +1,6 @@
 export default function InputSelect({
     label,
-className,
+    className,
     value,
     name,
     onChange,
@@ -14,13 +14,11 @@ className,
             <select
                 name={name}
                 value={value}
-defaultValue={"default"}
+                defaultValue={"default"}
                 onChange={onChange}
                 {...etc}
             >
-                <option value="default" disabled>
-                    Sélectionner une option
-                </option>
+                
                 {children}
             </select>
             <p className="inputError">{error}</p>

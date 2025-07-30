@@ -208,14 +208,8 @@ export default function PopupFormSession({ onSessionCreated, session }) {
                                     ? "Annuler"
                                     : "Nouvelle adresse"}
                             </small>
-                            <button
-                                style={{
-                                    width: "3rem",
-                                    height: "2rem",
-                                    padding: "0",
-                                    margin: "0",
-                                    flex: "1",
-                                }}
+                            <button className="btn-sm"
+                                
                                 type="button"
                                 onClick={() =>
                                     setAddressCreation(!addressCreation)

@@ -64,6 +64,10 @@ button:hover,
 .btn:hover {
   opacity: 0.8;
 }
+
+.btn-sm {
+  padding: 0.5rem 1rem;
+}
 .btn-error {
   background-color: var(--error-color);
 }
@@ -90,9 +94,11 @@ button:hover,
     /* min-width: 6.5rem; */
     height: 1.5rem;
     align-self: flex-end;
+
+
     
 }
-input[type=email], input[type=password], input[type=text], input[type=tel], input[type=date]{
+input[type=email], input[type=password], input[type=text], input[type=tel], input[type=date], input[type=number] {
   padding : 0.5rem 0.5rem;
   width:100%;
   border-radius: var(--radius);

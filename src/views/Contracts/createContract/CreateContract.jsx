@@ -5,7 +5,7 @@ import styles from "./CreateContract.module.css";
 import PopupWrapper from "../../../components/popups/PopupWrapper.jsx";
 import { useNotification } from "../../../../context/notificationContext";
 import ContractCreateForm from "../../../components/forms/ContractCreateForm/ContractCreateForm.jsx";
-import PopupformNotification from "../../../components/forms/PopupFormNotification/PopupformNotification.jsx";
+import PopupformIntervention from "../../../components/forms/PopupFormIntervention/PopupformIntervention.jsx";
 
 export default function CreateContract() {
     const [interventionCreationMode, setInterventionCreationMode] =
@@ -43,11 +43,11 @@ export default function CreateContract() {
                 {interventionCreationMode && (
                     <>
                         <PopupWrapper
-                            title="Créer une notification"
+                            title="Créer une intervention"
                             onClose={() => setInterventionCreationMode(false)}
                         >
-                            <PopupformNotification
-                                onNotificationCreated={onInterventionCreated}
+                            <PopupformIntervention
+                                onInterventionCreated={onInterventionCreated}
                             />
                         </PopupWrapper>
                     </>
