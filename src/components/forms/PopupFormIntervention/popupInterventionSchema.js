@@ -5,8 +5,8 @@ export const popupInterventionSchema = z.object({
 
 
   moduleId: z
-    .string("l'identifiant n'est pas une chaine de caracteres")
-    .uuid("identifiant incorrect"),
+    .string("l'identifiant n'est pas une chaine de caracteres"),
+    // .uuid("identifiant incorrect"),
 
 
 
@@ -23,8 +23,8 @@ export const popupInterventionSchema = z.object({
     .enum(["am", "pm", "journee"], "La valeur est incorrecte"),
 
   interventionCategoryId: z
-    .string()
-    .uuid("identifiant incorrect"),
+    .string(),
+    // .uuid("identifiant incorrect"),
 
 
   // toDo A adapter pour l'utilisation d'1 array

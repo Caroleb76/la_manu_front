@@ -27,21 +27,30 @@ export default function ContractCreateForm({
     const [currentFormateur, setCurrentFormateur] = useState(null);
     const [currentSessionId, setCurrentSessionId] = useState(null);
     const [currentSession, setCurrentSession] = useState(null);
+    const [contractStartDate, setContractStartDate] = useState(null);
+    const [contractEndDate, setContractEndDate] = useState(null);
+
+    useEffect(()=> {
+        // aller chercher la date la plus ancienne parmi toutes les interventions
+        const sortedInterventions = [...interventions].sort((a, b) => new Date(a.dateIntervention) - new Date(b.dateIntervention));
+        if (sortedInterventions.length > 0) {
+            setContractStartDate(sortedInterventions[0].dateIntervention);
+            setContractEndDate(sortedInterventions[sortedInterventions.length - 1].dateIntervention);
+        }
+
+    }, [interventions])
 
     const handleChangeFormateur = (event) => {
         setCurrentFormateurId(event.target.value);
-        console.log(event.target.value);
     };
     const handleChangeSession = (event) => {
         setCurrentSessionId(event.target.value);
-        console.log(event.target.value);
     };
     useEffect(() => {
         const getFormateurs = async () => {
             const response = await usersHelper.getUsers({ role: "FORMATEUR" });
             if (response) {
                 setFormateurs(response.data.users);
-                // console.log(response.data.users)
             }
 
             return response;
@@ -61,10 +70,8 @@ export default function ContractCreateForm({
     useEffect(() => {
         const getFormateurData = async () => {
             const response = await usersHelper.getUserById(currentFormateurId);
-            console.log(response);
             if (response) {
                 setCurrentFormateur(response.data);
-                // console.log(response.data.users)
             }
 
             return response;
@@ -77,10 +84,8 @@ export default function ContractCreateForm({
             const response = await sessionFormationsHelper.getSessionById(
                 currentSessionId
             );
-            console.log(response);
             if (response) {
                 setCurrentSession(response.data);
-                // console.log(response.data.users)
             }
 
             return response;
@@ -95,6 +100,8 @@ export default function ContractCreateForm({
         watch,
         control,
         formState: { errors },
+        setValue,
+        getValues
     } = useForm({
         resolver: zodResolver(contractCreateSchema),
         defaultValues: {
@@ -119,33 +126,51 @@ export default function ContractCreateForm({
     }, []);
 
     useEffect(() => {
-        if (currentFormateur || currentSession) {
-            reset({
-                lastName: currentFormateur?.lastName || "",
-                firstName: currentFormateur?.firstName || "",
-                address: currentFormateur?.address?.address || "",
-                postalCode: currentFormateur?.address?.postalCode || "",
-                city: currentFormateur?.address?.city || "",
-                startDate: currentSession
-                    ? new Date(currentSession.startDate).toLocaleDateString()
-                    : "",
-                endDate: currentSession
-                    ? new Date(currentSession.endDate).toLocaleDateString()
-                    : "",
-            });
+
+        if (currentFormateur) {
+            setValue("lastName", currentFormateur.lastName);
+            setValue("firstName", currentFormateur.firstName);
+            setValue("address", currentFormateur.address?.address);
+            setValue("postalCode", currentFormateur.address?.postalCode);
+            setValue("city", currentFormateur.address?.city);
         }
-    }, [currentFormateur, currentSession]);
+
+       if (contractStartDate){
+        setValue("startDate", new Date(contractStartDate).toLocaleDateString());
+       }
+
+       if (contractEndDate){
+        setValue("endDate", new Date(contractEndDate).toLocaleDateString());
+       }
+
+       
+    }, [currentFormateur, currentSession, contractStartDate, contractEndDate]);
 
     async function onSubmit(data) {
-        const response = await usersHelper.createNotification(data);
-        if (response.success) {
-            onSessionCreated();
-            reset();
-        } else {
-            alert(response.message);
-        }
+        // on récupère les données du formulaire sous forme d'objet
+        const values = getValues()
+    
+        
+
+        //On récupère les interventions et on les ajoute à l'objet values
+        values.interventions = interventions;
+
+console.log(values);
+
+
+       
+        //On appel la fonction onSessionCreated() qui affiche la popup de confirmation
+
+        // const response = await usersHelper.createNotification(data);
+        // if (response.success) {
+        //     onSessionCreated();
+        //     reset();
+        // } else {
+        //     alert(response.message);
+        // }
     }
 
+    
     return (
         <div className={styles.borderPopup}>
             <form action="" onSubmit={handleSubmit(onSubmit)}>
@@ -159,6 +184,9 @@ export default function ContractCreateForm({
                                 label="Recherche d'un vacataire"
                                 onChange={handleChangeFormateur}
                             >
+                                <option value="default" disabled hidden>
+                                    Sélectionner
+                                </option>
                                 {formateurs &&
                                     formateurs.map((formateur) => (
                                         <option
@@ -222,6 +250,9 @@ export default function ContractCreateForm({
                                 label="Session de formation"
                                 onChange={handleChangeSession}
                             >
+                                <option value="default" disabled hidden>
+                                    Sélectionner
+                                </option>
                                 {sessionsFormation &&
                                     sessionsFormation.map((session) => (
                                         <option
@@ -286,14 +317,13 @@ export default function ContractCreateForm({
                         <th>AM/PM/J</th>
                         <th>Durée</th>
                         <th>Catégorie</th>
-                        <th>Description</th>
                         <th>Supprimer</th>
                     </tr>
                     {!interventions.length && <tr><td >Aucune intervention</td></tr>}
                     {interventions.map((intervention, index) => (
                         <tr key={index}>
                             <td>{index + 1}</td>
-                            <td>{intervention.moduleId}</td>
+                            <td>{JSON.parse(intervention.moduleId).label}</td>
                             <td>{intervention.dateIntervention}</td>
                             <td>
                                 {intervention.shift == "am"
@@ -303,8 +333,7 @@ export default function ContractCreateForm({
                                     : "Journée"}
                             </td>
                             <td>{intervention.hours} heures</td>
-                            <td>{intervention.interventionCategoryId}</td>
-                            <td>{intervention.description}</td>
+                            <td>{JSON.parse(intervention.interventionCategoryId).label}</td>
                             <td>
                                 {index+1 == interventions.length - 1 ? (
                                     ""

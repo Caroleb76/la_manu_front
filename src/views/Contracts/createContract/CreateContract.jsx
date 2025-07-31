@@ -13,13 +13,9 @@ export default function CreateContract() {
     const [interventionCreationMode, setInterventionCreationMode] =
         useState(false);
     const { notify } = useNotification();
-
     const [reloadTrigger, setReloadTrigger] = useState(0);
-    const [searchText, setSearchText] = useState("");
-    const [pageSize, setPageSize] = useState(10);
-
-    const [interventions, setInterventions] = useState([])
  
+    const [interventions, setInterventions] = useState([])
 
     const addIntervention = ((intervention) => {
         setInterventions(prev => [...prev, intervention])
@@ -29,43 +25,12 @@ export default function CreateContract() {
 
     })
 
-    const colDefs = [
-        { field: "Module", filter: true },
-        { field: "Date", filter: true },
-        { field: "AM/PM/J", filter: false },
-        { field: "Durée", filter: false },
-        { field: "Catégorie", filter: false },
-        
-    ];
-    const getDataSource = useMemo(() => ({
-        getRows: async (params) => {
 
-            const rows = interventions.map((intervention) => {
-                
-                return {
-                    id: intervention.id,
-                    "Module": intervention.moduleId,
-                    "Date": new Date(intervention.dateIntervention).toLocaleDateString(),
-                    "AM/PM/J": intervention.shift,
-                    "Durée": intervention.hours,
-                    "Catégorie": intervention.interventionCategoryId
-                    
-                 
-                }
-            }
-            );
+   
 
-            // console.log(rows, response.data.total);
 
-            // params.successCallback(rows, response.data.total);
 
-        },
-    }), [interventions]);
 
-    const onSearchTextChange = (e) => {
-        setSearchText(e.target.value);
-        setReloadTrigger(reloadTrigger + 1);
-    };
     const onDeleteNotification = async (notification) => {
         const response = await notificationsHelper.deleteNotification(
             notification.id
@@ -95,6 +60,7 @@ export default function CreateContract() {
                         >
                             <PopupformIntervention
                                 onInterventionCreated={addIntervention}
+                                onClose={() => setInterventionCreationMode(false)}
                             />
                         </PopupWrapper>
                     </>

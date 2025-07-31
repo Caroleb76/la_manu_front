@@ -14,7 +14,7 @@ import { useNotification } from "../../../../context/notificationContext.jsx";
 import interventionsHelper from "../../../helpers/interventionsHelper.js";
 import { convertDateToStandardString, convertDateToStandardStringPlusOne } from "../../../utils/date.js";
 
-export default function PopupFormIntervention({ onInterventionCreated }) {
+export default function PopupFormIntervention({ onInterventionCreated , onClose }) {
     const [extraCostsInput, setExtraCostsInput] = useState([""]);
     const [roles, setRoles] = useState([]);
     const [modules, setModules] = useState([]);
@@ -35,7 +35,7 @@ export default function PopupFormIntervention({ onInterventionCreated }) {
             moduleFormationId: "",
             interventionCategoryId: "",
             shift: "",
-            extraCostsState: [],
+            extraCost: [],
         }
     });
  
@@ -86,7 +86,10 @@ export default function PopupFormIntervention({ onInterventionCreated }) {
     },[errors])
     async function onSubmit(data) {
         console.log("submit",data)
+
+      
         onInterventionCreated(data)
+        onClose()
         // const response = await interventionsHelper.createIntervention(data);
         // if (response.success) {
         //     onInterventionCreated();
@@ -95,6 +98,9 @@ export default function PopupFormIntervention({ onInterventionCreated }) {
         //     notify(response.message, "error");
         // }
     }
+
+
+
 
     return (
         <div className={styles.borderPopup}>
@@ -111,7 +117,10 @@ export default function PopupFormIntervention({ onInterventionCreated }) {
                             -- Sélectionner un module --
                         </option>
                         {modules?.map((module) => (
-                            <option key={module.id} value={module.id}>
+                            <option key={module.id} value={JSON.stringify({
+                                label: module.name,
+                                id: module.id
+                            })}>
                                 {module.name}
                             </option>
                         ))}
@@ -155,7 +164,10 @@ export default function PopupFormIntervention({ onInterventionCreated }) {
                             -- Sélectionner une catégorie --
                         </option>
                         {interventionsCategories?.map((category) => (
-                            <option key={category.id} value={category.id}>
+                            <option key={category.id} value={JSON.stringify({
+                                label: category.name,
+                                id: category.id
+                            })}>
                                 {category.name}
                             </option>
                         ))}
@@ -185,7 +197,10 @@ export default function PopupFormIntervention({ onInterventionCreated }) {
                                 -- Sélectionner un type de frais de déplacement --
                             </option>
                             {extraCostsOptions?.map((cost) => (
-                                <option key={cost.id} value={cost.id}>
+                                <option key={cost.id} value={JSON.stringify({
+                                    label: cost.category,
+                                    id: cost.id
+                                })}>
                                     {cost.category}
                                 </option>
                             ))}
