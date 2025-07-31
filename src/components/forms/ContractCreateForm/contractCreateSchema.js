@@ -26,6 +26,10 @@ export const contractCreateSchema = z.object({
         .min(2, "La ville doit contenir au moins 2 caractères.")
         .max(250, "La ville est trop long."),
 
+    sessionId: z
+    .string()
+    .uuid(),
+
     startDate: z
         .string()
         .min(1, "La date de début de contrat est requise.")

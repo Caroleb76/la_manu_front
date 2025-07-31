@@ -11,7 +11,16 @@ async function getContracts (offset=0,limit=10,searchText=""){
 
 }
 
+async function createContract (contract){
+
+    const response= await apiClient("contracts/",{method:"POST",body:contract});
+    return response;
+
+}
+
+
 
 export default {
-    getContracts
+    getContracts,
+    createContract
 }

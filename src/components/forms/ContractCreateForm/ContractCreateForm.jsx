@@ -4,6 +4,7 @@ import InputSelect from "../../ui/InputSelect.jsx";
 import { useEffect, useState } from "react";
 import usersHelper from "../../../helpers/usersHelper.js";
 import rolesHelper from "../../../helpers/rolesHelper.js";
+import contractsHelper from "../../../helpers/contractsHelper.js";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { contractCreateSchema } from "./contractCreateSchema.js";
@@ -11,6 +12,7 @@ import { DevTool } from "@hookform/devtools";
 import DataGrid from "../../DataGrid/DataGrid.jsx";
 
 import sessionFormationsHelper from "../../../helpers/sessionFormationsHelper.js";
+import PopupFormIntervention from "../PopupFormIntervention/PopupformIntervention.jsx";
 
 export default function ContractCreateForm({
     onSessionCreated,
@@ -30,7 +32,7 @@ export default function ContractCreateForm({
     const [contractStartDate, setContractStartDate] = useState(null);
     const [contractEndDate, setContractEndDate] = useState(null);
 
-    useEffect(()=> {
+    useEffect(() => {
         // aller chercher la date la plus ancienne parmi toutes les interventions
         const sortedInterventions = [...interventions].sort((a, b) => new Date(a.dateIntervention) - new Date(b.dateIntervention));
         if (sortedInterventions.length > 0) {
@@ -110,6 +112,7 @@ export default function ContractCreateForm({
             address: "",
             postalCode: "",
             city: "",
+            sessionId: "",
             startDate: "",
             endDate: "",
         },
@@ -135,42 +138,61 @@ export default function ContractCreateForm({
             setValue("city", currentFormateur.address?.city);
         }
 
-       if (contractStartDate){
-        setValue("startDate", new Date(contractStartDate).toLocaleDateString());
-       }
+        if (contractStartDate) {
+            setValue("startDate", new Date(contractStartDate).toLocaleDateString());
+        }
 
-       if (contractEndDate){
-        setValue("endDate", new Date(contractEndDate).toLocaleDateString());
-       }
+        if (contractEndDate) {
+            setValue("endDate", new Date(contractEndDate).toLocaleDateString());
+        }
 
-       
+
     }, [currentFormateur, currentSession, contractStartDate, contractEndDate]);
 
     async function onSubmit(data) {
         // on récupère les données du formulaire sous forme d'objet
         const values = getValues()
-    
-        
+        let formattedInterventions = []
+        interventions.forEach((intervention) => {
+
+            const moduleJson = JSON.parse(intervention.moduleObject)
+
+
+            let formattedExtraCosts = []
+            intervention.extraCosts.forEach((extracost) => {
+                const extraCostsJson = JSON.parse(extracost)
+                formattedExtraCosts.push(extraCostsJson.id)
+            })
+            formattedIntervention.extraCosts = formattedExtraCosts
+
+            const { extraCosts, moduleObject, ...otherFields } = intervention
+            let formattedIntervention = {
+                moduleId: moduleJson.id,
+                extraCosts: formattedExtraCosts,
+                ...otherFields
+            }
+            console.log("formattedIntervention", formattedIntervention)
+        })
+
+
 
         //On récupère les interventions et on les ajoute à l'objet values
         values.interventions = interventions;
 
-console.log(values);
 
+        // On appel la fonction onSessionCreated() qui affiche la popup de confirmation
 
-       
-        //On appel la fonction onSessionCreated() qui affiche la popup de confirmation
-
-        // const response = await usersHelper.createNotification(data);
-        // if (response.success) {
-        //     onSessionCreated();
-        //     reset();
-        // } else {
-        //     alert(response.message);
-        // }
+        const response = await contractsHelper.createContract(values);
+        if (response.success) {
+            console.log(response)
+            onSessionCreated();
+            reset();
+        } else {
+            alert(response.message);
+        }
     }
 
-    
+
     return (
         <div className={styles.borderPopup}>
             <form action="" onSubmit={handleSubmit(onSubmit)}>
@@ -249,6 +271,9 @@ console.log(values);
                                 className={styles.twoColumns}
                                 label="Session de formation"
                                 onChange={handleChangeSession}
+                                {...register("sessionId")}
+                                error={errors.sessionId?.message}
+
                             >
                                 <option value="default" disabled hidden>
                                     Sélectionner
@@ -323,19 +348,19 @@ console.log(values);
                     {interventions.map((intervention, index) => (
                         <tr key={index}>
                             <td>{index + 1}</td>
-                            <td>{JSON.parse(intervention.moduleId).label}</td>
+                            <td>{JSON.parse(intervention.moduleObject).label}</td>
                             <td>{intervention.dateIntervention}</td>
                             <td>
                                 {intervention.shift == "am"
                                     ? "Matin"
                                     : intervention.shift == "pm"
-                                    ? "Après-midi"
-                                    : "Journée"}
+                                        ? "Après-midi"
+                                        : "Journée"}
                             </td>
                             <td>{intervention.hours} heures</td>
-                            <td>{JSON.parse(intervention.interventionCategoryId).label}</td>
+                            <td>{JSON.parse(intervention.interventionCategoryObject).label}</td>
                             <td>
-                                {index+1 == interventions.length - 1 ? (
+                                {index + 1 == interventions.length - 1 ? (
                                     ""
                                 ) : (
                                     <button
