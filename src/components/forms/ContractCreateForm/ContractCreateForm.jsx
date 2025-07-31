@@ -152,30 +152,7 @@ export default function ContractCreateForm({
     async function onSubmit(data) {
         // on récupère les données du formulaire sous forme d'objet
         const values = getValues()
-        let formattedInterventions = []
-        interventions.forEach((intervention) => {
-
-            const moduleJson = JSON.parse(intervention.moduleObject)
-
-
-            let formattedExtraCosts = []
-            intervention.extraCosts.forEach((extracost) => {
-                const extraCostsJson = JSON.parse(extracost)
-                formattedExtraCosts.push(extraCostsJson.id)
-            })
-            formattedIntervention.extraCosts = formattedExtraCosts
-
-            const { extraCosts, moduleObject, ...otherFields } = intervention
-            let formattedIntervention = {
-                moduleId: moduleJson.id,
-                extraCosts: formattedExtraCosts,
-                ...otherFields
-            }
-            console.log("formattedIntervention", formattedIntervention)
-        })
-
-
-
+       
         //On récupère les interventions et on les ajoute à l'objet values
         values.interventions = interventions;
 
@@ -348,7 +325,7 @@ export default function ContractCreateForm({
                     {interventions.map((intervention, index) => (
                         <tr key={index}>
                             <td>{index + 1}</td>
-                            <td>{JSON.parse(intervention.moduleObject).label}</td>
+                            <td>{intervention.moduleName}</td>
                             <td>{intervention.dateIntervention}</td>
                             <td>
                                 {intervention.shift == "am"
@@ -358,7 +335,7 @@ export default function ContractCreateForm({
                                         : "Journée"}
                             </td>
                             <td>{intervention.hours} heures</td>
-                            <td>{JSON.parse(intervention.interventionCategoryObject).label}</td>
+                            <td>{intervention.interventionCategoryName}</td>
                             <td>
                                 {index + 1 == interventions.length - 1 ? (
                                     ""

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import interventionsCategoriesHelper from '../../../helpers/interventionsCategoriesHelper';
 
 
 export const popupInterventionSchema = z.object({
@@ -7,6 +8,16 @@ export const popupInterventionSchema = z.object({
   moduleId: z
     .string("l'identifiant n'est pas une chaine de caracteres"),
     // .uuid("identifiant incorrect"),
+
+  moduleName: z
+    .string("le nom n'est pas une chaine de caracteres")
+    .min(2, "Le nom doit contenir au moins 2 caractères."),
+
+
+    interventionCategoryName : z
+    .string("le nom n'est pas une chaine de caracteres")
+    .min(2, "Le nom doit contenir au moins 2 caractères."),
+
 
 
   dateIntervention: z

@@ -49,22 +49,19 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose }
         setExtraCostsInput(prev => prev.length > 0 ? prev.slice(0, -1) : prev)
     }
 
-    const selectedModuleId = watch("moduleId")
     const onModuleChange = (e) => {
-        const filtered = modules.filter((module) => module.id == selectedModuleId)
+         const selectedId=e.target.value
+        const filtered = modules.filter((module) => module.id == selectedId)
         if (filtered.length <= 0) {
             return
         }
+         console.log(filtered[0].name)
         setValue("moduleName", filtered[0].name)
     }
 
-    const selectedCategoryId = watch("interventionCategoryId")
     const onCategoryChange = (e) => {
-        console.log("categoryChange")
-        const selected=e.target.value
-
-         console.log("selected", selected)
-        const filtered = interventionsCategories.filter((category) => category.id == selectedCategoryId)
+        const selectedId=e.target.value
+        const filtered = interventionsCategories.filter((category) => category.id == selectedId)
         if (filtered.length <= 0) {
             return
         }
