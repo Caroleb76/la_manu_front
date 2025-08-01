@@ -1,6 +1,12 @@
 import { z } from "zod";
 
 export const contractCreateSchema = z.object({
+
+    formateurId: z
+    .string()
+    .uuid(),
+
+
     lastName: z
         .string()
         .min(2, "Le nom doit contenir au moins 2 caractères.")
