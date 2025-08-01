@@ -1,6 +1,6 @@
 
 import { createContext, useEffect, useState } from "react";
-import { TOKEN_KEY } from "../src/utils/constants";
+import { ADMIN_ROLE, SUPERADMIN_ROLE, TOKEN_KEY } from "../src/utils/constants";
 import { authMe } from "../src/helpers/auth";
 
 
@@ -35,8 +35,9 @@ const UserProvider = ({ children }) => {
 
 
         if (!userParam ) return;
+        const isAdmin =userParam && (userParam.role.name === ADMIN_ROLE || userParam.role.name === SUPERADMIN_ROLE)
         // console.log("user is updated" , userParam);
-        
+        userParam.isAdmin = isAdmin
         setUser(userParam);
 
         

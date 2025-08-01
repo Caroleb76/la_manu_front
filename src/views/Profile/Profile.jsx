@@ -27,7 +27,7 @@ function Profile({userId}) {
       </div>
 
       {activeTab === "profile" && <ProfileForm userId={userId} />}
-      {activeTab === "upload" && <FilesManager initialUserId={userId} />}
+      {activeTab === "upload" && <FilesManager userId={userId} />}
     </div>
   );
 }

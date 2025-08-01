@@ -8,11 +8,10 @@ import InputFile from "../ui/InputFile";
 import InputText from "../ui/InputText";
 import { useNotification } from "../../../context/notificationContext";
 
-function FilesManager({ initialUserId }) {
+function FilesManager({ userId }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileNameInput, setFileNameInput] = useState("");
   const [files, setFiles] = useState([]);
-  const [userId, setUserId] = useState(initialUserId);
   const { user } = useContext(UserContext);
   const [docType, setDocType] = useState("");
   const [diplomaType, setDiplomaType] = useState("");
@@ -23,14 +22,13 @@ function FilesManager({ initialUserId }) {
   }, []);
 
   async function loadFiles() {
-    let resolvedUserId = initialUserId;
-    if (!resolvedUserId) {
-      const userData = user
-      resolvedUserId = userData.id;
+    let currentUserId = userId;
+    if (!currentUserId) {
+      currentUserId = user.id
     }
-    setUserId(resolvedUserId);
+
     try {
-      const userFiles = await filesHelper.getUserFiles(resolvedUserId);
+      const userFiles = await filesHelper.getUserFiles(currentUserId);
       console.log(userFiles);
 
       setFiles(userFiles.data);
@@ -51,9 +49,11 @@ function FilesManager({ initialUserId }) {
     if (!selectedFile || !docType || (docType === "Autre" && !fileNameInput.trim())) return;
 
     const formData = new FormData();
+    const idToSend = userId ? userId : user.id
     formData.append("file", selectedFile);
     formData.append("filename", fileNameInput.trim());
     formData.append("docType", docType);
+    formData.append("userId", idToSend);
     if (docType === "Diplome") {
       const finalName = fileNameInput.trim() + "_" + diplomaType;
       formData.set("filename", finalName);
@@ -147,18 +147,21 @@ function FilesManager({ initialUserId }) {
       )}
 
 
-
-      <label htmlFor="fileInput" className={`${styles.addButton} ${styles.fileAdd}`}>
-        Ajouter
-      </label>
-      <input
-        type="file"
-        id="fileInput"
-        name="addFile"
-        accept=".pdf,.doc,.docx,.jpg,.png"
-        hidden
-        onChange={onFileSelected}
-      />
+      {
+        !userId &&
+        <>
+          <label htmlFor="fileInput" className={`${styles.addButton} ${styles.fileAdd}`}>
+            Ajouter
+          </label>
+          <input
+            type="file"
+            id="fileInput"
+            name="addFile"
+            accept=".pdf,.doc,.docx,.jpg,.png"
+            hidden
+            onChange={onFileSelected}
+          /></>
+      }
 
 
       <div className={styles.fileSection}>

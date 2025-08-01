@@ -8,7 +8,7 @@ export default function AlertWidget() {
     useEffect(() => {
         const fetchNotifications = async () => {
             const response = await notificationsHelper.getNotifications()
-            console.log(response)
+            // console.log(response)
             if (response.success) {
                 setNotifications(response.data.notifications)
 

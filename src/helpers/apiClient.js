@@ -28,10 +28,8 @@ async function apiClient(endpoint, { method = "GET", headers = [], body, params 
     }
     try {
         const response = await fetch(url, config);
-        // if(!response.ok){
-        //     const errorData=await response.json();
-        //     throw new Error(errorData.data.message??"API Error");
-        // }
+        // console.log(response);
+        
         const json = await response.json();
         return json;
     } catch (error) {

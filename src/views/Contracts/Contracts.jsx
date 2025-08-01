@@ -1,8 +1,9 @@
 import DataGrid from "../../components/DataGrid/DataGrid";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useContext } from "react";
 import contractsHelper from "../../helpers/contractsHelper";
 import styles from "./Contracts.module.css";
 import { Link } from "react-router";
+import { UserContext } from "../../../context/userContext";
 
 export default function Contracts() {
 
@@ -20,13 +21,18 @@ export default function Contracts() {
     const [reloadTrigger, setReloadTrigger] = useState(0);
     const [searchText, setSearchText] = useState("");
     const [pageSize, setPageSize] = useState(10);
+    const { user } = useContext(UserContext);
     const getDataSource = useMemo(() => ({
         getRows: async (params) => {
 
             const offset = params.startRow;
             const pageSize = params.endRow - params.startRow;
+            let filter = null;
+            if (!user.isAdmin) {
+                filter = `{"userId":"${user.id}"}`
 
-            const response = await contractsHelper.getContracts(offset, pageSize, searchText);
+            }
+            const response = await contractsHelper.getContracts(offset, pageSize, searchText, filter);
 
             const rows = response.data.contracts.map((contract) => {
                 const hasUnvalidatedInterventions = contract?.Interventions?.some(
@@ -64,13 +70,17 @@ export default function Contracts() {
 
     return (
         <>
-         
-            <div className={styles.mainContainer}>
-   <Link to="/dashboard/contracts/create" className="btn btn-add" >
-                Créer un contrat
-            </Link>
 
-                <input type="text" placeholder="Rechercher" value={searchText} onChange={(e) => onSearchTextChange(e)} />
+            <div className={styles.mainContainer}>
+                {
+                    user.isAdmin &&
+                    <>
+                        <Link to="/dashboard/contracts/create" className="btn btn-add" >
+                            Créer un contrat
+                        </Link>
+                        <input type="text" placeholder="Rechercher" value={searchText} onChange={(e) => onSearchTextChange(e)} />
+                    </>
+                }
                 <DataGrid pageSize={pageSize} colDefs={colDefs} data={getDataSource}
                 />
             </div>

@@ -15,7 +15,7 @@ import { profileSchema } from "./profileSchema"; // Make sure this path matches 
 import usersHelper from "../../../helpers/usersHelper.js";
 import { set } from "zod/v4-mini";
 
-export default function ProfileForm({userId}) {
+export default function ProfileForm({ userId }) {
   const { user: currentUser, updateUser } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true);
   const [initials, setInitials] = useState("")
@@ -39,8 +39,14 @@ export default function ProfileForm({userId}) {
 
   useEffect(() => {
     async function loadUser() {
-      const userData = userId ? await usersHelper.getUserById(userId) : currentUser;
-      // console.log(userData)
+      let userData = null;
+      if (userId) {
+        const response = await usersHelper.getUserById(userId);
+        userData = response.data
+      } else {
+        userData = currentUser
+      }
+
       if (userData) {
 
         reset({
@@ -61,7 +67,7 @@ export default function ProfileForm({userId}) {
       setIsLoading(false);
     }
     loadUser();
-  }, [ reset]);
+  }, [reset]);
 
   const onSubmit = async (data) => {
     const formData = new FormData();
@@ -80,12 +86,14 @@ export default function ProfileForm({userId}) {
       const response = await usersHelper.updateUser(user.id, formData);
       // console.log("Update response:", response);
       notify("Profil mis à jour", "success");
-      updateUser(response.data.user);
-         const formattedInitials = handleNameInitials(userData.firstName + " " + userData.lastName)
-        // console.log(formattedInitials);
-
+      if(!userId){
+        updateUser(response.data.user);
+        const formattedInitials = handleNameInitials(userData.firstName + " " + userData.lastName)
         setInitials(formattedInitials)
-        setFiles([]);
+      }
+      // console.log(formattedInitials);
+
+      setFiles([]);
 
     } catch (error) {
       console.error("Update error:", error);
@@ -155,9 +163,9 @@ export default function ProfileForm({userId}) {
             <InputText label="Nombre de CV de votre véhicule" {...register("horsePower")} error={errors.horsePower?.message} />
           </div>
         </section>
-          <button type="submit" className="btn-success"> valider les modifications </button>
+        <button type="submit" className="btn-success"> valider les modifications </button>
 
-      
+
       </form>
     </div>
   );

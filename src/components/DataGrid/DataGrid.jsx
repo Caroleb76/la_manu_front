@@ -7,13 +7,13 @@ import styles from "./DataGrid.module.css";
 import { useEffect, useState } from "react";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
-const DataGrid = ({ data, colDefs, renderIconWithCondition, onActionClick, iconStyle,pageSize=10 }) => {
+const DataGrid = ({ data, colDefs, renderIconWithCondition, onActionClick, iconStyle, pageSize = 10 }) => {
   const [columnDefs, setColumnDefs] = useState([]);
   // I should implement a way to add actions dynamically 
   useEffect(() => {
     let newDefs = [...colDefs];
     if (colDefs.filter((colDef) => colDef.field === "Actions").length > 0) {
-
+      const actionsCol = colDefs.find((colDef) => colDef.field === "Actions");
       newDefs = newDefs.filter((colDef) => colDef.field !== "Actions");
       newDefs.push({
         headerName: "Actions",
@@ -22,14 +22,28 @@ const DataGrid = ({ data, colDefs, renderIconWithCondition, onActionClick, iconS
         cellRenderer: (params) => (
           <div style={{ position: "relative", height: "100%" }}>
             <div className={styles.actions}  >
-              <Icon
-                onClick={() => onActionClick ? onActionClick(params.data) : {}}
-                icon= {renderIconWithCondition ? renderIconWithCondition(params.data) :  ""}
-                width="1.8rem"
-                style={{
-                  color: iconStyle ? iconStyle(params.data).color : "inherit",
-                }}
-              />
+              {
+                actionsCol?.actions && actionsCol.actions.length > 0 ?
+                  actionsCol.actions.map((action, index) => (
+                    <Icon
+                      key={index}
+                      onClick={() => action.onClick ? action.onClick(params.data) : {}}
+                      icon={action.icon.condition ? action.icon.condition(params.data) : action.icon.icon}
+                      width="1.8rem"
+                      style={{
+                        color: iconStyle ? iconStyle(params.data).color : "inherit",
+                      }}
+                    />
+                  )):
+                  <Icon
+                    onClick={() => onActionClick ? onActionClick(params.data) : {}}
+                    icon={renderIconWithCondition ? renderIconWithCondition(params.data) : ""}
+                    width="1.8rem"
+                    style={{
+                      color: iconStyle ? iconStyle(params.data).color : "inherit",
+                    }}
+                  />
+              }
 
             </div>
           </div>
