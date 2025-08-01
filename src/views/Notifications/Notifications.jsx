@@ -5,6 +5,7 @@ import styles from "./Notifications.module.css";
 import PopupWrapper from "../../components/popups/PopupWrapper.jsx";
 import { useNotification } from "../../../context/notificationContext";
 import PopupformNotification from "../../components/forms/PopupFormNotification/PopupformNotification.jsx";
+import { PRIORITIES } from "../../utils/constants.js";
 
 
 function Notifications() {
@@ -35,7 +36,7 @@ function Notifications() {
             const rows = response.data.notifications.map((notification) => ({
                 id: notification.id,
                 Titre: notification.title,
-                Priorité: notification.priority,
+                Priorité: PRIORITIES[notification.priority],
                 Contenu: notification.content,
                 isActive: new Date(notification.endDate) > new Date(),
                 "Date de début": new Date(notification.startDate).toLocaleDateString(),
