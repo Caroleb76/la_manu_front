@@ -42,9 +42,8 @@ export default function ContractCreateForm({
 
     }, [interventions])
 
-    const handleChangeFormateur = (event) => {
-        setCurrentFormateurId(event.target.value);
-    };
+
+
     const handleChangeSession = (event) => {
         setCurrentSessionId(event.target.value);
     };
@@ -69,17 +68,7 @@ export default function ContractCreateForm({
         getSessionsList();
     }, []);
 
-    useEffect(() => {
-        const getFormateurData = async () => {
-            const response = await usersHelper.getUserById(currentFormateurId);
-            if (response) {
-                setCurrentFormateur(response.data);
-            }
 
-            return response;
-        };
-        getFormateurData();
-    }, [currentFormateurId]);
 
     useEffect(() => {
         const getSessionData = async () => {
@@ -97,6 +86,7 @@ export default function ContractCreateForm({
 
     const {
         register,
+        unregister,
         reset,
         handleSubmit,
         watch,
@@ -117,6 +107,20 @@ export default function ContractCreateForm({
             endDate: "",
         },
     });
+    const formateurId = watch("formateurId")
+
+    useEffect(() => {
+        console.log("effect getUser")
+        const getFormateurData = async () => {
+            const response = await usersHelper.getUserById(formateurId);
+            if (response) {
+                setCurrentFormateur(response.data);
+            }
+
+            return response;
+        };
+        getFormateurData();
+    }, [formateurId]);
 
     const selectedStartDate = watch("startDate");
 
@@ -150,16 +154,23 @@ export default function ContractCreateForm({
     }, [currentFormateur, currentSession, contractStartDate, contractEndDate]);
 
     async function onSubmit(data) {
+        const {lastName,firstName, address, postalCode, city,...otherFields}=data
+   
         // on récupère les données du formulaire sous forme d'objet
-        const values = getValues()
-       
+
+      const formattedData = {
+        interventions:interventions,
+        ...otherFields
+      }
+        console.log("otherFields", otherFields)
+
         //On récupère les interventions et on les ajoute à l'objet values
-        values.interventions = interventions;
+        data.interventions = interventions;
 
 
         // On appel la fonction onSessionCreated() qui affiche la popup de confirmation
 
-        const response = await contractsHelper.createContract(values);
+        const response = await contractsHelper.createContract(formattedData);
         if (response.success) {
             console.log(response)
             onSessionCreated();
@@ -181,7 +192,8 @@ export default function ContractCreateForm({
                             <InputSelect
                                 className={styles.twoColumns}
                                 label="Recherche d'un vacataire"
-                                onChange={handleChangeFormateur}
+                                {...register("formateurId")}
+                                error={errors.formateurId?.message}
                             >
                                 <option value="default" disabled hidden>
                                     Sélectionner
@@ -252,7 +264,7 @@ export default function ContractCreateForm({
                                 error={errors.sessionId?.message}
 
                             >
-                                <option value="default" disabled hidden>
+                                <option value="" disabled hidden>
                                     Sélectionner
                                 </option>
                                 {sessionsFormation &&
