@@ -1,13 +1,22 @@
 import { z } from 'zod';
+import interventionsCategoriesHelper from '../../../helpers/interventionsCategoriesHelper';
 
 
 export const popupInterventionSchema = z.object({
 
 
   moduleId: z
-    .string("l'identifiant n'est pas une chaine de caracteres")
-    .uuid("identifiant incorrect"),
+    .string("l'identifiant n'est pas une chaine de caracteres"),
+    // .uuid("identifiant incorrect"),
 
+  moduleName: z
+    .string("le nom n'est pas une chaine de caracteres")
+    .min(2, "Le nom doit contenir au moins 2 caractères."),
+
+
+    interventionCategoryName : z
+    .string("le nom n'est pas une chaine de caracteres")
+    .min(2, "Le nom doit contenir au moins 2 caractères."),
 
 
 
@@ -17,14 +26,14 @@ export const popupInterventionSchema = z.object({
 
   hours: z
     .coerce.number()
-    .min(1, "Le nombre d'heure est requis."),
+    .min(0.5, "Le nombre d'heure est requis."),
 
   shift: z
     .enum(["am", "pm", "journee"], "La valeur est incorrecte"),
 
   interventionCategoryId: z
-    .string()
-    .uuid("identifiant incorrect"),
+    .string(),
+    // .uuid("identifiant incorrect"),
 
 
   // toDo A adapter pour l'utilisation d'1 array

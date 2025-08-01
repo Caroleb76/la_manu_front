@@ -113,6 +113,13 @@ input:focus{
   outline: solid 2px var(--primary-color);
 }
 
+input:disabled {
+  background-color: lightgray;
+  color: var(--inactive-color);
+  cursor: not-allowed;
+  opacity: 1;
+}
+
 input::placeholder{
   color: var(--inactive-color);
   font-size: small;

@@ -14,7 +14,7 @@ import { useNotification } from "../../../../context/notificationContext.jsx";
 import interventionsHelper from "../../../helpers/interventionsHelper.js";
 import { convertDateToStandardString, convertDateToStandardStringPlusOne } from "../../../utils/date.js";
 
-export default function PopupFormIntervention({ onInterventionCreated }) {
+export default function PopupFormIntervention({ onInterventionCreated, onClose }) {
     const [extraCostsInput, setExtraCostsInput] = useState([""]);
     const [roles, setRoles] = useState([]);
     const [modules, setModules] = useState([]);
@@ -32,18 +32,41 @@ export default function PopupFormIntervention({ onInterventionCreated }) {
     } = useForm({
         resolver: zodResolver(popupInterventionSchema),
         defaultValues: {
-            moduleFormationId: "",
+            moduleId: "",
+            moduleName: "",
             interventionCategoryId: "",
+            interventionCategoryName: "",
             shift: "",
-            extraCostsState: [],
+            extraCost: [],
+
         }
     });
- 
+
     const addExtraCosts = () => {
         setExtraCostsInput(prev => [...prev, ""])
     }
     const removeExtraCosts = () => {
         setExtraCostsInput(prev => prev.length > 0 ? prev.slice(0, -1) : prev)
+    }
+
+    const onModuleChange = (e) => {
+         const selectedId=e.target.value
+        const filtered = modules.filter((module) => module.id == selectedId)
+        if (filtered.length <= 0) {
+            return
+        }
+         console.log(filtered[0].name)
+        setValue("moduleName", filtered[0].name)
+    }
+
+    const onCategoryChange = (e) => {
+        const selectedId=e.target.value
+        const filtered = interventionsCategories.filter((category) => category.id == selectedId)
+        if (filtered.length <= 0) {
+            return
+        }
+        console.log(filtered[0].name)
+        setValue("interventionCategoryName", filtered[0].name)
     }
 
     useEffect(() => {
@@ -69,7 +92,7 @@ export default function PopupFormIntervention({ onInterventionCreated }) {
         const getExtraCosts = async () => {
             const response = await extraCostsHelper.getExtraCosts();
             if (response) {
-                 console.log("extracostsResponse",response.data)
+                console.log("extracostsResponse", response.data)
                 setExtraCostsOptions(response.data)
                 // console.log(response.data.users)
             }
@@ -81,12 +104,17 @@ export default function PopupFormIntervention({ onInterventionCreated }) {
         getExtraCosts()
     }, [])
 
-    useEffect(()=>{
-        console.log("errors",errors)
-    },[errors])
+
+
+    useEffect(() => {
+        console.log("errors", errors)
+    }, [errors])
     async function onSubmit(data) {
-        console.log("submit",data)
+        console.log("submit", data)
+
+
         onInterventionCreated(data)
+        onClose()
         // const response = await interventionsHelper.createIntervention(data);
         // if (response.success) {
         //     onInterventionCreated();
@@ -95,6 +123,9 @@ export default function PopupFormIntervention({ onInterventionCreated }) {
         //     notify(response.message, "error");
         // }
     }
+
+
+
 
     return (
         <div className={styles.borderPopup}>
@@ -106,12 +137,14 @@ export default function PopupFormIntervention({ onInterventionCreated }) {
                         label="Module"
                         {...register("moduleId")}
                         error={errors.moduleId?.message}
+                        onChange={onModuleChange}
                     >
                         <option value="" hidden>
                             -- Sélectionner un module --
                         </option>
                         {modules?.map((module) => (
-                            <option key={module.id} value={module.id}>
+                            <option key={module.id} value={module.id}
+                            >
                                 {module.name}
                             </option>
                         ))}
@@ -127,6 +160,7 @@ export default function PopupFormIntervention({ onInterventionCreated }) {
                     <InputText
                         label="Nombre d'heure"
                         type="number"
+                        step="0.5"
                         {...register("hours")}
                         error={errors.hours?.message}
                     />
@@ -149,6 +183,7 @@ export default function PopupFormIntervention({ onInterventionCreated }) {
                         label="Catégorie d'intervention"
                         {...register("interventionCategoryId")}
                         error={errors.interventionCategoryId?.message}
+                         onChange={onCategoryChange}
                     >
                         <option value="" hidden>
                             -- Sélectionner une catégorie --
@@ -184,7 +219,10 @@ export default function PopupFormIntervention({ onInterventionCreated }) {
                                 -- Sélectionner un type de frais de déplacement --
                             </option>
                             {extraCostsOptions?.map((cost) => (
-                                <option key={cost.id} value={cost.id}>
+                                <option key={cost.id} value={JSON.stringify({
+                                    label: cost.category,
+                                    id: cost.id
+                                })}>
                                     {cost.category}
                                 </option>
                             ))}
@@ -199,6 +237,14 @@ export default function PopupFormIntervention({ onInterventionCreated }) {
                         placeholder="Description"
                         {...register("description")}
                         error={errors.description?.message}
+                    />
+
+                    <input type="hidden"
+                        {...register("moduleName")}
+                    />
+
+                    <input type="hidden"
+                        {...register("interventionCategoryName")}
                     />
                 </section>
 
