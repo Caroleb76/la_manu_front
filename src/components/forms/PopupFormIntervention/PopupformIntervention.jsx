@@ -14,7 +14,7 @@ import { useNotification } from "../../../../context/notificationContext.jsx";
 import interventionsHelper from "../../../helpers/interventionsHelper.js";
 import { convertDateToStandardString, convertDateToStandardStringPlusOne } from "../../../utils/date.js";
 
-export default function PopupFormIntervention({ onInterventionCreated, onClose }) {
+export default function PopupFormIntervention({ onInterventionCreated, onClose,sessionFormation: formationId }) {
     const [extraCostsInput, setExtraCostsInput] = useState([""]);
     const [roles, setRoles] = useState([]);
     const [modules, setModules] = useState([]);
@@ -50,17 +50,17 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose }
     }
 
     const onModuleChange = (e) => {
-         const selectedId=e.target.value
+        const selectedId = e.target.value
         const filtered = modules.filter((module) => module.id == selectedId)
         if (filtered.length <= 0) {
             return
         }
-         console.log(filtered[0].name)
+        console.log(filtered[0].name)
         setValue("moduleName", filtered[0].name)
     }
 
     const onCategoryChange = (e) => {
-        const selectedId=e.target.value
+        const selectedId = e.target.value
         const filtered = interventionsCategories.filter((category) => category.id == selectedId)
         if (filtered.length <= 0) {
             return
@@ -70,8 +70,9 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose }
     }
 
     useEffect(() => {
+        if(!formationId) return
         const getModules = async () => {
-            const response = await modulesHelper.getModules();
+            const response = await modulesHelper.getModuleByFormation(formationId);
             if (response) {
                 //  console.log(response.data)
                 setModules(response.data)
@@ -139,9 +140,11 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose }
                         error={errors.moduleId?.message}
                         onChange={onModuleChange}
                     >
-                        <option value="" hidden>
+                        {modules?.length <= 0 ? <option value="" >
                             -- Sélectionner un module --
-                        </option>
+                        </option> : <option value="" hidden >
+                            -- Sélectionner un module --
+                        </option>}
                         {modules?.map((module) => (
                             <option key={module.id} value={module.id}
                             >
@@ -183,7 +186,7 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose }
                         label="Catégorie d'intervention"
                         {...register("interventionCategoryId")}
                         error={errors.interventionCategoryId?.message}
-                         onChange={onCategoryChange}
+                        onChange={onCategoryChange}
                     >
                         <option value="" hidden>
                             -- Sélectionner une catégorie --
@@ -212,17 +215,13 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose }
                             key={key}
                             label=""
                             {...register(`extraCosts.${key}`, { shouldUnregister: true })}
-
                             error={errors.extracostsState?.message}
                         >
                             <option value="" hidden>
                                 -- Sélectionner un type de frais de déplacement --
                             </option>
                             {extraCostsOptions?.map((cost) => (
-                                <option key={cost.id} value={JSON.stringify({
-                                    label: cost.category,
-                                    id: cost.id
-                                })}>
+                                <option key={cost.id} value={cost.id}>
                                     {cost.category}
                                 </option>
                             ))}

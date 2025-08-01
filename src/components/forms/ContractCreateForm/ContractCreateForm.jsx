@@ -9,16 +9,16 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { contractCreateSchema } from "./contractCreateSchema.js";
 import { DevTool } from "@hookform/devtools";
-import DataGrid from "../../DataGrid/DataGrid.jsx";
-
 import sessionFormationsHelper from "../../../helpers/sessionFormationsHelper.js";
-import PopupFormIntervention from "../PopupFormIntervention/PopupformIntervention.jsx";
+import { convertDateToFranceTimeZone } from "../../../utils/date.js";
+import { useNotification } from "../../../../context/notificationContext.jsx";
+import { set } from "zod/v4-mini";
 
 export default function ContractCreateForm({
-    onSessionCreated,
     showPopup,
     interventions,
     deleteIntervention,
+    onSelectedSession,
 }) {
     const [roles, setRoles] = useState([]);
     const [reloadTrigger, setReloadTrigger] = useState(0);
@@ -31,6 +31,7 @@ export default function ContractCreateForm({
     const [currentSession, setCurrentSession] = useState(null);
     const [contractStartDate, setContractStartDate] = useState(null);
     const [contractEndDate, setContractEndDate] = useState(null);
+    const {notify}=useNotification();
 
     useEffect(() => {
         // aller chercher la date la plus ancienne parmi toutes les interventions
@@ -45,7 +46,16 @@ export default function ContractCreateForm({
 
 
     const handleChangeSession = (event) => {
+
         setCurrentSessionId(event.target.value);
+        console.log(currentSessionId);
+        
+        const formationId = sessionsFormation.find(session => session.id == event.target.value)?.formationId;
+        if(!formationId) {
+            notify("Pas possible de trouver la formation associée a cette session", "error");
+            return;
+        }
+        onSelectedSession(formationId);
     };
     useEffect(() => {
         const getFormateurs = async () => {
@@ -110,8 +120,10 @@ export default function ContractCreateForm({
     const formateurId = watch("formateurId")
 
     useEffect(() => {
-        console.log("effect getUser")
+        // console.log("effect getUser")
         const getFormateurData = async () => {
+            // console.log("the formateur id is ", formateurId);
+            if (!formateurId || formateurId === "default") return
             const response = await usersHelper.getUserById(formateurId);
             if (response) {
                 setCurrentFormateur(response.data);
@@ -132,6 +144,9 @@ export default function ContractCreateForm({
         loadRoles();
     }, []);
 
+
+
+
     useEffect(() => {
 
         if (currentFormateur) {
@@ -143,41 +158,51 @@ export default function ContractCreateForm({
         }
 
         if (contractStartDate) {
-            setValue("startDate", new Date(contractStartDate).toLocaleDateString());
+
+            
+
+
+            setValue("startDate", convertDateToFranceTimeZone(contractStartDate));
         }
 
         if (contractEndDate) {
-            setValue("endDate", new Date(contractEndDate).toLocaleDateString());
+
+            setValue("endDate", convertDateToFranceTimeZone(contractEndDate));
         }
 
 
     }, [currentFormateur, currentSession, contractStartDate, contractEndDate]);
 
     async function onSubmit(data) {
-        const {lastName,firstName, address, postalCode, city,...otherFields}=data
-   
+     try {
+           const { lastName, firstName, address, postalCode, city, ...otherFields } = data
+
         // on récupère les données du formulaire sous forme d'objet
 
-      const formattedData = {
-        interventions:interventions,
-        ...otherFields
-      }
+        const formattedData = {
+            interventions: interventions,
+            ...otherFields
+        }
         console.log("otherFields", otherFields)
 
         //On récupère les interventions et on les ajoute à l'objet values
         data.interventions = interventions;
 
 
-        // On appel la fonction onSessionCreated() qui affiche la popup de confirmation
 
         const response = await contractsHelper.createContract(formattedData);
         if (response.success) {
             console.log(response)
-            onSessionCreated();
             reset();
+           deleteIntervention(true);
+           notify("Le contrat a bien été ajouté", "success");
         } else {
             alert(response.message);
         }
+     } catch (error) {
+        console.error(error);
+        notify("Une erreur est survenue", "error");
+     }
     }
 
 
@@ -259,8 +284,8 @@ export default function ContractCreateForm({
                             <InputSelect
                                 className={styles.twoColumns}
                                 label="Session de formation"
-                                onChange={handleChangeSession}
                                 {...register("sessionId")}
+                                onChange={handleChangeSession}
                                 error={errors.sessionId?.message}
 
                             >
@@ -307,14 +332,14 @@ export default function ContractCreateForm({
                     <section className={styles.twoColumns}>
                         <div className={styles.interventionTitle}>
                             <h2 className="title">Interventions</h2>
-                            <button
+                          { currentSessionId &&  <button
                                 type="button"
                                 className={styles.btnPlus}
                                 onClick={showPopup}
                             >
                                 {" "}
                                 +{" "}
-                            </button>
+                            </button>}
                         </div>
                     </section>
                 </div>
@@ -338,7 +363,7 @@ export default function ContractCreateForm({
                         <tr key={index}>
                             <td>{index + 1}</td>
                             <td>{intervention.moduleName}</td>
-                            <td>{intervention.dateIntervention}</td>
+                            <td>{convertDateToFranceTimeZone(intervention.dateIntervention)}</td>
                             <td>
                                 {intervention.shift == "am"
                                     ? "Matin"
@@ -368,7 +393,7 @@ export default function ContractCreateForm({
                 </table>
 
                 <div className={styles.popupButtons}>
-                    <button> Valider </button>
+                    <button> Créer </button>
                 </div>
                 <DevTool control={control} />
             </form>

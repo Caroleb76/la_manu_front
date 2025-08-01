@@ -16,18 +16,25 @@ export default function CreateContract() {
     const [reloadTrigger, setReloadTrigger] = useState(0);
  
     const [interventions, setInterventions] = useState([])
+    const [selectedFormationId, setSelectedFormationId] = useState(null);
 
     const addIntervention = ((intervention) => {
         setInterventions(prev => [...prev, intervention])
     })
-    const deleteLastIntervention = (() => {
+    const deleteLastIntervention = ((all=false) => {
+        if(all){
+            setInterventions([])
+            return;
+        }
         setInterventions(prev => prev.length > 0 ? prev.slice(0, -1) : prev)
 
     })
 
 
    
-
+    const onSessionFormationSelected = (formationId) => {
+        setSelectedFormationId(formationId);
+    };
 
 
 
@@ -61,6 +68,7 @@ export default function CreateContract() {
                             <PopupformIntervention
                                 onInterventionCreated={addIntervention}
                                 onClose={() => setInterventionCreationMode(false)}
+                                sessionFormation = {selectedFormationId}
                             />
                         </PopupWrapper>
                     </>
@@ -68,8 +76,8 @@ export default function CreateContract() {
                 <ContractCreateForm 
                    interventions={interventions}
                    deleteIntervention={deleteLastIntervention}
-                    onSessionCreated={() => { }}
                     showPopup={() => setInterventionCreationMode(true)}
+                    onSelectedSession={onSessionFormationSelected}
                 />
                
             </div>

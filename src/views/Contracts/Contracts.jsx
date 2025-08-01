@@ -4,6 +4,7 @@ import contractsHelper from "../../helpers/contractsHelper";
 import styles from "./Contracts.module.css";
 import { Link } from "react-router";
 import { UserContext } from "../../../context/userContext";
+import { convertDateToFranceTimeZone } from "../../utils/date";
 
 export default function Contracts() {
 
@@ -13,9 +14,9 @@ export default function Contracts() {
         { field: "Date de Début", filter: false },
         { field: "Date de Fin", filter: false },
         { field: "Heures", filter: false },
+        { field: "Interventions", filter: false },
         { field: "Signé", filter: false },
         { field: "Déclaré", filter: false },
-        { field: "Interventions", filter: false },
     ];
 
     const [reloadTrigger, setReloadTrigger] = useState(0);
@@ -42,12 +43,12 @@ export default function Contracts() {
                     id: contract.id,
                     "Nom Prénom": contract.User.firstName + " " + contract.User.lastName,
                     "Formation": contract.SessionFormation.Formation.name,
-                    "Date de Début": new Date(contract.startDate).toLocaleDateString(),
-                    "Date de Fin": new Date(contract.endDate).toLocaleDateString(),
-                    "Heures": contract.intervention, //somme des temps des interventions
-                    "Signé": contract.signed,
-                    "Déclaré": contract.declared,
-                    "Interventions": hasUnvalidatedInterventions,
+                    "Date de Début": convertDateToFranceTimeZone(contract.startDate),
+                    "Date de Fin": convertDateToFranceTimeZone(contract.endDate),
+                    "Heures": contract.totalHours, //somme des temps des interventions
+                    "Interventions": contract.interventions.length,
+                    "Signé": contract.signed ? "✅" : "❌",
+                    "Déclaré": contract.declared ? "✅" : "❌",
                 }
             }
             );
