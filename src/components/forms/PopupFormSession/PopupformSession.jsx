@@ -53,12 +53,13 @@ export default function PopupFormSession({ onSessionCreated, session }) {
     };
 
     async function onSubmit(data) {
-        let response = null;
+       try{
+         let response = null;
         
 
+         data.addressId = selectedAddress.id;
         if (session) { // update case 
             data.id= session.id
-          session.addressId = selectedAddress.id;
             response = await sessionFormationsHelper.updateSessionFormation(
                 data
             );
@@ -67,18 +68,26 @@ export default function PopupFormSession({ onSessionCreated, session }) {
                 data
             );
         }
+        // console.log("the api called is ", response);
+        
         if (response.success) {
           if (session) {
             notify("Session modifiée", "success");
             
         } else {
+            
             notify("La formation a bien été ajoutée", "success");
           }
             onSessionCreated();
+            reset();
+            // console.log(response);
+            
         } else {
             notify(response.message, "error");
         }
-        reset();
+       }catch(e){
+
+       }
     }
 
     const onAddressChange = async (address) => {
@@ -179,6 +188,8 @@ export default function PopupFormSession({ onSessionCreated, session }) {
                             }}
                             valueField={"label"}
                             onSelect={(a) => {
+                                // console.log("a", a);
+                                
                                 setSelectedAddress(a);
 
                                 setAddressSearchText(a.city);
