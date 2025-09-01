@@ -13,6 +13,7 @@ function Navbar() {
 
 
   useEffect(() => {
+    console.log(user.initials ?? "not found");
     function handleClickOutside(event) {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
         setDropdown(false);
@@ -22,7 +23,8 @@ function Navbar() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+    
+  }, [user]);
 
 
   function handleLogout() {
@@ -37,13 +39,14 @@ function Navbar() {
           onClick={() => setDropdown(!dropdown)}
           ref={wrapperRef}
         >
-          {
-            user?.profilePicture ? (
-                <img src={serverUrl + user.profilePicture + `?${Date.now()}`} alt="avatar" />
-            ) : (
-              <p>{user?.initials}</p>
-            )
-          }
+          {user?.profilePicture ? (
+            <img
+              src={`${serverUrl}${user.profilePicture}?v=${user.profilePicVersion ?? 0}`}
+              alt="avatar"
+            />
+          ) : (
+            <p>{user?.initials}</p>
+          )}
           {dropdown && (
             <div
               className={`${styles.dropdownContent}, ${dropdown ? styles.dropdownVisible : ""
