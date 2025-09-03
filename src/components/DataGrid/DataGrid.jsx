@@ -32,6 +32,7 @@ const DataGrid = ({ data, colDefs, renderIconWithCondition, onActionClick, iconS
                       width="1.8rem"
                       style={{
                         color: iconStyle ? iconStyle(params.data).color : "inherit",
+                        visibility: action.visible===false ? "hidden" : "visible",
                       }}
                     />
                   )):

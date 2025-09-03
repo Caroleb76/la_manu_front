@@ -6,7 +6,7 @@ async function getInterventions (offset=0,limit=10,searchText=""){
     const params= {
         offset,limit,searchText
     };
-    const response= await apiClient("intervention/",{method:"GET",params});
+    const response= await apiClient("interventions/",{method:"GET",params});
     return response;
 
 }

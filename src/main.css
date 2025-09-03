@@ -120,6 +120,20 @@ input:disabled {
   opacity: 1;
 }
 
+select:disabled {
+  background-color: lightgray;
+  color: var(--inactive-color);
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+button:disabled {
+  background-color: lightgray;
+  color: var(--inactive-color);
+  cursor: not-allowed;
+  opacity: 1;
+}
+
 input::placeholder{
   color: var(--inactive-color);
   font-size: small;
