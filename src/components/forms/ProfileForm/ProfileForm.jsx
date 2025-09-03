@@ -82,22 +82,24 @@ export default function ProfileForm({ userId }) {
       formData.append(fileObj.name, fileObj.file);
     });
 
-    try {
-      const response = await usersHelper.updateUser(user.id, formData);
-      // console.log("Update response:", response);
-      notify("Profil mis à jour", "success");
-      if(!userId){
-        updateUser(response.data.user);
-        const formattedInitials = handleNameInitials(userData.firstName + " " + userData.lastName)
-        setInitials(formattedInitials)
-      }
-      // console.log(formattedInitials);
+ try {
+  const response = await usersHelper.updateUser(user.id, formData);
+  notify("Profil mis à jour", "success");
 
-      setFiles([]);
+  const updated = response.data; 
+  
 
-    } catch (error) {
-      console.error("Update error:", error);
-    }
+  if (!userId) {
+    updateUser(updated);
+  }
+
+
+  setUser(prev => ({ ...prev, ...updated }));
+  setProfilePicture(null);
+  setFiles([]);
+} catch (err) {
+  console.error("Update error:", err);
+}
   };
 
   if (isLoading) return <p>Chargement...</p>;
@@ -107,7 +109,7 @@ export default function ProfileForm({ userId }) {
       <form onSubmit={handleSubmit((data) => onSubmit(data))}>
         <section className={`${styles.grid} ${styles.profileSection}`}>
           <div className={styles.profileIconTitleWrapper}>
-            <input hidden type="file" id="avatarFile" accept="image/*" onChange={(e) => {
+            <input hidden type="file" id="avatarFile" accept=".jpg,.png,.gif,.webp" onChange={(e) => {
               console.log("photo", e.target.files[0]);
               setProfilePicture(e.target.files[0]);
               setFiles(prev => [...prev, { name: "profilePicture", file: e.target.files[0] }]);
