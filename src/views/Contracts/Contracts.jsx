@@ -45,6 +45,13 @@ export default function Contracts() {
                         icon: "material-symbols:stylus-note",
                     },
                 },
+                {
+                    label: "Pdf",
+                    onClick: (data) => exportToPdf(data),
+                    icon: {
+                        icon: "material-symbols:visibility",
+                    },
+                },
             ],
         },
     ];
@@ -113,9 +120,7 @@ export default function Contracts() {
         [reloadTrigger]
     );
 
-    useEffect(() => {
-       console.log(user);
-    }, [user]);
+
 
     const onSearchTextChange = (e) => {
         setSearchText(e.target.value);
@@ -130,6 +135,10 @@ export default function Contracts() {
     const signContract = async (data) => {
         setSelectedContractId(data.id);
         navigate(`/dashboard/contracts/sign/${data.id}`);
+    };
+
+    const exportToPdf = (data) => {
+        navigate(`/dashboard/contracts/view/${data.id}`);
     };
 
     return (

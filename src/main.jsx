@@ -19,6 +19,7 @@ import CreateContract from "./views/Contracts/createContract/CreateContract";
 import Sessions from "./views/Sessions/Sessions";
 import Interventions from "./views/Interventions/Interventions";
 import EditContract from "./views/Contracts/editContract/EditContract";
+import ViewContract from "./views/Contracts/viewContract/ViewContract";
 
 createRoot(document.getElementById("root")).render(
     <UserProvider>
@@ -42,6 +43,7 @@ createRoot(document.getElementById("root")).render(
                             <Route path="sessions" element={<Sessions />} />
                             <Route path="contracts">
                                 <Route index element={<Contracts />} />
+                                <Route path="view/:contractId" element={<ViewContract />} />
                                 <Route
                                     path="create"
                                     element={<CreateContract />}
@@ -54,6 +56,7 @@ createRoot(document.getElementById("root")).render(
                                     path="sign/:contractId"
                                     element={<CreateContract />}
                                 />
+
                             </Route>
 
                             <Route path="profile" element={<Profile />} />
