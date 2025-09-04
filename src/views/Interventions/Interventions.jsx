@@ -7,8 +7,13 @@ import { useNotification } from "../../../context/notificationContext";
 import PopupformNotification from "../../components/forms/PopupFormNotification/PopupformNotification.jsx";
 import { PRIORITIES } from "../../utils/constants.js";
 import { convertDateToFranceTimeZone } from "../../utils/date.js";
+import { useContext } from "react";
+import { UserContext } from "../../../context/userContext";
 
 function Interventions() {
+
+    const {user }=useContext(UserContext);
+
     const [notificationCreationMode, setNotificationCreationMode] =
         useState(false);
     const { notify } = useNotification();
@@ -35,13 +40,22 @@ function Interventions() {
                 const offset = params.startRow;
                 const pageSize = params.endRow - params.startRow;
 
-                const response = await interventionsHelper.getInterventions(
-                    offset,
-                    pageSize,
-                    searchText
-                );
+                let response;
 
-                console.log(response);
+                if(user.role.name==="ADMIN"){
+                    response = await interventionsHelper.getInterventions(
+                        offset,
+                        pageSize,
+                        searchText
+                    );
+                }else{
+                    response = await interventionsHelper.getByUserId(
+                        user.id
+                    );
+                }
+
+                
+                console.log("RESPONSE", response);
 
                 const rows = response.data.map((interventions) => ({
                     Nom: interventions.Contract.User.lastName,

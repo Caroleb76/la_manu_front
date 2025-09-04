@@ -8,7 +8,15 @@ async function getInterventions (offset=0,limit=10,searchText=""){
     };
     const response= await apiClient("interventions/",{method:"GET",params});
     return response;
+}
 
+async function getByUserId (id){
+
+    const params= {
+       id
+    };
+    const response= await apiClient("interventions/user/"+id,{method:"GET",params});
+    return response;
 }
 
 async function createIntervention (intervention){
@@ -27,5 +35,6 @@ async function deleteIntervention(id) {
 export default {
     getInterventions,
     deleteIntervention,
-    createIntervention
+    createIntervention, 
+    getByUserId
 }
