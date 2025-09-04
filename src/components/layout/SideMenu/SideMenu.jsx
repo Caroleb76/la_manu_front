@@ -113,28 +113,26 @@ function SideMenu() {
                                     <p>Sessions de formation</p>
                                 </div>
                             </NavLink>
-
-                            <NavLink
-                                to="/dashboard/interventions"
-                                className={({ isActive }) =>
-                                    ` ${styles.menuItem} ${
-                                        isActive ? styles.active : ""
-                                    }`
-                                }
-                            >
-                                <div className={styles.menuItemContent}>
-                                    <Icon
-                                        className={styles.menuIcon}
-                                        icon="hugeicons:file-euro"
-                                        width={"1.8rem"}
-                                        fill={"green"}
-                                    />
-                                    <p>Interventions</p>
-                                </div>
-                            </NavLink>
                         </>
                     )}
-
+                    <NavLink
+                        to="/dashboard/interventions"
+                        className={({ isActive }) =>
+                            ` ${styles.menuItem} ${
+                                isActive ? styles.active : ""
+                            }`
+                        }
+                    >
+                        <div className={styles.menuItemContent}>
+                            <Icon
+                                className={styles.menuIcon}
+                                icon="hugeicons:file-euro"
+                                width={"1.8rem"}
+                                fill={"green"}
+                            />
+                            <p>Interventions</p>
+                        </div>
+                    </NavLink>
                     <NavLink
                         to="/dashboard/contracts"
                         className={({ isActive }) =>
