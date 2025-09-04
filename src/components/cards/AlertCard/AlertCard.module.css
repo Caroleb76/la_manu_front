@@ -1,0 +1,39 @@
+.title {
+display:flex;
+align-items: center;
+gap: 1rem;
+>h3{
+    font-size: large;
+    font-weight: bold;
+}
+>p{
+    font-size: small;
+}
+}
+
+.content {
+
+}
+
+.card {
+padding: 1rem;
+border-radius: var(--radius);
+
+}
+
+.priorityDefault{
+    background-color: var(--inactive-color);
+}
+
+
+.priorityHigh {
+background-color: var(--error-color);
+}
+
+.priorityMedium {
+background-color: var(--warning-color);
+}
+
+.priorityLow {
+background-color: var(--success-color);
+}

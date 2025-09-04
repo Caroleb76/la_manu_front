@@ -1,0 +1,14 @@
+.layoutContainer{
+    display: flex;
+    min-width: 100vw;
+    min-height: 100vh;
+}
+.layoutContent{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+.layoutBody{
+    flex: 1;
+    padding: 2rem;
+}

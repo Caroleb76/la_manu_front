@@ -1,0 +1,99 @@
+.fileContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 0 auto;
+  width: 70%;
+}
+
+.addButton {
+  font-size: 0.8rem;
+  width: 6.5rem;
+  height: 1.5rem;
+  padding: 0.25rem;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  text-align: center;
+ 
+}
+.noFile{
+ position: absolute;
+ top: 50%;
+ left: 50%;
+ transform: translate(-50%, -50%);
+ font-size: 1.5rem;
+ color: var(--inactive-color);
+}
+.fileContainer button:hover {
+  background-color: #2d5293;
+  /* darker shade of primary */
+}
+
+.fileGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 1rem;
+
+
+}
+
+.fileSection {
+  height: 600px;
+  overflow-y: auto;
+  background-color: #e4e4e4;
+  border-radius: var(--radius);
+  padding: 0.5rem;
+
+}
+
+.fileAddPopupBlock{
+
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+}
+.fileAddPopup{
+  position: relative;
+  padding: 2rem;
+  display: flex;
+  border-radius: var(--radius);
+  align-items: center;
+  gap: 1rem;
+  background-color: #f8f9fa;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  animation: fadeIn 0.3s ease;
+}
+.select {
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: var(--radius);
+  background-color: white;
+  color: var(--text-color);
+  min-width: 200px;
+}
+
+.closeIcon{
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  cursor: pointer;
+}
+
+.fileAdd{
+    align-self: flex-end;
+}

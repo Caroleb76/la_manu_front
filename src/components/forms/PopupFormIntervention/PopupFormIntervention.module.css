@@ -1,0 +1,35 @@
+ .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr ;
+    gap: 2rem;
+  } 
+
+  .grid_2col {
+    grid-column: span 2;
+  }
+
+  .popupSection {
+padding-top: 2rem;                 
+padding-bottom: 2rem;
+  }
+
+
+  .popupButtons{
+    display :flex;
+    justify-content: space-evenly;
+    
+
+  }
+
+  .extraCostsButtons{
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .extraCostsTitle{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  
