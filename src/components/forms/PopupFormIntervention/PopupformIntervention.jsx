@@ -38,6 +38,7 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose,s
             interventionCategoryName: "",
             shift: "",
             extraCost: [],
+            description: "",
 
         }
     });
@@ -233,10 +234,10 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose,s
 
                     </div >
                     <InputText
+                        {...register("description")}
                         className={styles.grid_2col}
                         label="Description"
                         placeholder="Description"
-                        {...register("description")}
                         error={errors.description?.message}
                     />
 

@@ -30,14 +30,12 @@ export default function CreateContract() {
                 id: intervention.moduleId,
                 name: intervention.moduleName,
             },
-            dateIntervention: intervention.dateIntervention,
-            shift: intervention.shift,
-            hours: intervention.hours,
+            
             InterventionCategory: {
                 id: intervention.interventionCategoryId,
                 name: intervention.interventionCategoryName,
             },
-            extraCosts: intervention.extraCosts,
+           ...intervention
         };
         setInterventions((prev) => [...prev, formattedIntervention]);
     };
