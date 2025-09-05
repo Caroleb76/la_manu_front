@@ -7,7 +7,12 @@ import AlertWidget from "../../components/Widget/AlertWidget/AlertWidget";
 import Tasks from "../../components/Widget/Tasks/Tasks";
 import BigCalendar from "../../components/calendar/BigCalendar";
 import interventionsHelper from "../../helpers/interventionsHelper";
-import { getInterventionEndDate , getInterventionStartDate} from "../../utils/date";
+import {
+    getInterventionEndDate,
+    getInterventionStartDate,
+} from "../../utils/date";
+import { isAdmin, isFormateur } from "../../utils/userRole";
+import AdminStats from "../../components/stats/AdminStats";
 
 export default function Home() {
     const { user } = useContext(UserContext);
@@ -16,37 +21,58 @@ export default function Home() {
     useEffect(() => {
         const getEvents = async () => {
             if (!user || !user.id) return;
+
+            
+
             try {
                 // Get interventions
-                const interventionsResponse = await interventionsHelper.getByUserId(user.id);
+                const interventionsResponse =
+                    await interventionsHelper.getByUserId(user.id);
                 console.log("INTERVENTIONS", interventionsResponse.data);
 
-
-                const events = interventionsResponse.data.map((intervention) => ({
-                    title: intervention.ModuleFormation.name,
-                    start: getInterventionStartDate(intervention.dateIntervention, intervention.shift),
-                    end: getInterventionEndDate(intervention.dateIntervention, intervention.shift, intervention.hours),
-                    allDay: false,
-                }));
+                const events = interventionsResponse.data.map(
+                    (intervention) => ({
+                        title: intervention.ModuleFormation.name,
+                        start: getInterventionStartDate(
+                            intervention.dateIntervention,
+                            intervention.shift
+                        ),
+                        end: getInterventionEndDate(
+                            intervention.dateIntervention,
+                            intervention.shift,
+                            intervention.hours
+                        ),
+                        allDay: false,
+                    })
+                );
 
                 setEvents(events);
-
             } catch (error) {
                 console.error(error);
             }
         };
-        getEvents().then(() => {console.log("events", events)});
+        getEvents().then(() => {
+            console.log("events", events);
+        });
     }, []);
     return (
         <section className={styles.widgetGrid}>
-            <Widget
-                titre="calendrier"
-                classString={styles.calendarWidget + " " + styles.widget}
-            >
-                {" "}
-                <BigCalendar events={events}/>
-            </Widget>
+            {user && isAdmin(user) && (
+                <Widget titre="Statistiques" classString={styles.statsWidget + " " + styles.widget}>
+                    {" "}
+                    <AdminStats/> 
+                </Widget>
+            )}
 
+            {user && isFormateur(user) && (
+                <Widget
+                    titre="calendrier"
+                    classString={styles.calendarWidget + " " + styles.widget}
+                >
+                    {" "}
+                    <BigCalendar events={events} />
+                </Widget>
+            )}
             <Widget titre="alertes" classString={styles.widget}>
                 {" "}
                 <AlertWidget />

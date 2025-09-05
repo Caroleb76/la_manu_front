@@ -29,7 +29,7 @@ export const popupInterventionSchema = z.object({
     .min(0.5, "Le nombre d'heure est requis."),
 
   shift: z
-    .enum(["am", "pm", "journee"], "La valeur est incorrecte"),
+    .enum(["matin", "apres-midi", "journee"], "La valeur est incorrecte"),
 
   interventionCategoryId: z
     .string(),
