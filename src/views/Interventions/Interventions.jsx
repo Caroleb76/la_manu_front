@@ -175,8 +175,8 @@ const onInterventionValidated = (iv) => {
             pending.length > 0 &&
             <Section title="interventions passées à valider ⚠️" items={pending}  onValidateClick={onInterventionValidated}/>
           }
-          <Section title="Interventions à venir" items={coming} onValidateClick={onInterventionValidated}/>
-          <Section title="intervention validées" items={validated} onValidateClick={onInterventionValidated}/>
+          <Section title="Interventions à venir" disableActions={true} items={coming} onValidateClick={onInterventionValidated}/>
+          <Section title="intervention validées"  disableActions={true} items={validated} onValidateClick={onInterventionValidated}/>
         </div>
       )}
 
@@ -186,7 +186,8 @@ const onInterventionValidated = (iv) => {
 }
 
 // small components
-function Section({ title, items, onValidateClick }) {
+function Section({ title, items, onValidateClick,disableActions }) {
+  console.log(disableActions);
   return (
     <section>
       <div className={styles.sectionHeader}>
@@ -195,19 +196,22 @@ function Section({ title, items, onValidateClick }) {
       {items.length === 0 ? (
         <div className={styles.emptyCard}>Aucune donnée.</div>
       ) : (
-        items.map((iv) => <InterventionCard onValidateClick={()=>onValidateClick(iv)} key={iv.id} iv={iv} />)
+        items.map((iv) => <InterventionCard disableActions={disableActions} onValidateClick={()=>onValidateClick(iv)} key={iv.id} iv={iv} />)
       )}
     </section>
   );
 }
 
-function InterventionCard({ iv ,onValidateClick}) {
+function InterventionCard({ iv ,onValidateClick,disableActions}) {
   const date = new Date(iv.dateIntervention);
   const weekday = monthWithDot(date.toLocaleDateString("fr-FR", { weekday: "long" }));
   const day = date.toLocaleDateString("fr-FR", { day: "2-digit" });
   const month = cleanedMonth(date.toLocaleDateString("fr-FR", { month: "short" }));
   const {notify} = useNotification();
   const [extraCostMode, setExtraCostMode] = useState(false);
+  
+  
+  
   const onExtraClick = () => {
     setExtraCostMode(true);
   };
@@ -281,17 +285,18 @@ function InterventionCard({ iv ,onValidateClick}) {
 
             <button
               type="button"
-              className={styles.extraBtn}
+              className={styles.extraBtn + " " + (disableActions ? styles.disabled : "")}
               onClick={onExtraClick}
+              disabled={disableActions}
               title="Voir / ajouter des frais annexes"
             >
               Frais
             </button>
                        <button
               type="button"
-              className={styles.extraBtn + " " + (iv.validatedByFormateur ? styles.disabled : "")}
+              className={styles.extraBtn + " " + ((iv.validatedByFormateur || disableActions) ? styles.disabled : "")}
               onClick={validate}
-              disabled={iv.validatedByFormateur}
+              disabled={iv.validatedByFormateur || disableActions}
               title="Valider l’intervention"
             >
               {iv.validatedByFormateur ? "Valide" : "Valider"}
