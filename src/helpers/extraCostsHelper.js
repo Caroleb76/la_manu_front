@@ -11,21 +11,30 @@ async function getExtraCosts (offset=0,limit=10,searchText=""){
 
 }
 
-// async function createIntervention (intervention){
+async function create (extraCost){
 
-//     const response= await apiClient("intervention/",{method:"POST",body:intervention});
-//     return response;
+    const response= await apiClient("extraCosts/",{method:"POST",body:extraCost});
+    return response;
 
-// }
+}
 
-// async function deleteIntervention(id) {
-//     const response = await apiClient("intervention/"+id,{method:"DELETE"});
-//     return response;
-// }
+async function getExtraCostsByInterventionId (interventionId){
+
+    const response= await apiClient(`extraCosts/intervention/${interventionId}`,{method:"GET"});    
+    return response;
+    
+}
+
+async function destroy(id) {
+    const response = await apiClient("extraCosts/"+id,{method:"DELETE"});
+    return response;
+}
 
 
 export default {
     getExtraCosts,
-    // deleteIntervention,
+    create,
+    getExtraCostsByInterventionId,
+    destroy
     // createIntervention
 }

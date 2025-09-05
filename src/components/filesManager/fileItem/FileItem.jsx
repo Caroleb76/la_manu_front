@@ -6,7 +6,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { set } from "zod/v4-mini";
 import { useNotification } from "../../../../context/notificationContext";
 
-function FileItem({ file, onFileDeleted }) {
+function FileItem({ file, onFileDeleted,miniMode }) {
   const serverUrl = import.meta.env.VITE_SERVER_URL;
   const [fileClicked, setFileClicked] = useState(false);
   const [deleteFileConfirmation, setDeleteFileConfirmation] = useState(false);
@@ -47,7 +47,7 @@ function FileItem({ file, onFileDeleted }) {
   }
 
   return (
-    <div ref={wrapperRef} className={styles.fileItem + (fileClicked ? " " + styles.active : "")} onClick={() => { onFileClicked() }} role="button" tabIndex={0}>
+    <div ref={wrapperRef} className={styles.fileItem + (fileClicked ? " " + styles.active : "")+ (miniMode ? " " + styles.miniMode : "")} onClick={() => { onFileClicked() }} role="button" tabIndex={0}>
       {deleteFileConfirmation &&
         <div className={styles.confirmatiionDialogBlock}>
           <div className={styles.confirmationDialog}>

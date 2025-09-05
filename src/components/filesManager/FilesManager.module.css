@@ -9,7 +9,7 @@
 
 .addButton {
   font-size: 0.8rem;
-  width: 6.5rem;
+  /* width: 6.5rem; */
   height: 1.5rem;
   padding: 0.25rem;
   background-color: var(--primary-color);
@@ -96,4 +96,13 @@
 
 .fileAdd{
     align-self: flex-end;
+}
+.miniMode{
+  width: 100%!important;
+  .fileGrid{
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+  .fileContainer{
+    width: 100%!important;
+  }
 }

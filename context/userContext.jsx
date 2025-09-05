@@ -1,5 +1,5 @@
 import { createContext, useEffect, useMemo, useRef, useState } from "react";
-import { ADMIN_ROLE, SUPERADMIN_ROLE, TOKEN_KEY } from "../src/utils/constants";
+import { ADMIN_ROLE, FORMATEUR_ROLE, SUPERADMIN_ROLE, TOKEN_KEY } from "../src/utils/constants";
 import { authMe } from "../src/helpers/auth";
 import { handleNameInitials } from "../src/utils/initials";
 
@@ -39,6 +39,7 @@ function normalizeUser(u) {
     ...u,
     initials: u?.initials ?? handleNameInitials(`${firstName} ${lastName}`),
     isAdmin: [ADMIN_ROLE, SUPERADMIN_ROLE].includes(u?.role?.name),
+    isFormateur: u?.role?.name === FORMATEUR_ROLE
   };
 }
 

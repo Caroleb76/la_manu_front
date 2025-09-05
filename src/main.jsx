@@ -17,6 +17,7 @@ import { NotificaitonProvider } from "../context/notificationContext";
 import Formations from "./views/Formations/Formations";
 import CreateContract from "./views/Contracts/createContract/CreateContract"
 import Sessions from "./views/Sessions/Sessions";
+import Interventions from "./views/Interventions/Interventions";
 
 createRoot(document.getElementById("root")).render(
 
@@ -34,6 +35,7 @@ createRoot(document.getElementById("root")).render(
 
             <Route path="dashboard" element={<Dashboard />}>
               <Route path="main" element={<Home />} />
+              <Route path="interventions" element={<Interventions />} />
               <Route path="users" element={<Users />} />
               <Route path="notifications" element={<Notifications />} />
               <Route path="formations" element={<Formations />} />

@@ -37,6 +37,25 @@ function SideMenu() {
               <p>Dashboard</p>
             </div>
           </NavLink>
+          {
+            user.isFormateur &&
+                      <NavLink
+            to="/dashboard/interventions"
+            className={({ isActive }) =>
+              ` ${styles.menuItem} ${isActive ? styles.active : ""}`
+            }
+          >
+            <div className={styles.menuItemContent}>
+              <Icon
+                className={styles.menuIcon}
+                icon="hugeicons:dashboard-browsing"
+                width={"1.8rem"}
+                fill={"green"}
+              />
+              <p>Interventions</p>
+            </div>
+          </NavLink>
+          }
 
           {user.isAdmin &&
             <>
