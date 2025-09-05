@@ -503,7 +503,7 @@ export default function ContractCreateForm({
                             currentInterventions.map((intervention, index) => (
                                 <tr key={index}>
                                     <td>{index + 1}</td>
-                                    <td>{intervention.ModuleFormation.name}</td>
+                                    <td>{intervention.ModuleFormation?.name ?? "N/A"}</td>
                                     <td>
                                         {convertDateToFranceTimeZone(
                                             intervention.dateIntervention
@@ -518,7 +518,7 @@ export default function ContractCreateForm({
                                     </td>
                                     <td>{intervention.hours} heures</td>
                                     <td>
-                                        {intervention.InterventionCategory.name}
+                                        {intervention.InterventionCategory?.name ?? "N/A"}
                                     </td>
                                     <td>
                                         <button

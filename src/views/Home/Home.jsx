@@ -32,7 +32,7 @@ export default function Home() {
 
                 const events = interventionsResponse.data.map(
                     (intervention) => ({
-                        title: intervention.ModuleFormation.name,
+                        title: intervention?.ModuleFormation?.name ?? "N/A",
                         start: getInterventionStartDate(
                             intervention.dateIntervention,
                             intervention.shift
@@ -47,6 +47,7 @@ export default function Home() {
                 );
 
                 setEvents(events);
+                // logger.info("events", events);
             } catch (error) {
                 console.error(error);
             }
