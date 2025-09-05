@@ -2,7 +2,7 @@ import styles from "./SideMenu.module.css";
 import logo from "../../../assets/img/Logo.svg";
 import { NavLink } from "react-router";
 import { Icon } from "@iconify/react";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { UserContext } from "../../../../context/userContext";
 import { ADMIN_ROLE, SUPERADMIN_ROLE } from "../../../utils/constants";
 function SideMenu() {
@@ -10,7 +10,9 @@ function SideMenu() {
     // const isAdmin = user && (user.role.name === ADMIN_ROLE || user.role.name === SUPERADMIN_ROLE);
     // console.log(user);
 
-
+useEffect(() => {
+  console.log(user.isFormateur);
+}, []);
   return (
     <>
 
@@ -47,7 +49,26 @@ function SideMenu() {
             <div className={styles.menuItemContent}>
               <Icon
                 className={styles.menuIcon}
-                icon="hugeicons:dashboard-browsing"
+                icon="hugeicons:file-euro"
+                width={"1.8rem"}
+                fill={"green"}
+              />
+              <p>Interventions</p>
+            </div>
+          </NavLink>
+          }
+          {
+            user.isAdmin &&
+                      <NavLink
+            to="/dashboard/interventions-admin"
+            className={({ isActive }) =>
+              ` ${styles.menuItem} ${isActive ? styles.active : ""}`
+            }
+          >
+            <div className={styles.menuItemContent}>
+              <Icon
+                className={styles.menuIcon}
+                icon="hugeicons:file-euro"
                 width={"1.8rem"}
                 fill={"green"}
               />
@@ -134,24 +155,7 @@ function SideMenu() {
                             </NavLink>
                         </>
                     )}
-                    <NavLink
-                        to="/dashboard/interventions"
-                        className={({ isActive }) =>
-                            ` ${styles.menuItem} ${
-                                isActive ? styles.active : ""
-                            }`
-                        }
-                    >
-                        <div className={styles.menuItemContent}>
-                            <Icon
-                                className={styles.menuIcon}
-                                icon="hugeicons:file-euro"
-                                width={"1.8rem"}
-                                fill={"green"}
-                            />
-                            <p>Interventions</p>
-                        </div>
-                    </NavLink>
+
                     <NavLink
                         to="/dashboard/contracts"
                         className={({ isActive }) =>
