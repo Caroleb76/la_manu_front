@@ -8,7 +8,15 @@ async function getInterventions (offset=0,limit=10,searchText=""){
     };
     const response= await apiClient("interventions/",{method:"GET",params});
     return response;
+}
 
+async function getByUserId (id){
+
+    const params= {
+       id
+    };
+    const response= await apiClient("interventions/user/"+id,{method:"GET",params});
+    return response;
 }
 
 
@@ -18,8 +26,9 @@ async function getInterventionsByContractId (contractId){
     if(!contractId) return;
     const response= await apiClient(`interventions/contract/${contractId}`,{method:"GET"});
     return response;
-
 }
+
+
 async function validateIntervention(interventionId){
 
     const response= await apiClient(`interventions/validate/${interventionId}`,{method:"POST"});
@@ -45,5 +54,6 @@ export default {
     deleteIntervention,
     createIntervention,
     getInterventionsByContractId,
-    validateIntervention
+    validateIntervention, 
+    getByUserId
 }

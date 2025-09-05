@@ -3,3 +3,18 @@ display: grid;
 grid-template-columns: 1fr 1fr;
 gap: 3rem;
 }
+
+.widgetGrid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    
+}
+
+.widget {
+    height: 100%;
+}
+
+.calendarWidget{
+    grid-column: span 2;
+}

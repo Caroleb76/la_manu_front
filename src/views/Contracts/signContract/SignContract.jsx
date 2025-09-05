@@ -1,22 +1,18 @@
-import { useEffect, useState, useMemo, useContext } from "react";
-import { UserContext } from "../../../../context/userContext";
+import { useEffect, useState, useMemo } from "react";
 
-import { useParams } from "react-router";
-import notificationsHelper from "../../../helpers/notificationsHelper";
-import styles from "./CreateContract.module.css";
+import notificationsHelper from "../../../helpers/notificationsHelper.js";
+import styles from "./SignContract.module.css";
 import PopupWrapper from "../../../components/popups/PopupWrapper.jsx";
-import { useNotification } from "../../../../context/notificationContext";
-import ContractCreateForm from "../../../components/forms/ContractCreateForm/ContractCreateForm.jsx";
+import { useNotification } from "../../../../context/notificationContext.jsx";
 import PopupformIntervention from "../../../components/forms/PopupFormIntervention/PopupformIntervention.jsx";
+import ContractEditForm from "../../../components/forms/ContractEditForm/ContractEditForm.jsx";
+import { useParams } from "react-router";
 
 import contractsHelper from "../../../helpers/contractsHelper.js";
 
-export default function CreateContract() {
+export default function EditContract() {
     let { contractId } = useParams();
-
-      const { user } = useContext(UserContext);
-
-
+    
     const [interventionCreationMode, setInterventionCreationMode] =
         useState(false);
     const { notify } = useNotification();
@@ -34,7 +30,7 @@ export default function CreateContract() {
             return;
         }
         setInterventions((prev) =>
-            prev.length > 0 ? prev.slice(0, -1) : prev
+            prev?.length > 0 ? prev.slice(0, -1) : prev
         );
     };
 
@@ -79,9 +75,8 @@ export default function CreateContract() {
                         </PopupWrapper>
                     </>
                 )}
-                <ContractCreateForm
-                    userRole={user.role}
-                    contractId={contractId ?? null}
+                <ContractEditForm
+                contractId={contractId}
                     interventions={interventions}
                     deleteIntervention={deleteLastIntervention}
                     showPopup={() => setInterventionCreationMode(true)}
