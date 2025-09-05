@@ -129,8 +129,7 @@ const ContractPdf2 = ({ currentContract, totalHours }) => {
                                             </p>
                                             <p style={styles.p}>
                                                 module : {
-                                                    intervention.ModuleFormation
-                                                        .name
+                                                    intervention.ModuleFormation?.name ?? "N/A"
                                                 }
                                             </p>
                                             <p style={styles.p}>durée : {intervention.hours}h</p>
@@ -149,9 +148,7 @@ const ContractPdf2 = ({ currentContract, totalHours }) => {
                                             <p style={styles.p}></p>
                                             <p style={styles.p}>
                                                 tarif horaire brut - congés payés inclus:  {
-                                                    intervention
-                                                        .InterventionCategory
-                                                        .rate
+                                                    intervention.InterventionCategory?.rate ?? "N/A"
                                                 }{" "}
                                                 €
                                             </p>
