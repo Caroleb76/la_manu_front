@@ -28,7 +28,7 @@ export default function Contracts() {
             filter: false,
             actions: [
                 {
-                    visible: user.role.name === "ADMIN",
+                    visible: false,
                     label: "Editer",
                     onClick: (data) => editContract(data),
 

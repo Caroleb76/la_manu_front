@@ -27,6 +27,7 @@ function Interventions() {
         { field: "Horaire", filter: false },
         { field: "Duree", filter: false },
         { field: "Categorie", filter: false },
+        { field: "Tarif", filter: false },
         { field: "A payer", filter: false },
         { field: "Payée", filter: false },
     ];
@@ -60,18 +61,15 @@ function Interventions() {
                 const rows = response.data.map((interventions) => ({
                     Nom: interventions.Contract.User.lastName,
                     Prenom: interventions.Contract.User.firstName,
-                    Module: interventions.ModuleFormation.name,
+                    Module: interventions.ModuleFormation?.name,
                     Date: convertDateToFranceTimeZone(
                         interventions.dateIntervention
                     ),
                     Horaire:
-                        interventions.shift === "am"
-                            ? "Matin"
-                            : interventions.shift === "pm"
-                            ? "Après Midi"
-                            : "Journée",
-                    Duree: interventions.hours,
-                    Categorie: interventions.InterventionCategory.name,
+                        interventions.shift ,
+                    Duree: `${interventions.hours} h`,
+                    Categorie: interventions.InterventionCategory?.name,
+                    Tarif: `${interventions.InterventionCategory?.rate} €` ,
                     'A payer': interventions.validatedByFormateur ? "✅" : "❌",
                     'Payée': interventions.validatedByAdmin ? "✅" : "❌",
                 }));

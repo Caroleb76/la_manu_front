@@ -13,7 +13,7 @@ const BigCalendar = ({ events }) => {
                 events={events}
                 startAccessor="start"
                 endAccessor="end"
-                style={{ height: 400 }}
+                style={{ height: 350 }}
                 defaultDate={new Date()}
                 defaultView="week"
             />

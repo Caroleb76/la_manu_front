@@ -7,15 +7,14 @@ import styles from "./CreateContract.module.css";
 import PopupWrapper from "../../../components/popups/PopupWrapper.jsx";
 import { useNotification } from "../../../../context/notificationContext";
 import ContractCreateForm from "../../../components/forms/ContractCreateForm/ContractCreateForm.jsx";
-import PopupformIntervention from "../../../components/forms/PopupFormIntervention/PopupformIntervention.jsx";
+import PopupFormIntervention from "../../../components/forms/PopupFormIntervention/PopupformIntervention.jsx";
 
 import contractsHelper from "../../../helpers/contractsHelper.js";
 
 export default function CreateContract() {
     let { contractId } = useParams();
 
-      const { user } = useContext(UserContext);
-
+    const { user } = useContext(UserContext);
 
     const [interventionCreationMode, setInterventionCreationMode] =
         useState(false);
@@ -26,15 +25,26 @@ export default function CreateContract() {
     const [selectedFormationId, setSelectedFormationId] = useState(null);
 
     const addIntervention = (intervention) => {
-        setInterventions((prev) => [...prev, intervention]);
+        const formattedIntervention = {
+            ModuleFormation: {
+                id: intervention.moduleId,
+                name: intervention.moduleName,
+            },
+            dateIntervention: intervention.dateIntervention,
+            shift: intervention.shift,
+            hours: intervention.hours,
+            InterventionCategory: {
+                id: intervention.interventionCategoryId,
+                name: intervention.interventionCategoryName,
+            },
+            extraCosts: intervention.extraCosts,
+        };
+        setInterventions((prev) => [...prev, formattedIntervention]);
     };
-    const deleteLastIntervention = (all = false) => {
-        if (all) {
-            setInterventions([]);
-            return;
-        }
+    const deleteLastIntervention = (index) => {
+// Remove the intervention at the specified index
         setInterventions((prev) =>
-            prev.length > 0 ? prev.slice(0, -1) : prev
+            prev.filter((_, i) => i !== index)
         );
     };
 
@@ -69,7 +79,7 @@ export default function CreateContract() {
                             title="Créer une intervention"
                             onClose={() => setInterventionCreationMode(false)}
                         >
-                            <PopupformIntervention
+                            <PopupFormIntervention
                                 onInterventionCreated={addIntervention}
                                 onClose={() =>
                                     setInterventionCreationMode(false)
@@ -79,6 +89,7 @@ export default function CreateContract() {
                         </PopupWrapper>
                     </>
                 )}
+
                 <ContractCreateForm
                     userRole={user.role}
                     contractId={contractId ?? null}

@@ -110,9 +110,10 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose,s
     useEffect(() => {
         console.log("errors", errors)
     }, [errors])
+
+    
     async function onSubmit(data) {
         console.log("submit", data)
-
 
         onInterventionCreated(data)
         onClose()
@@ -156,6 +157,7 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose,s
                     <InputText
                         label="Date de l'intervention"
                         type="date"
+                        min={new Date().toISOString().split("T")[0]}
                         {...register("dateIntervention")}
                         error={errors.dateIntervention?.message}
                     />
@@ -176,8 +178,8 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose,s
                         <option value="" hidden>
                             -- Sélectionner une option --
                         </option>
-                        <option value="am">matin</option>
-                        <option value="pm">après-midi</option>
+                        <option value="matin">matin</option>
+                        <option value="apres-midi">après-midi</option>
                         <option value="journee">journée</option>
                     </InputSelect>
 
