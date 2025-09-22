@@ -22,6 +22,7 @@ export default function ContractCreateForm({
     interventions,
     deleteIntervention,
     onSelectedSession,
+    interventionsCategories
 }) {
     const { notify } = useNotification();
     const navigate = useNavigate();
@@ -64,6 +65,7 @@ export default function ContractCreateForm({
     const [contractStartDate, setContractStartDate] = useState(null);
     const [contractEndDate, setContractEndDate] = useState(null);
     const [currentContract, setCurrentContract] = useState(null);
+    
     const [isSigned, setIsSigned] = useState(false);
     const formateurId = watch("formateurId");
     const selectedStartDate = watch("startDate");
@@ -91,19 +93,23 @@ export default function ContractCreateForm({
         };
 
         // Get the list of roles
-        const loadRoles = async () => {
+        const getRoles = async () => {
             const response = await rolesHelper.getRoles();
             setRoles(response.data);
         };
 
+        
+
         getFormateurs();
         getSessionsList();
-        loadRoles();
+        getRoles();
+
     }, []);
+
+
 
     useEffect(() => {
         if (interventions && interventions.length > 0) {
-            console.log("interventions", interventions);
             setCurrentInterventions(interventions);
             //Récupérer la date  de l'intervention la plus tôt
 
@@ -119,6 +125,8 @@ export default function ContractCreateForm({
                 current.dateIntervention > latest.dateIntervention ? current : latest
             );
             setContractEndDate(latestIntervention.dateIntervention);
+        } else if (interventions && interventions.length === 0) {
+            setCurrentInterventions([]);
         }
     }, [interventions]);
 
@@ -127,6 +135,7 @@ export default function ContractCreateForm({
         async function loadData() {
             if (!contractId) return;
             const contractResp = await contractsHelper.getContract(contractId);
+            console.log(contractResp);
 
             if (contractResp) {
                 // On reset le formulaire avec les données du contrat (préremplissage)
@@ -313,6 +322,15 @@ export default function ContractCreateForm({
         }
 
         return;
+    
+    }
+
+    function getRateFromInterventionCategoryId(interventionCategoryId) {
+        const rate = interventionsCategories.find(
+            (category) => category.id == interventionCategoryId
+        )?.rate;
+        return rate;
+      
     }
 
     return (
@@ -490,6 +508,7 @@ export default function ContractCreateForm({
                             <th>AM/PM/J</th>
                             <th>Durée</th>
                             <th>Catégorie</th>
+                            <th>Tarif</th>
                             <th>Supprimer</th>
                         </tr>
                     </thead>
@@ -501,7 +520,7 @@ export default function ContractCreateForm({
                         )}
                         {currentInterventions &&
                             currentInterventions.map((intervention, index) => (
-                                <tr key={index}>
+                                <tr key={index} >
                                     <td>{index + 1}</td>
                                     <td>{intervention.ModuleFormation?.name ?? "N/A"}</td>
                                     <td>
@@ -519,6 +538,9 @@ export default function ContractCreateForm({
                                     <td>{intervention.hours} heures</td>
                                     <td>
                                         {intervention.InterventionCategory?.name ?? "N/A"}
+                                    </td>
+                                    <td>
+                                        {intervention.InterventionCategory?.id? getRateFromInterventionCategoryId(intervention.InterventionCategory?.id) + "€"  : "N/A"}
                                     </td>
                                     <td>
                                         <button

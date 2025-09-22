@@ -4,7 +4,7 @@ import InputSelect from "../../ui/InputSelect.jsx";
 import { useEffect, useState } from "react";
 import sessionFormationsHelper from "../../../helpers/sessionFormationsHelper.js";
 import rolesHelper from "../../../helpers/rolesHelper.js";
-import { useForm } from "react-hook-form";
+import { useForm , Controller} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { popupSessionSchema } from "./popupSessionSchema.js";
 import { DevTool } from "@hookform/devtools";
@@ -13,38 +13,41 @@ import addressesHelper from "../../../helpers/addressesHelper.js";
 import SearchDropDown from "../../ui/searchDropdown.jsx";
 import PopupFormAddress from "../PopupFormAddress/PopupFormAddress.jsx";
 import { useNotification } from "../../../../context/notificationContext.jsx";
+import Combobox from "../../ui/Combobox.jsx";
 
 export default function PopupFormSession({ onSessionCreated, session }) {
-    // const [session, setSession] = useState(sessionParam);
+    const { notify } = useNotification();
+    const [addressCreation, setAddressCreation] = useState(false);
     const [addressesOptions, setAddressesOptions] = useState([]);
-    const [selectedAddress, setSelectedAddress] = useState(null);
-    const [addressSearchText, setAddressSearchText] = useState("");
     const [formations, setFormations] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [addressCreation, setAddressCreation] = useState(false);
-    const { notify } = useNotification();
+
     const {
         register,
         reset,
         handleSubmit,
-        watch,
         control,
         formState: { errors },
+        watch,
     } = useForm({
         resolver: zodResolver(popupSessionSchema),
-        defaultValues: session || {},
+        defaultValues: {
+            ...session,
+            addressId: session?.Address?.id || "",
+        }
     });
 
     const selectedStartDate = watch("startDate");
+  
 
     useEffect(() => {
-        loadFormations().then(() => {
-            if (session) {
-                reset(session);
-                setAddressSearchText(session.Address.city);
-                setSelectedAddress(session.Address);
-            }
-        });
+        loadFormations();
+        loadAddresses();
+        if (session) {
+            reset({ ...session, addressId: session.Address.id });
+            loadAddresses();
+            
+        }
     }, []);
 
     const loadFormations = async () => {
@@ -52,70 +55,45 @@ export default function PopupFormSession({ onSessionCreated, session }) {
         setFormations(response.data.formations);
     };
 
-    async function onSubmit(data) {
-       try{
-         let response = null;
-        
-
-         data.addressId = selectedAddress.id;
-        if (session) { // update case 
-            data.id= session.id
-            response = await sessionFormationsHelper.updateSessionFormation(
-                data
-            );
-        } else { // creation case
-            response = await sessionFormationsHelper.createSessionFormation(
-                data
-            );
-        }
-        // console.log("the api called is ", response);
-        
-        if (response.success) {
-          if (session) {
-            notify("Session modifiée", "success");
-            
-        } else {
-            
-            notify("La formation a bien été ajoutée", "success");
-          }
-            onSessionCreated();
-            reset();
-            // console.log(response);
-            
-        } else {
-            notify(response.message, "error");
-        }
-       }catch(e){
-
-       }
-    }
-
-    const onAddressChange = async (address) => {
-        try {
-            setLoading(true);
-            setAddressSearchText(address);
-            if (address.length < 3) {
-                setAddressesOptions([]);
-                return;
-            }
-            const response = await addressesHelper.getAddresses(0, 10, address);
-            let dataConverted = response.data.map((address) => ({
+        const loadAddresses = async () => {
+        const response = await addressesHelper.getAddresses();
+        const dataConverted = response.data.map(address => ({
                 ...address,
                 label: address.city + " - " + address.address,
             }));
-            setAddressesOptions(dataConverted);
-        } finally {
-            setLoading(false);
-        }
+        setAddressesOptions(dataConverted);
     };
+
+  
+
+    async function onSubmit(data) {
+        try {
+            // data.addressId will be filled by RHF Controller!
+            let response;
+            if (session) {
+                data.id = session.id;
+                response = await sessionFormationsHelper.updateSessionFormation(data);
+            } else {
+                response = await sessionFormationsHelper.createSessionFormation(data);
+            }
+            if (response.success) {
+                notify(session ? "Session modifiée" : "La formation a bien été ajoutée", "success");
+                onSessionCreated();
+                reset();
+            } else {
+                notify(response.message, "error");
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
 
     const onAddressCreated = (address) => {
-        
-
         setAddressCreation(false);
-        onAddressChange(address.city);
         notify("Adresse ajoutée", "success");
+        loadAddresses();
     };
+
 
     return (
         <div className={styles.borderPopup}>
@@ -178,27 +156,49 @@ export default function PopupFormSession({ onSessionCreated, session }) {
                             alignItems: "flex-end",
                         }}
                     >
-                        <SearchDropDown
-                            label="Lieu"
-                            name="addressId"
-                            options={addressesOptions}
-                            //asd
-                            onChangeParam={(e) => {
-                                onAddressChange(e.target.value);
-                            }}
-                            valueField={"label"}
-                            onSelect={(a) => {
-                                // console.log("a", a);
-                                
-                                setSelectedAddress(a);
 
-                                setAddressSearchText(a.city);
-                                setAddressesOptions([]);
-                            }}
-                            loading={loading}
-                            value={addressSearchText}
-                            {...register("addressId")}
-                        />
+
+<Controller
+  name="addressId"
+  control={control}
+  render={({ field }) => (
+    <Combobox
+      label="Lieu"
+      options={addressesOptions}
+      loading={loading}
+      {...field}
+    />
+  )}
+/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
 
                         <div
                             style={{

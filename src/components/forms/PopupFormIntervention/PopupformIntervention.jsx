@@ -14,11 +14,10 @@ import { useNotification } from "../../../../context/notificationContext.jsx";
 import interventionsHelper from "../../../helpers/interventionsHelper.js";
 import { convertDateToStandardString, convertDateToStandardStringPlusOne } from "../../../utils/date.js";
 
-export default function PopupFormIntervention({ onInterventionCreated, onClose,sessionFormation: formationId }) {
+export default function PopupFormIntervention({ onInterventionCreated, onClose,sessionFormation: formationId, interventionsCategories }) {
     const [extraCostsInput, setExtraCostsInput] = useState([""]);
     const [roles, setRoles] = useState([]);
     const [modules, setModules] = useState([]);
-    const [interventionsCategories, setInterventionsCategories] = useState([]);
     const [extraCostsOptions, setExtraCostsOptions] = useState([]);
     const { notify } = useNotification();
     const {
@@ -66,7 +65,6 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose,s
         if (filtered.length <= 0) {
             return
         }
-        console.log(filtered[0].name)
         setValue("interventionCategoryName", filtered[0].name)
     }
 
@@ -83,14 +81,7 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose,s
             return response
         }
 
-        const getCategories = async () => {
-            const response = await interventionsCategoriesHelper.getInterventionsCategories();
-            if (response) {
-                setInterventionsCategories(response.data)
-                console.log(response.data)
-            }
-            return response
-        }
+       
         const getExtraCosts = async () => {
             const response = await extraCostsHelper.getExtraCosts();
             if (response) {
@@ -102,15 +93,10 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose,s
             return response
         }
         getModules()
-        getCategories()
         getExtraCosts()
     }, [])
 
 
-
-    useEffect(() => {
-        console.log("errors", errors)
-    }, [errors])
 
     
     async function onSubmit(data) {
