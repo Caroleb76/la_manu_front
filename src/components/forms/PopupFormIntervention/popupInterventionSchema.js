@@ -38,7 +38,7 @@ export const popupInterventionSchema = z.object({
 
   // toDo A adapter pour l'utilisation d'1 array
   extraCosts: z
-    .array(z.string(), "le type de frais est invalide"),
+    .array(z.string(), "le type de frais est invalide").optional(),
 
   description: z
     .string()

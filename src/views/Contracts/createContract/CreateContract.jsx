@@ -8,8 +8,8 @@ import PopupWrapper from "../../../components/popups/PopupWrapper.jsx";
 import { useNotification } from "../../../../context/notificationContext";
 import ContractCreateForm from "../../../components/forms/ContractCreateForm/ContractCreateForm.jsx";
 import PopupFormIntervention from "../../../components/forms/PopupFormIntervention/PopupformIntervention.jsx";
+import interventionsCategoriesHelper from "../../../helpers/interventionsCategoriesHelper.js";
 
-import contractsHelper from "../../../helpers/contractsHelper.js";
 
 export default function CreateContract() {
     let { contractId } = useParams();
@@ -20,9 +20,20 @@ export default function CreateContract() {
         useState(false);
     const { notify } = useNotification();
     const [reloadTrigger, setReloadTrigger] = useState(0);
+    const [interventionsCategories, setInterventionsCategories] = useState([]);
 
     const [interventions, setInterventions] = useState([]);
     const [selectedFormationId, setSelectedFormationId] = useState(null);
+
+    useEffect(() => {
+        const categoryResponse = interventionsCategoriesHelper.getInterventionsCategories();
+        categoryResponse.then((categories) => {
+            setInterventionsCategories(categories.data);
+            console.log(categories.data);
+        });
+    }, []);
+
+  
 
     const addIntervention = (intervention) => {
         const extraCosts = intervention.extraCosts.map((extraCost) => ({
@@ -39,6 +50,7 @@ export default function CreateContract() {
             InterventionCategory: {
                 id: intervention.interventionCategoryId,
                 name: intervention.interventionCategoryName,
+                rate : intervention.interventionCategoryRate
             },
             extraCosts , 
         };
@@ -88,6 +100,7 @@ export default function CreateContract() {
                                     setInterventionCreationMode(false)
                                 }
                                 sessionFormation={selectedFormationId}
+                                interventionsCategories={interventionsCategories}
                             />
                         </PopupWrapper>
                     </>
@@ -100,6 +113,7 @@ export default function CreateContract() {
                     deleteIntervention={deleteLastIntervention}
                     showPopup={() => setInterventionCreationMode(true)}
                     onSelectedSession={onSessionFormationSelected}
+                    interventionsCategories={interventionsCategories}
                 />
             </div>
         </>
