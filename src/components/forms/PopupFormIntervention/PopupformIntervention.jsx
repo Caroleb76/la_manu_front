@@ -13,13 +13,14 @@ import { DevTool } from "@hookform/devtools";
 import { useNotification } from "../../../../context/notificationContext.jsx";
 import interventionsHelper from "../../../helpers/interventionsHelper.js";
 import { convertDateToStandardString, convertDateToStandardStringPlusOne } from "../../../utils/date.js";
+import extraCostsCategoryHelper from "../../../helpers/extraCostsCategoryHelper.js";
 
 export default function PopupFormIntervention({ onInterventionCreated, onClose,sessionFormation: formationId }) {
     const [extraCostsInput, setExtraCostsInput] = useState([""]);
     const [roles, setRoles] = useState([]);
     const [modules, setModules] = useState([]);
     const [interventionsCategories, setInterventionsCategories] = useState([]);
-    const [extraCostsOptions, setExtraCostsOptions] = useState([]);
+    const [extraCostCategories, setExtraCostCategories] = useState([]);
     const { notify } = useNotification();
     const {
         register,
@@ -92,10 +93,10 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose,s
             return response
         }
         const getExtraCosts = async () => {
-            const response = await extraCostsHelper.getExtraCosts();
+            const response = await extraCostsCategoryHelper.getAll();
             if (response) {
                 console.log("extracostsResponse", response.data)
-                setExtraCostsOptions(response.data)
+                setExtraCostCategories(response.data)
                 // console.log(response.data.users)
             }
 
@@ -167,6 +168,7 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose,s
                         label="Nombre d'heure"
                         type="number"
                         step="0.5"
+                        min= "0.5"
                         {...register("hours")}
                         error={errors.hours?.message}
                     />
@@ -223,9 +225,9 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose,s
                             <option value="" hidden>
                                 -- Sélectionner un type de frais de déplacement --
                             </option>
-                            {extraCostsOptions?.map((cost) => (
-                                <option key={cost.id} value={cost.id}>
-                                    {cost.category}
+                            {extraCostCategories?.map((category) => (
+                                <option key={category.id} value={category.id}>
+                                    {category.name}
                                 </option>
                             ))}
                         </InputSelect>))}

@@ -18,6 +18,13 @@ async function create (extraCost){
 
 }
 
+async function update (extraCost,id){
+
+    const response= await apiClient(`extraCosts/${id}`,{method:"PUT",body:extraCost});
+    return response;
+
+}
+
 async function getExtraCostsByInterventionId (interventionId){
 
     const response= await apiClient(`extraCosts/intervention/${interventionId}`,{method:"GET"});    
@@ -35,6 +42,7 @@ export default {
     getExtraCosts,
     create,
     getExtraCostsByInterventionId,
-    destroy
+    destroy,
+    update,
     // createIntervention
 }

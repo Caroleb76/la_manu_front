@@ -25,7 +25,12 @@ export default function CreateContract() {
     const [selectedFormationId, setSelectedFormationId] = useState(null);
 
     const addIntervention = (intervention) => {
+        const extraCosts = intervention.extraCosts.map((extraCost) => ({
+                categoryId: extraCost,
+                val:""
+            }))
         const formattedIntervention = {
+            ...intervention,
             ModuleFormation: {
                 id: intervention.moduleId,
                 name: intervention.moduleName,
@@ -35,7 +40,7 @@ export default function CreateContract() {
                 id: intervention.interventionCategoryId,
                 name: intervention.interventionCategoryName,
             },
-           ...intervention
+            extraCosts , 
         };
         setInterventions((prev) => [...prev, formattedIntervention]);
     };

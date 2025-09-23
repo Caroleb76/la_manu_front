@@ -5,24 +5,26 @@ import { UserContext } from "../../../context/userContext";
 import extraCostsHelper from "../../helpers/extraCostsHelper";
 import { useNotification } from "../../../context/notificationContext";
 import filesHelper from "../../helpers/filesHelper";
+import extraCostsCategoryHelper from "../../helpers/extraCostsCategoryHelper";
 
 const ExtraConsts = ({ iv }) => {
   const { user } = useContext(UserContext);
-  const [type, setType] = useState("");
   const [value, setValue] = useState("");
   const [fileIsSelected, setFileIsSelected] = useState(false);
   const filesManagerRef = useRef(null);
   const { notify } = useNotification();
   const [extraCosts, setExtraCosts] = useState([]);
-  const [creationMode, setCreationMode] = useState(false);
+  const [modificationMode, setModificationMode] = useState(false);
+  const [selectedExtraCost , setSelectedExtraCost] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const loadExtraCosts = async () => {
     if (!iv?.id) return;
     try {
       setLoading(true);
-      const response = await extraCostsHelper.getExtraCostsByInterventionId(iv.id);
-      setExtraCosts(response.data || []);
+      const extraCostResponse = await extraCostsHelper.getExtraCostsByInterventionId(iv.id);
+      
+      setExtraCosts(extraCostResponse.data || []);
     } catch (e) {
       console.error(e);
       notify("Impossible de charger les frais supplémentaires.", "error");
@@ -38,23 +40,22 @@ const ExtraConsts = ({ iv }) => {
   }, [iv?.id]);
 
   const submit = async () => {
-    if (!type?.trim() || !String(value).trim() || !fileIsSelected) {
+    if (!String(value).trim() || (!fileIsSelected && selectedExtraCost.files.length === 0)) {
       notify("Veuillez remplir tous les champs, et ajouter un justificatif.", "error");
       return;
     }
     try {
-      const payload = { category: type.trim(), val: String(value).trim(), interventionId: iv.id };
-      const response = await extraCostsHelper.create(payload);
+      const payload = { category: selectedExtraCost.id, val: String(value).trim(), interventionId: iv.id };
+      const response = await extraCostsHelper.update(payload, selectedExtraCost.id);
       if (!response?.success) {
         notify(response?.message || "Échec de la création du frais.", "error");
         return;
       }
       const extraCostId = response.data.id;
-      filesManagerRef.current?.uploadPendingFiles(extraCostId);
-      setType("");
+      await filesManagerRef.current?.uploadPendingFiles(extraCostId);
       setValue("");
       setFileIsSelected(false);
-      setCreationMode(false);
+      setModificationMode(false);
       await loadExtraCosts();
       notify("Frais ajouté avec succès.", "success");
     } catch (e) {
@@ -84,6 +85,8 @@ const ExtraConsts = ({ iv }) => {
     }
 
   const valueFormating = (v) => {
+  
+    
     const n = Number(v);
     if (Number.isNaN(n)) return v;
     try {
@@ -93,11 +96,19 @@ const ExtraConsts = ({ iv }) => {
     }
   };
 
+  const onModifyExtraCost = (ec) => {
+    setSelectedExtraCost(ec);
+    setModificationMode(true);
+    setValue(ec.val);
+    
+  }
+
   return (
     <>
-      {!creationMode ? (
+      {!modificationMode ? 
+      (
         <div className={Styles.mainContainer}>
-          <div className={Styles.headerRow}>
+          {/* <div className={Styles.headerRow}>
             <h3 className={Styles.title}>Frais supplémentaires</h3>
             <button
               type="button"
@@ -106,7 +117,7 @@ const ExtraConsts = ({ iv }) => {
             >
               Ajouter un frais
             </button>
-          </div>
+          </div> */}
 
           <div className={Styles.tableCard}>
             {loading ? (
@@ -125,7 +136,7 @@ const ExtraConsts = ({ iv }) => {
                   <tbody>
                     {extraCosts.map((ec) => (
                       <tr key={ec.id}>
-                        <td>{ec.category || "—"}</td>
+                        <td>{ec.category.name || "—"}</td>
                         <td>{valueFormating(ec.val)}</td>
                         <td>
                           {Array.isArray(ec.files) && ec.files.length > 0 ? (
@@ -157,13 +168,21 @@ const ExtraConsts = ({ iv }) => {
                                 Télécharger
                               </button>
                             )} */}
-                            <button
+                              <button
+                              type="button"
+                              className={`${Styles.btnAdd}`}
+                               onClick={() => onModifyExtraCost(ec)}
+                            >
+                              Modifier
+                            </button>
+                            {/* <button
                               type="button"
                               className={`${Styles.btn} ${Styles.btnDanger}`}
                               onClick={() => deleteFile(ec.id)}
                             >
                               Supprimer
-                            </button>
+                            </button> */}
+                             
                           </div>
                         </td>
                       </tr>
@@ -176,16 +195,14 @@ const ExtraConsts = ({ iv }) => {
             )}
           </div>
         </div>
-      ) : (
+      ) : 
+      (
         <div className={Styles.mainContainer}>
           <div className={Styles.row}>
-            <input
-              type="text"
-              name="Type de frais"
-              placeholder="Type de frais"
-              onChange={(e) => setType(e.target.value)}
-              value={type}
-            />
+            
+                <input type="text" disabled={true} value={selectedExtraCost.category.name}/>
+
+           
             <input
               type="text"
               name="Valeur du frais"
@@ -214,8 +231,7 @@ const ExtraConsts = ({ iv }) => {
             </button>
             <button
               onClick={() => {
-                setCreationMode(false);
-                setType("");
+                setModificationMode(false);
                 setValue("");
                 setFileIsSelected(false);
               }}

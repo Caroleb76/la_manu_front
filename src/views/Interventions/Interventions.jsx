@@ -285,9 +285,9 @@ function InterventionCard({ iv ,onValidateClick,disableActions}) {
 
             <button
               type="button"
-              className={styles.extraBtn + " " + (disableActions ? styles.disabled : "")}
+              // className={styles.extraBtn + " " + (disableActions ? styles.disabled : "")}
               onClick={onExtraClick}
-              disabled={disableActions}
+              // disabled={disableActions}
               title="Voir / ajouter des frais annexes"
             >
               Frais
