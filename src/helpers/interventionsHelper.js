@@ -58,6 +58,13 @@ async function getTotalAmountPerMonth(){
     return response;
 }
 
+
+async function getTotalExtraCostPerMonth(){
+const date = dayjs(new Date()).format("YYYY-MM-DD");
+    const response= await apiClient(`extraCosts/monthlyAmount/` + date,{method:"GET"});
+    return response;
+}
+
 async function validatePayment(interventionId){
     const response= await apiClient(`interventions/validatePayment/${interventionId}`,{method:"PUT"});
     return response;
@@ -75,5 +82,6 @@ export default {
     getByUserId,
     getTotalHoursPerCategory,
     getTotalAmountPerMonth,
+    getTotalExtraCostPerMonth,
     validatePayment
 }

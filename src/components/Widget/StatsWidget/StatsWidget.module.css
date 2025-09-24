@@ -21,6 +21,7 @@
     flex-direction: column;
     flex-grow: 1;
     justify-content: space-evenly;
+    gap: 0.5rem;
 
      border: 1px solid var(--primary-color);
      padding: 1rem;
