@@ -206,7 +206,7 @@ const ExtraCosts = ({ iv }) => {
             <input
               type="text"
               name="Valeur du frais"
-              placeholder="Valeur du frais"
+              placeholder="Montant"
               onChange={(e) => setValue(e.target.value)}
               value={value}
             />

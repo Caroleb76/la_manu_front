@@ -1,46 +1,51 @@
 import styles from "./Interventions.module.css";
 import StatusPill from "./StatusPill";
-import { useState } from "react";
+import { useState, useMemo, useCallback} from "react";
 import interventionsHelper from "../../helpers/interventionsHelper";
 import { useNotification } from "../../../context/notificationContext";
 import PopupWrapper from "../../components/popups/PopupWrapper";
 import ExtraCosts from "../extraCosts/ExtraCosts";
 
-function InterventionCard({ iv, onValidateClick, disableActions, extraCostMode, setExtraCostMode }) {
-    const monthWithDot = (s) =>
-        s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
-    const cleanedMonth = (m) => monthWithDot(m.replace(/\.$/, ""));
-    const date = new Date(iv.dateIntervention);
-    const weekday = monthWithDot(
-        date.toLocaleDateString("fr-FR", { weekday: "long" })
-    );
-    const day = date.toLocaleDateString("fr-FR", { day: "2-digit" });
-    const month = cleanedMonth(
-        date.toLocaleDateString("fr-FR", { month: "short" })
-    );
+const formatDate = (dateStr) => {
+  const date = new Date(dateStr);
+  const weekday = date.toLocaleDateString("fr-FR", { weekday: "long" });
+  const day = date.toLocaleDateString("fr-FR", { day: "2-digit" });
+  const month = date.toLocaleDateString("fr-FR", { month: "short" }).replace(/\.$/, "");
+  return {
+    weekday: weekday.charAt(0).toUpperCase() + weekday.slice(1),
+    day,
+    month: month.charAt(0).toUpperCase() + month.slice(1),
+  };
+};
 
 
+
+
+// Composant InterventionCard simplifié et mémorisé
+export default function InterventionCard({
+    iv,
+    onValidateClick,
+    disableActions,
+    extraCostMode,
+    setExtraCostMode,
+}) {
+    // Use formatted date util
+    const { weekday, day, month } = useMemo(
+        () => formatDate(iv.dateIntervention),
+        [iv.dateIntervention]
+    );
     const { notify } = useNotification();
-
     const [confirmValidation, setConfirmValidation] = useState(false);
 
-    const onExtraClick = () => {
-        setExtraCostMode(true);
-    };
-
-    const displayConfirmationPopup = () => {
-        setConfirmValidation(true);
-    };
-    const validate = async () => {
+    const validate = useCallback(async () => {
         const response = await interventionsHelper.validateIntervention(iv.id);
         if (!response?.success) {
             notify(response.message, "error");
             return;
         }
         notify("Intervention validée", "success");
-        iv.validatedByFormateur = true;
-        onValidateClick();
-    };
+        onValidateClick(iv); // Pass iv up, let parent update immutable state
+    }, [iv.id, notify, onValidateClick]);
 
     return (
         <article className={styles.card}>
@@ -49,10 +54,9 @@ function InterventionCard({ iv, onValidateClick, disableActions, extraCostMode, 
                     onClose={() => setExtraCostMode(false)}
                     title="Frais de déplacement"
                 >
-                    <ExtraCosts iv={iv}></ExtraCosts>
+                    <ExtraCosts iv={iv} />
                 </PopupWrapper>
             )}
-
             <div className={styles.cardMain}>
                 <div className={styles.cardLeft}>
                     <div className={styles.dateBox}>
@@ -61,7 +65,6 @@ function InterventionCard({ iv, onValidateClick, disableActions, extraCostMode, 
                             {day} {month}
                         </div>
                     </div>
-
                     <div className={styles.infoCol}>
                         <div className={styles.line}>
                             <span className={styles.label}>
@@ -76,12 +79,10 @@ function InterventionCard({ iv, onValidateClick, disableActions, extraCostMode, 
                             </strong>
                         </div>
                         <div className={styles.line}>
-                            <span className={styles.label}></span>{" "}
                             <span>{iv.shift.toUpperCase() || "—"}</span>
                         </div>
                     </div>
                 </div>
-
                 <div className={styles.cardRight}>
                     <div className={styles.upperRightCard}>
                         <StatusPill
@@ -103,16 +104,13 @@ function InterventionCard({ iv, onValidateClick, disableActions, extraCostMode, 
                             }
                         />
                     </div>
-
                     <div className={styles.lowerRightCard}>
                         <button
                             type="button"
-                            className={
-                                styles.extraBtn +
-                                " " +
-                                (disableActions ? styles.disabled : "")
-                            }
-                            onClick={onExtraClick}
+                            className={`${styles.extraBtn} ${
+                                disableActions ? styles.disabled : ""
+                            }`}
+                            onClick={() => setExtraCostMode(true)}
                             disabled={disableActions}
                             title="Voir / ajouter des frais annexes"
                         >
@@ -120,14 +118,12 @@ function InterventionCard({ iv, onValidateClick, disableActions, extraCostMode, 
                         </button>
                         <button
                             type="button"
-                            className={
-                                styles.extraBtn +
-                                " " +
-                                (iv.validatedByFormateur || disableActions
+                            className={`${styles.extraBtn} ${
+                                iv.validatedByFormateur || disableActions
                                     ? styles.disabled
-                                    : "")
-                            }
-                            onClick={displayConfirmationPopup}
+                                    : ""
+                            }`}
+                            onClick={() => setConfirmValidation(true)}
                             disabled={iv.validatedByFormateur || disableActions}
                             title="Valider l’intervention"
                         >
@@ -136,12 +132,9 @@ function InterventionCard({ iv, onValidateClick, disableActions, extraCostMode, 
                     </div>
                 </div>
             </div>
-
             {iv.description && (
                 <p className={styles.description}>{iv.description}</p>
             )}
         </article>
     );
 }
-
-export default InterventionCard;
