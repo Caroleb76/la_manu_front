@@ -12,7 +12,7 @@ import {
     getInterventionStartDate,
 } from "../../utils/date";
 import { isAdmin, isFormateur } from "../../utils/userRole";
-import AdminStats from "../../components/stats/AdminStats";
+import StatsWidget from "../../components/Widget/StatsWidget/StatsWidget";
 
 export default function Home() {
     const { user } = useContext(UserContext);
@@ -61,7 +61,7 @@ export default function Home() {
             {user && isAdmin(user) && (
                 <Widget titre="Statistiques" classString={styles.statsWidget + " " + styles.widget}>
                     {" "}
-                    <AdminStats/> 
+                    <StatsWidget/> 
                 </Widget>
             )}
 
@@ -78,10 +78,15 @@ export default function Home() {
                 {" "}
                 <AlertWidget />
             </Widget>
+
+           
             <Widget titre="widget" classString={styles.widget}>
                 {" "}
                 <Tasks />
             </Widget>
+      
+
+           
         </section>
     );
 }

@@ -11,8 +11,7 @@ import { useContext } from "react";
 import { UserContext } from "../../../context/userContext";
 
 function InterventionsAdmin() {
-
-    const {user }=useContext(UserContext);
+    const { user } = useContext(UserContext);
 
     const [notificationCreationMode, setNotificationCreationMode] =
         useState(false);
@@ -30,6 +29,7 @@ function InterventionsAdmin() {
         { field: "Tarif", filter: false },
         { field: "A payer", filter: false },
         { field: "Payée", filter: false },
+        { field: "Actions", filter: false },
     ];
 
     const [searchText, setSearchText] = useState("");
@@ -43,44 +43,39 @@ function InterventionsAdmin() {
 
                 let response;
 
-                if(user.role.name==="ADMIN"){
+                if (user.role.name === "ADMIN") {
                     response = await interventionsHelper.getInterventions(
                         offset,
                         pageSize,
                         searchText
                     );
-                }else{
-                    response = await interventionsHelper.getByUserId(
-                        user.id
-                    );
+                } else {
+                    response = await interventionsHelper.getByUserId(user.id);
                 }
 
-                
-                console.log("RESPONSE", response);
-
                 const rows = response.data.map((interventions) => ({
+                    Id: interventions.id,
                     Nom: interventions.Contract.User.lastName,
                     Prenom: interventions.Contract.User.firstName,
                     Module: interventions.ModuleFormation?.name,
                     Date: convertDateToFranceTimeZone(
                         interventions.dateIntervention
                     ),
-                    Horaire:
-                        interventions.shift ,
+                    Horaire: interventions.shift,
                     Duree: `${interventions.hours} h`,
                     Categorie: interventions.InterventionCategory?.name,
-                    Tarif: `${interventions.InterventionCategory?.rate} €` ,
-                    'A payer': interventions.validatedByFormateur ? "✅" : "❌",
-                    'Payée': interventions.validatedByAdmin ? "✅" : "❌",
+                    Tarif: `${interventions.InterventionCategory?.rate} €`,
+                    "A payer": interventions.validatedByFormateur ? "✅" : "❌",
+                    Payée: interventions.validatedByAdmin ? "✅" : "❌",
                 }));
                 if (searchText.length > 0) {
                     setPageSize(rows.length);
                 } else {
                     setPageSize(pageSize);
+
                 }
                 // console.log(rows, response.data.total);
-
-                params.successCallback(rows, response.data.total);
+                params.successCallback(rows, rows.length);
             },
         }),
         [reloadTrigger]
@@ -92,13 +87,14 @@ function InterventionsAdmin() {
         setReloadTrigger((prev) => prev + 1);
     };
 
-    const onDeleteNotification = async (notification) => {
-        const response = await notificationsHelper.deleteNotification(
-            notification.id
+    const onValidatePayment = async (intervention) => {
+        console.log(intervention);
+        const response = await interventionsHelper.validatePayment(
+            intervention.Id
         );
         if (response && response.success) {
             setReloadTrigger((prev) => prev + 1);
-            notify("La notification a bien été supprimée", "success");
+            notify("L'intervention a bien été payée", "success");
         } else {
             notify("Une erreur est survenue", "error");
         }
@@ -125,12 +121,12 @@ function InterventionsAdmin() {
                         </PopupWrapper>
                     </>
                 )}
-                {/* <button
+                <button
                     className={styles.addButton}
                     onClick={() => setNotificationCreationMode(true)}
                 >
                     Créer
-                </button> */}
+                </button>
                 <input
                     type="text"
                     placeholder="Rechercher"
@@ -139,15 +135,17 @@ function InterventionsAdmin() {
                 />
                 <DataGrid
                     pageSize={pageSize}
-                    onActionClick={onDeleteNotification}
+                    onActionClick={(intervention) => {
+                        onValidatePayment(intervention);
+                    }}
                     colDefs={colDefs}
                     data={getDataSource}
-                    renderIconWithCondition={(row) =>
-                        "ic:baseline-delete-outline"
+                    renderIconWithCondition={(intervention) =>
+                        intervention?.Payée === "✅"
+                            ? "ic:outline-cancel"
+                            :  "ic:outline-price-check"
                     }
-                    iconStyle={(row) => {
-                        return { color: "red" };
-                    }}
+                   
                 />
             </div>
         </>

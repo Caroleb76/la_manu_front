@@ -1,5 +1,5 @@
 import apiClient from "./apiClient";
-
+import dayjs from "dayjs";
 
 async function getInterventions (offset=0,limit=10,searchText=""){
 
@@ -54,6 +54,30 @@ async function deleteIntervention(id) {
     return response;
 }
 
+async function getTotalHoursPerCategory(){
+    const response= await apiClient(`interventions/categories/hours`,{method:"GET"});
+    return response;
+}
+async function getTotalAmountPerMonth(){
+    const date = dayjs(new Date()).format("YYYY-MM-DD");
+    const response= await apiClient(`interventions/monthlyAmount/` + date,{method:"GET"});
+    return response;
+}
+
+
+async function getTotalExtraCostPerMonth(){
+const date = dayjs(new Date()).format("YYYY-MM-DD");
+    const response= await apiClient(`extraCosts/monthlyAmount/` + date,{method:"GET"});
+    return response;
+}
+
+async function validatePayment(interventionId){
+    const response= await apiClient(`interventions/validatePayment/${interventionId}`,{method:"PUT"});
+    return response;
+    
+}
+
+
 
 export default {
     getInterventions,
@@ -62,5 +86,9 @@ export default {
     getInterventionsByContractId,
     validateIntervention, 
     getByUserId,
-    getByFormationAndUserId
+    getByFormationAndUserId,
+    getTotalHoursPerCategory,
+    getTotalAmountPerMonth,
+    getTotalExtraCostPerMonth,
+    validatePayment
 }
