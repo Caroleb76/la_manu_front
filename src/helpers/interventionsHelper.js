@@ -27,6 +27,12 @@ async function getInterventionsByContractId (contractId){
     return response;
 }
 
+async function getByFormationAndUserId (formationId,userId){
+
+    const response= await apiClient(`interventions/user/${userId}/formation/${formationId}`,{method:"GET"});
+    return response;
+}
+
 
 async function validateIntervention(interventionId){
 
@@ -78,6 +84,7 @@ export default {
     getInterventionsByContractId,
     validateIntervention, 
     getByUserId,
+    getByFormationAndUserId,
     getTotalHoursPerCategory,
     getTotalAmountPerMonth,
     getTotalExtraCostPerMonth,
