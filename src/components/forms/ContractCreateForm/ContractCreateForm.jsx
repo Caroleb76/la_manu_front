@@ -12,6 +12,7 @@ import { DevTool } from "@hookform/devtools";
 import sessionFormationsHelper from "../../../helpers/sessionFormationsHelper.js";
 import { convertDateToFranceTimeZone } from "../../../utils/date.js";
 import { useNotification } from "../../../../context/notificationContext.jsx";
+import { useNavigate } from "react-router";
 import { set } from "zod/v4-mini";
 
 export default function ContractCreateForm({
@@ -21,8 +22,10 @@ export default function ContractCreateForm({
     interventions,
     deleteIntervention,
     onSelectedSession,
+    interventionsCategories
 }) {
     const { notify } = useNotification();
+    const navigate = useNavigate();
 
     //Setup React Hook Form
     const {
@@ -62,6 +65,7 @@ export default function ContractCreateForm({
     const [contractStartDate, setContractStartDate] = useState(null);
     const [contractEndDate, setContractEndDate] = useState(null);
     const [currentContract, setCurrentContract] = useState(null);
+    
     const [isSigned, setIsSigned] = useState(false);
     const formateurId = watch("formateurId");
     const selectedStartDate = watch("startDate");
@@ -89,28 +93,55 @@ export default function ContractCreateForm({
         };
 
         // Get the list of roles
-        const loadRoles = async () => {
+        const getRoles = async () => {
             const response = await rolesHelper.getRoles();
             setRoles(response.data);
         };
 
+        
+
         getFormateurs();
         getSessionsList();
-        loadRoles();
+        getRoles();
+
     }, []);
+
+
+
+    useEffect(() => {
+        if (interventions && interventions.length > 0) {
+            setCurrentInterventions(interventions);
+            //Récupérer la date  de l'intervention la plus tôt
+
+            const oldestIntervention =interventions.reduce((oldest, current) =>
+                current.dateIntervention < oldest.dateIntervention ? current : oldest
+            );
+
+            setContractStartDate(oldestIntervention.dateIntervention);
+
+            //Récupérer la date  de l'intervention la plus tard
+
+            const latestIntervention =interventions.reduce((latest, current) =>
+                current.dateIntervention > latest.dateIntervention ? current : latest
+            );
+            setContractEndDate(latestIntervention.dateIntervention);
+        } else if (interventions && interventions.length === 0) {
+            setCurrentInterventions([]);
+        }
+    }, [interventions]);
 
     // On update
     useEffect(() => {
         async function loadData() {
             if (!contractId) return;
             const contractResp = await contractsHelper.getContract(contractId);
+            console.log(contractResp);
 
             if (contractResp) {
                 // On reset le formulaire avec les données du contrat (préremplissage)
                 // Assure-toi que les noms des champs correspondent à ceux du schema
                 setCurrentContract(contractResp.data);
                 setIsSigned(contractResp.data.signed);
-                console.log("isSigned", isSigned);
 
                 reset({
                     formateurId: contractResp.data.User.id || "",
@@ -155,9 +186,7 @@ export default function ContractCreateForm({
 
     // On formateur update
     useEffect(() => {
-        // console.log("effect getUser")
         const getFormateurData = async () => {
-            // console.log("the formateur id is ", formateurId);
             if (!formateurId || formateurId === "default") return;
             const response = await usersHelper.getUserById(formateurId);
             if (response) {
@@ -199,7 +228,6 @@ export default function ContractCreateForm({
     //Function: handle change session
     const handleChangeSession = (event) => {
         setCurrentSessionId(event.target.value);
-        console.log(currentSessionId);
 
         const formationId = sessionsFormation.find(
             (session) => session.id == event.target.value
@@ -214,7 +242,7 @@ export default function ContractCreateForm({
         onSelectedSession(formationId);
     };
 
-     function extractData(data) {
+    function extractData(data) {
         try {
             const {
                 lastName,
@@ -230,7 +258,6 @@ export default function ContractCreateForm({
                 interventions: interventions,
                 ...otherFields,
             };
-            console.log("otherFields", otherFields);
 
             //On récupère les interventions et on les ajoute à l'objet values
             data.interventions = interventions;
@@ -241,22 +268,21 @@ export default function ContractCreateForm({
         }
     }
     // Function  : Form submit
-    
 
     async function onCreate(data) {
-        try { 
+        try {
             const formattedData = extractData(data);
             const response = await contractsHelper.createContract(
-                    formattedData
-                );
-                if (response.success) {
-                    console.log(response);
-                    reset();
-                    deleteIntervention(true);
-                    notify("Le contrat a bien été ajouté", "success");
-                } else {
-                    alert(response.message);
-                }
+                formattedData
+            );
+            if (response.success) {
+                reset();
+                deleteIntervention(true);
+                notify("Le contrat a bien été ajouté", "success");
+                navigate("/dashboard/contracts");
+            } else {
+                alert(response.message);
+            }
         } catch (error) {
             console.error(error);
             notify("Une erreur est survenue", "error");
@@ -264,32 +290,26 @@ export default function ContractCreateForm({
         return;
     }
     async function onEdit(data) {
-       try {
+        try {
             const formattedData = extractData(data);
-             const response = await contractsHelper.editContract(
-                    formattedData
-                );
-                if (response.success) {
-                    console.log(response);
-                    reset();
-                    deleteIntervention(true);
-                    notify("Le contrat a bien été modifié", "success");
-                } else {
-                    alert(response.message);
-                }
-       } catch (error) {
-           console.error(error);
-           notify("Une erreur est survenue", "error");
-       }
+            const response = await contractsHelper.editContract(formattedData);
+            if (response.success) {
+                reset();
+                deleteIntervention(true);
+                notify("Le contrat a bien été modifié", "success");
+            } else {
+                alert(response.message);
+            }
+        } catch (error) {
+            console.error(error);
+            notify("Une erreur est survenue", "error");
+        }
         return;
     }
     async function onSign(data) {
         try {
-            const response = await contractsHelper.signContract(
-                contractId
-            );
+            const response = await contractsHelper.signContract(contractId);
             if (response.success) {
-                console.log(response);
                 setIsSigned(true);
                 deleteIntervention(true);
                 notify("Le contrat a bien été signé", "success");
@@ -300,12 +320,38 @@ export default function ContractCreateForm({
             console.error(error);
             notify("Une erreur est survenue", "error");
         }
-        
+
         return;
+    
+    }
+
+    function getRateFromInterventionCategoryId(interventionCategoryId) {
+        const rate = interventionsCategories.find(
+            (category) => category.id == interventionCategoryId
+        )?.rate;
+        return rate;
+      
     }
 
     return (
+        //DEBUG
         <div className={styles.borderPopup}>
+
+            {currentInterventions.length > 0 && (
+                <div className={styles.interventionsContainer}>
+                    <h2 className="title">Interventions</h2>
+                    <div className={styles.interventions}>
+                        {interventions.map((intervention, index) => (
+                            <div className={styles.intervention} key={index}>
+                                <h3>{intervention.title}</h3>
+                                <p>{intervention.date}</p>
+                                <p>{intervention.hours}h</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
             <form action="">
                 <div className={styles.grid}>
                     <section>
@@ -437,7 +483,9 @@ export default function ContractCreateForm({
                                     type="button"
                                     className={styles.btnPlus}
                                     onClick={showPopup}
-                                    disabled={userRole.name == "FORMATEUR" || isSigned}
+                                    disabled={
+                                        userRole.name == "FORMATEUR" || isSigned
+                                    }
                                 >
                                     {" "}
                                     +{" "}
@@ -460,6 +508,7 @@ export default function ContractCreateForm({
                             <th>AM/PM/J</th>
                             <th>Durée</th>
                             <th>Catégorie</th>
+                            <th>Tarif</th>
                             <th>Supprimer</th>
                         </tr>
                     </thead>
@@ -471,9 +520,9 @@ export default function ContractCreateForm({
                         )}
                         {currentInterventions &&
                             currentInterventions.map((intervention, index) => (
-                                <tr key={index}>
+                                <tr key={index} >
                                     <td>{index + 1}</td>
-                                    <td>{intervention.ModuleFormation.name}</td>
+                                    <td>{intervention.ModuleFormation?.name ?? "N/A"}</td>
                                     <td>
                                         {convertDateToFranceTimeZone(
                                             intervention.dateIntervention
@@ -488,25 +537,26 @@ export default function ContractCreateForm({
                                     </td>
                                     <td>{intervention.hours} heures</td>
                                     <td>
-                                        {intervention.InterventionCategory.name}
+                                        {intervention.InterventionCategory?.name ?? "N/A"}
                                     </td>
                                     <td>
-                                        {index + 1 ==
-                                        interventions.length - 1 ? (
-                                            ""
-                                        ) : (
-                                            <button
-                                                type="button"
-                                                className="btn-sm"
-                                                disabled={userRole.name == "FORMATEUR" || isSigned}
-                                                onClick={() =>
-                                                    deleteIntervention(index)
-                                                }
-                                            >
-                                                {" "}
-                                                -{" "}
-                                            </button>
-                                        )}
+                                        {intervention.InterventionCategory?.id? getRateFromInterventionCategoryId(intervention.InterventionCategory?.id) + "€"  : "N/A"}
+                                    </td>
+                                    <td>
+                                        <button
+                                            type="button"
+                                            className="btn-sm"
+                                            disabled={
+                                                userRole.name == "FORMATEUR" ||
+                                                isSigned
+                                            }
+                                            onClick={() =>
+                                                deleteIntervention(index)
+                                            }
+                                        >
+                                            {" "}
+                                            -{" "}
+                                        </button>
                                     </td>
                                 </tr>
                             ))}
@@ -517,9 +567,7 @@ export default function ContractCreateForm({
                     {contractId && (
                         <h3
                             className={
-                                isSigned
-                                    ? styles.isSigned
-                                    : styles.isNotSigned
+                                isSigned ? styles.isSigned : styles.isNotSigned
                             }
                         >
                             {isSigned
@@ -528,16 +576,25 @@ export default function ContractCreateForm({
                         </h3>
                     )}
                     {!contractId && userRole.name == "ADMIN" && (
-                        <button onClick={handleSubmit(onCreate)} > Créer</button>
+                        <button onClick={handleSubmit(onCreate)}> Créer</button>
                     )}
                     {contractId && userRole.name == "ADMIN" && (
-                        <button onClick={handleSubmit(onEdit)} disabled={isSigned}>
+                        <button
+                            onClick={handleSubmit(onEdit)}
+                            disabled={isSigned}
+                        >
                             {" "}
                             Modifier
                         </button>
                     )}
                     {userRole.name == "FORMATEUR" && (
-                        <button onClick={handleSubmit(onSign)} disabled={isSigned}> Signer </button>
+                        <button
+                            onClick={handleSubmit(onSign)}
+                            disabled={isSigned}
+                        >
+                            {" "}
+                            Signer{" "}
+                        </button>
                     )}
                 </div>
 

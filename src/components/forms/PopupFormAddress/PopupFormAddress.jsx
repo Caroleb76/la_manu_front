@@ -9,7 +9,7 @@ import { useNotification } from "../../../../context/notificationContext.jsx";
 import notificationsHelper from "../../../helpers/notificationsHelper.js";
 import addressesHelper from "../../../helpers/addressesHelper.js";
 
-export default function PopupFormAddress({ onCreated }) {
+export default function PopupFormAddress({ onCreated } ) {
 
   const {notify}=useNotification();
   const {
@@ -23,10 +23,7 @@ export default function PopupFormAddress({ onCreated }) {
   });
  
 
-  useEffect(() => {
- 
-
-  }, [])
+  
 
 
   async function onSubmit(data) {

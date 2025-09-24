@@ -16,6 +16,13 @@ async function getUserFiles(userId) {
 
 }
 
+async function getExtraCostFiles(userId,extraCostId) {
+
+    const response = await apiClient(`files/${userId}/${extraCostId}/getAll`, { method: "GET" });
+    return response;
+
+}
+
 async function downloadFile(fullPath,fileName) {
     const token = localStorage.getItem("token");
     console.log(fullPath);
@@ -54,5 +61,6 @@ export default {
     uploadFile,
     getUserFiles,
     downloadFile,
-    deleteFile
+    deleteFile,
+    getExtraCostFiles
 }

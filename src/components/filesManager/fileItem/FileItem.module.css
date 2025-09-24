@@ -6,9 +6,7 @@
     flex-direction: column;
 }
 
-.fileItem p{
-    font-size: 0.8rem;
-}
+
 .fileItem:hover{
     cursor: pointer;
     background-color: rgba(243,147,54,0.2);
@@ -84,4 +82,13 @@
   cursor: pointer;
   background-color: var(--secondary-color);
   color: white;
+}
+
+.miniMode{
+   p{
+    font-size: 0.7rem;
+  }
+  img{
+    width: 32px;
+  }
 }

@@ -20,6 +20,7 @@ import Sessions from "./views/Sessions/Sessions";
 import Interventions from "./views/Interventions/Interventions";
 import EditContract from "./views/Contracts/editContract/EditContract";
 import ViewContract from "./views/Contracts/viewContract/ViewContract";
+import InterventionsAdmin from "./views/InterventionsAdmin/InterventionsAdmin";
 
 createRoot(document.getElementById("root")).render(
     <UserProvider>
@@ -32,9 +33,11 @@ createRoot(document.getElementById("root")).render(
                         <Route path="signup" element={<Signup />} />
                         <Route path="login" element={<Login />} />
 
+
                         <Route path="dashboard" element={<Dashboard />}>
                             <Route path="main" element={<Home />} />
-                            <Route path="users" element={<Users />} />
+                            <Route path="interventions" element={<Interventions />} />
+              <Route path="users" element={<Users />} />
                             <Route
                                 path="notifications"
                                 element={<Notifications />}
@@ -61,6 +64,7 @@ createRoot(document.getElementById("root")).render(
 
                             <Route path="profile" element={<Profile />} />
                             <Route path="interventions" element={<Interventions />} />
+                            <Route path="interventions-admin" element={<InterventionsAdmin />} />
                         </Route>
                     </Route>
                 </Routes>

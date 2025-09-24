@@ -1,23 +1,34 @@
 import DataGrid from "../../components/DataGrid/DataGrid";
 import { useState, useEffect, useMemo } from "react";
-import notificationsHelper from "../../helpers/notificationsHelper";
-import styles from "./Notifications.module.css";
+import interventionsHelper from "../../helpers/interventionsHelper.js";
+import styles from "./Interventions.module.css";
 import PopupWrapper from "../../components/popups/PopupWrapper.jsx";
 import { useNotification } from "../../../context/notificationContext";
 import PopupformNotification from "../../components/forms/PopupFormNotification/PopupformNotification.jsx";
 import { PRIORITIES } from "../../utils/constants.js";
+import { convertDateToFranceTimeZone } from "../../utils/date.js";
+import { useContext } from "react";
+import { UserContext } from "../../../context/userContext";
 
-function Notifications() {
+function InterventionsAdmin() {
+    const { user } = useContext(UserContext);
+
     const [notificationCreationMode, setNotificationCreationMode] =
         useState(false);
     const { notify } = useNotification();
     const dataGridRef = null;
+
     const colDefs = [
-        { field: "Titre", filter: true },
-        { field: "Priorité", filter: true },
-        { field: "Contenu", filter: true },
-        { field: "Date de début", filter: false },
-        { field: "Date de fin", filter: false },
+        { field: "Nom", filter: true },
+        { field: "Prenom", filter: true },
+        { field: "Module", filter: true },
+        { field: "Date", filter: true },
+        { field: "Horaire", filter: false },
+        { field: "Duree", filter: false },
+        { field: "Categorie", filter: false },
+        { field: "Tarif", filter: false },
+        { field: "A payer", filter: false },
+        { field: "Payée", filter: false },
         { field: "Actions", filter: false },
     ];
 
@@ -30,35 +41,41 @@ function Notifications() {
                 const offset = params.startRow;
                 const pageSize = params.endRow - params.startRow;
 
-                const response = await notificationsHelper.getNotifications(
-                    offset,
-                    pageSize,
-                    searchText
-                );
+                let response;
 
-                const rows = response.data.notifications.map(
-                    (notification) => ({
-                        id: notification.id,
-                        Titre: notification.title,
-                        Priorité: PRIORITIES[notification.priority],
-                        Contenu: notification.content,
-                        isActive: new Date(notification.endDate) > new Date(),
-                        "Date de début": new Date(
-                            notification.startDate
-                        ).toLocaleDateString(),
-                        "Date de fin": new Date(
-                            notification.endDate
-                        ).toLocaleDateString(),
-                    })
-                );
+                if (user.role.name === "ADMIN") {
+                    response = await interventionsHelper.getInterventions(
+                        offset,
+                        pageSize,
+                        searchText
+                    );
+                } else {
+                    response = await interventionsHelper.getByUserId(user.id);
+                }
+
+                const rows = response.data.map((interventions) => ({
+                    Id: interventions.id,
+                    Nom: interventions.Contract.User.lastName,
+                    Prenom: interventions.Contract.User.firstName,
+                    Module: interventions.ModuleFormation?.name,
+                    Date: convertDateToFranceTimeZone(
+                        interventions.dateIntervention
+                    ),
+                    Horaire: interventions.shift,
+                    Duree: `${interventions.hours} h`,
+                    Categorie: interventions.InterventionCategory?.name,
+                    Tarif: `${interventions.InterventionCategory?.rate} €`,
+                    "A payer": interventions.validatedByFormateur ? "✅" : "❌",
+                    Payée: interventions.validatedByAdmin ? "✅" : "❌",
+                }));
                 if (searchText.length > 0) {
                     setPageSize(rows.length);
                 } else {
                     setPageSize(pageSize);
+
                 }
                 // console.log(rows, response.data.total);
-
-                params.successCallback(rows, response.data.total);
+                params.successCallback(rows, rows.length);
             },
         }),
         [reloadTrigger]
@@ -70,13 +87,14 @@ function Notifications() {
         setReloadTrigger((prev) => prev + 1);
     };
 
-    const onDeleteNotification = async (notification) => {
-        const response = await notificationsHelper.deleteNotification(
-            notification.id
+    const onValidatePayment = async (intervention) => {
+        console.log(intervention);
+        const response = await interventionsHelper.validatePayment(
+            intervention.Id
         );
         if (response && response.success) {
             setReloadTrigger((prev) => prev + 1);
-            notify("La notification a bien été supprimée", "success");
+            notify("L'intervention a bien été payée", "success");
         } else {
             notify("Une erreur est survenue", "error");
         }
@@ -117,19 +135,21 @@ function Notifications() {
                 />
                 <DataGrid
                     pageSize={pageSize}
-                    onActionClick={onDeleteNotification}
+                    onActionClick={(intervention) => {
+                        onValidatePayment(intervention);
+                    }}
                     colDefs={colDefs}
                     data={getDataSource}
-                    renderIconWithCondition={(row) =>
-                        "ic:baseline-delete-outline"
+                    renderIconWithCondition={(intervention) =>
+                        intervention?.Payée === "✅"
+                            ? "ic:outline-cancel"
+                            :  "ic:outline-price-check"
                     }
-                    iconStyle={(row) => {
-                        return { color: "red" };
-                    }}
+                   
                 />
             </div>
         </>
     );
 }
 
-export default Notifications;
+export default InterventionsAdmin;

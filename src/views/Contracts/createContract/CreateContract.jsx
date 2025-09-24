@@ -7,34 +7,59 @@ import styles from "./CreateContract.module.css";
 import PopupWrapper from "../../../components/popups/PopupWrapper.jsx";
 import { useNotification } from "../../../../context/notificationContext";
 import ContractCreateForm from "../../../components/forms/ContractCreateForm/ContractCreateForm.jsx";
-import PopupformIntervention from "../../../components/forms/PopupFormIntervention/PopupformIntervention.jsx";
+import PopupFormIntervention from "../../../components/forms/PopupFormIntervention/PopupformIntervention.jsx";
+import interventionsCategoriesHelper from "../../../helpers/interventionsCategoriesHelper.js";
 
-import contractsHelper from "../../../helpers/contractsHelper.js";
 
 export default function CreateContract() {
     let { contractId } = useParams();
 
-      const { user } = useContext(UserContext);
-
+    const { user } = useContext(UserContext);
 
     const [interventionCreationMode, setInterventionCreationMode] =
         useState(false);
     const { notify } = useNotification();
     const [reloadTrigger, setReloadTrigger] = useState(0);
+    const [interventionsCategories, setInterventionsCategories] = useState([]);
 
     const [interventions, setInterventions] = useState([]);
     const [selectedFormationId, setSelectedFormationId] = useState(null);
 
+    useEffect(() => {
+        const categoryResponse = interventionsCategoriesHelper.getInterventionsCategories();
+        categoryResponse.then((categories) => {
+            setInterventionsCategories(categories.data);
+            console.log(categories.data);
+        });
+    }, []);
+
+  
+
     const addIntervention = (intervention) => {
-        setInterventions((prev) => [...prev, intervention]);
+        const extraCosts = intervention.extraCosts.map((extraCost) => ({
+                categoryId: extraCost,
+                val:""
+            }))
+        const formattedIntervention = {
+            ...intervention,
+            ModuleFormation: {
+                id: intervention.moduleId,
+                name: intervention.moduleName,
+            },
+            
+            InterventionCategory: {
+                id: intervention.interventionCategoryId,
+                name: intervention.interventionCategoryName,
+                rate : intervention.interventionCategoryRate
+            },
+            extraCosts , 
+        };
+        setInterventions((prev) => [...prev, formattedIntervention]);
     };
-    const deleteLastIntervention = (all = false) => {
-        if (all) {
-            setInterventions([]);
-            return;
-        }
+    const deleteLastIntervention = (index) => {
+// Remove the intervention at the specified index
         setInterventions((prev) =>
-            prev.length > 0 ? prev.slice(0, -1) : prev
+            prev.filter((_, i) => i !== index)
         );
     };
 
@@ -69,16 +94,18 @@ export default function CreateContract() {
                             title="Créer une intervention"
                             onClose={() => setInterventionCreationMode(false)}
                         >
-                            <PopupformIntervention
+                            <PopupFormIntervention
                                 onInterventionCreated={addIntervention}
                                 onClose={() =>
                                     setInterventionCreationMode(false)
                                 }
                                 sessionFormation={selectedFormationId}
+                                interventionsCategories={interventionsCategories}
                             />
                         </PopupWrapper>
                     </>
                 )}
+
                 <ContractCreateForm
                     userRole={user.role}
                     contractId={contractId ?? null}
@@ -86,6 +113,7 @@ export default function CreateContract() {
                     deleteIntervention={deleteLastIntervention}
                     showPopup={() => setInterventionCreationMode(true)}
                     onSelectedSession={onSessionFormationSelected}
+                    interventionsCategories={interventionsCategories}
                 />
             </div>
         </>

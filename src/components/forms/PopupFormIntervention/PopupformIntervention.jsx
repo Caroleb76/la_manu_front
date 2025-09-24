@@ -13,13 +13,14 @@ import { DevTool } from "@hookform/devtools";
 import { useNotification } from "../../../../context/notificationContext.jsx";
 import interventionsHelper from "../../../helpers/interventionsHelper.js";
 import { convertDateToStandardString, convertDateToStandardStringPlusOne } from "../../../utils/date.js";
+import extraCostsCategoryHelper from "../../../helpers/extraCostsCategoryHelper.js";
 
-export default function PopupFormIntervention({ onInterventionCreated, onClose,sessionFormation: formationId }) {
+export default function PopupFormIntervention({ onInterventionCreated, onClose,sessionFormation: formationId, interventionsCategories }) {
     const [extraCostsInput, setExtraCostsInput] = useState([""]);
     const [roles, setRoles] = useState([]);
     const [modules, setModules] = useState([]);
-    const [interventionsCategories, setInterventionsCategories] = useState([]);
-    const [extraCostsOptions, setExtraCostsOptions] = useState([]);
+    // const [interventionsCategories, setInterventionsCategories] = useState([]);
+    const [extraCostCategories, setExtraCostCategories] = useState([]);
     const { notify } = useNotification();
     const {
         register,
@@ -38,6 +39,7 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose,s
             interventionCategoryName: "",
             shift: "",
             extraCost: [],
+            description: "",
 
         }
     });
@@ -65,7 +67,6 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose,s
         if (filtered.length <= 0) {
             return
         }
-        console.log(filtered[0].name)
         setValue("interventionCategoryName", filtered[0].name)
     }
 
@@ -82,37 +83,26 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose,s
             return response
         }
 
-        const getCategories = async () => {
-            const response = await interventionsCategoriesHelper.getInterventionsCategories();
-            if (response) {
-                setInterventionsCategories(response.data)
-                console.log(response.data)
-            }
-            return response
-        }
+       
         const getExtraCosts = async () => {
-            const response = await extraCostsHelper.getExtraCosts();
+            const response = await extraCostsCategoryHelper.getAll();
             if (response) {
                 console.log("extracostsResponse", response.data)
-                setExtraCostsOptions(response.data)
+                setExtraCostCategories(response.data)
                 // console.log(response.data.users)
             }
 
             return response
         }
         getModules()
-        getCategories()
         getExtraCosts()
     }, [])
 
 
 
-    useEffect(() => {
-        console.log("errors", errors)
-    }, [errors])
+    
     async function onSubmit(data) {
         console.log("submit", data)
-
 
         onInterventionCreated(data)
         onClose()
@@ -156,6 +146,7 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose,s
                     <InputText
                         label="Date de l'intervention"
                         type="date"
+                        min={new Date().toISOString().split("T")[0]}
                         {...register("dateIntervention")}
                         error={errors.dateIntervention?.message}
                     />
@@ -164,6 +155,7 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose,s
                         label="Nombre d'heure"
                         type="number"
                         step="0.5"
+                        min= "0.5"
                         {...register("hours")}
                         error={errors.hours?.message}
                     />
@@ -176,8 +168,8 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose,s
                         <option value="" hidden>
                             -- Sélectionner une option --
                         </option>
-                        <option value="am">matin</option>
-                        <option value="pm">après-midi</option>
+                        <option value="matin">matin</option>
+                        <option value="apres-midi">après-midi</option>
                         <option value="journee">journée</option>
                     </InputSelect>
 
@@ -220,9 +212,9 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose,s
                             <option value="" hidden>
                                 -- Sélectionner un type de frais de déplacement --
                             </option>
-                            {extraCostsOptions?.map((cost) => (
-                                <option key={cost.id} value={cost.id}>
-                                    {cost.category}
+                            {extraCostCategories?.map((category) => (
+                                <option key={category.id} value={category.id}>
+                                    {category.name}
                                 </option>
                             ))}
                         </InputSelect>))}
@@ -231,10 +223,10 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose,s
 
                     </div >
                     <InputText
+                        {...register("description")}
                         className={styles.grid_2col}
                         label="Description"
                         placeholder="Description"
-                        {...register("description")}
                         error={errors.description?.message}
                     />
 
