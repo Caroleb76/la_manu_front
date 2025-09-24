@@ -29,7 +29,10 @@ async function apiClient(endpoint, { method = "GET", headers = [], body, params 
     try {
         const response = await fetch(url, config);
         // console.log(response);
-        
+        if(response.status === 401) {
+            localStorage.removeItem(TOKEN_KEY);
+            window.location.reload();
+        }
         const json = await response.json();
         return json;
     } catch (error) {

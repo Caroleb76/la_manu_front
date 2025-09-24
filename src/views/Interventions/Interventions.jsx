@@ -7,6 +7,7 @@ import { useNotification } from "../../../context/notificationContext";
 import { set } from "zod/v4-mini";
 import PopupWrapper from "../../components/popups/PopupWrapper";
 import ExtraConsts from "../../components/extraCosts/ExtraCosts";
+import formationHelper from "../../helpers/formationHelper";
 
 
 // creation of the date in text (in french format)
@@ -27,12 +28,12 @@ const cleanedMonth = (m) => monthWithDot(m.replace(/\.$/, ""));
 
 export default function Interventions() {
   const [interventions, setInterventions] = useState([]);
-  const [contracts, setContracts] = useState([]);
-  const [selectedContractId, setSelectedContractId] = useState("");
+  // const [contracts, setContracts] = useState([]);
+  // const [selectedContractId, setSelectedContractId] = useState("");
   const [loading, setLoading] = useState(true);
   const { user } = useContext(UserContext);
   const [selectedFormation, setSelectedFormation] = useState(null);
-
+  const [formations, setFormations] = useState([]);
 
 useEffect(() => {
   let ignore = false;
@@ -40,17 +41,11 @@ useEffect(() => {
   (async () => {
     setLoading(true);
     try {
-      const filter = !user.isAdmin ? JSON.stringify({ userId: user.id }) : undefined;
-      const res = await contractsHelper.getContracts(0, 1000, "", filter);
-      const list = res?.data?.contracts ?? [];
 
+      const res = await formationHelper.allFormationByFormateurId(user.id);
+      setFormations(res?.data ?? []);
       if (ignore) return;
-
-      setContracts(list);
-
-      const firstId = list[0]?.id ?? "";
-      setSelectedContractId(firstId);
-      setSelectedFormation(list[0].SessionFormation.Formation);
+      setSelectedFormation(res?.data[0]);
       calculateStats();
     } catch (e) {
       console.error(e);
@@ -65,7 +60,9 @@ useEffect(() => {
 
 
 useEffect(() => {
-  if (!selectedContractId) {
+  console.log("selectedFormation", selectedFormation);
+  
+  if (!selectedFormation) {
     setInterventions([]);
     return;
   }
@@ -74,7 +71,7 @@ useEffect(() => {
 
   (async () => {
     try {
-      const res = await interventionsHelper.getInterventionsByContractId(selectedContractId);
+      const res = await interventionsHelper.getByFormationAndUserId(selectedFormation.id,user.id);
       if (!ignore) setInterventions(res?.data ?? []);
     } catch (e) {
       console.error(e);
@@ -83,7 +80,7 @@ useEffect(() => {
   })();
 
   return () => { ignore = true; };
-}, [selectedContractId]);
+}, [selectedFormation]);
 
 
 useEffect(() => {
@@ -98,18 +95,14 @@ function calculateStats() {
   const today = new Date();
 
 
-  const filtered = useMemo(() => {
-    return selectedContractId
-      ? interventions?.filter((i) => i.contractId === selectedContractId)
-      : interventions;
-  }, [interventions, selectedContractId]);
+  const filtered = useMemo(() => interventions, [interventions, selectedFormation]);
 
   const { validated, coming, pending } = useMemo(() => {
     const p = [];
     const c = [];
     const v = [];
-    console.log("filtered", filtered);
-    console.log(selectedContractId);
+    // console.log("filtered", filtered);
+    // console.log(selectedContractId);
     
     
     filtered?.forEach((iv) => {
@@ -155,12 +148,14 @@ const onInterventionValidated = (iv) => {
           <select
             id="formationSelect"
             className={styles.select}
-            value={selectedContractId}
-            onChange={(e) => setSelectedContractId(e.target.value)}
+            value={selectedFormation?.id}
+            onChange={(e) =>{
+              setSelectedFormation(formations.find(f => f.id === e.target.value));
+            }}
           >
-            {contracts?.map((f) => (
+            {formations?.map((f) => (
               <option key={f.id} value={f.id}>
-                {f.SessionFormation.Formation.name}
+                {f.name}
               </option>
             ))}
           </select>
@@ -187,7 +182,7 @@ const onInterventionValidated = (iv) => {
 
 // small components
 function Section({ title, items, onValidateClick,disableActions }) {
-  console.log(disableActions);
+  // console.log(disableActions);
   return (
     <section>
       <div className={styles.sectionHeader}>
@@ -217,7 +212,7 @@ function InterventionCard({ iv ,onValidateClick,disableActions}) {
   };
 
     const validate = async () => {
-
+    
     const response = await interventionsHelper.validateIntervention(iv.id);
     if(!response?.success){
       notify(response.message, "error");
@@ -285,9 +280,9 @@ function InterventionCard({ iv ,onValidateClick,disableActions}) {
 
             <button
               type="button"
-              // className={styles.extraBtn + " " + (disableActions ? styles.disabled : "")}
+              className={styles.extraBtn + " " + (disableActions ? styles.disabled : "")}
               onClick={onExtraClick}
-              // disabled={disableActions}
+              disabled={disableActions}
               title="Voir / ajouter des frais annexes"
             >
               Frais

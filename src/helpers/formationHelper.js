@@ -10,6 +10,12 @@ async function getFormations(offset = 0, limit = 10, searchText = "") {
     return response;
 }
 
+async function allFormationByFormateurId(userId) {
+
+    const response = await apiClient(`formation/formateur/${userId}`, { method: "GET" });
+    return response;
+}
+
 async function createFormation(formation) {
     const response = await apiClient("formation/", {
         method: "POST",
@@ -28,5 +34,6 @@ async function updateFormation(formation) {
 export default {
     getFormations,
     createFormation,
-    updateFormation
+    updateFormation,
+    allFormationByFormateurId
 };
