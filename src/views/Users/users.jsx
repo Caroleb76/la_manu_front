@@ -67,7 +67,6 @@ function Users() {
       const offset = params.startRow;
       const pageSize = params.endRow - params.startRow;
 
-      // console.log("Requête : offset=", offset, "limit=", pageSize, "page=", pageNumberRef.current);
       // pageNumberRef.current=Math.floor(offset/pageSize);
       const response = await usersHelper.getUsers({ offset, pageSize, searchText });
       const rows = response.data.users.map((user) => ({
@@ -95,7 +94,6 @@ function Users() {
     notify("L'utilisateur a bien été modifié", "success");
   };
   const editUser = async (data) => {
-    console.log("edit user", data);
     setSelectedUserId(data.id);
     setUserCreationMode(false);
 

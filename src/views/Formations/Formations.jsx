@@ -40,14 +40,12 @@ export default function Formations() {
                     offset,
                     pageSize
                 );
-                console.log(response);
                 formations = response.data.formations;
                 const rows = response.data.formations.map((formation) => ({
                     id: formation.id,
                     Nom: formation.name,
                     Description: formation.description,
                 }));
-console.log(rows, response.data.total);
                 params.successCallback(rows, response.data.total);
             },
         }),

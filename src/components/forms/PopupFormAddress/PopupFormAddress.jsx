@@ -28,7 +28,6 @@ export default function PopupFormAddress({ onCreated } ) {
 
   async function onSubmit(data) {
 
-    console.log(data);
     const response= await addressesHelper.createAddress(data);
     if (response.success) {
       reset();

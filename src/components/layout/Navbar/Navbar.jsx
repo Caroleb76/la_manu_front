@@ -13,7 +13,6 @@ function Navbar() {
 
 
   useEffect(() => {
-    console.log(user.initials ?? "not found");
     function handleClickOutside(event) {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
         setDropdown(false);

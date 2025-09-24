@@ -8,95 +8,57 @@ import { ADMIN_ROLE, SUPERADMIN_ROLE } from "../../../utils/constants";
 function SideMenu() {
     const { user } = useContext(UserContext);
     // const isAdmin = user && (user.role.name === ADMIN_ROLE || user.role.name === SUPERADMIN_ROLE);
-    // console.log(user);
 
-useEffect(() => {
-  console.log(user.isFormateur);
-}, []);
-  return (
-    <>
-
-      <div className={styles.menuContainer}>
-        <div className={styles.logoContainer}>
-          <img src={logo} alt="logo de l'IFEN" />
-          <hr />
-        </div>
-        <div className={styles.itemsList}>
-          <NavLink
-            to="/dashboard/main"
-            className={({ isActive }) =>
-              ` ${styles.menuItem} ${isActive ? styles.active : ""}`
-            }
-          >
-            <div className={styles.menuItemContent}>
-              <Icon
-                className={styles.menuIcon}
-                icon="hugeicons:dashboard-browsing"
-                width={"1.8rem"}
-                fill={"green"}
-              />
-              <p>Dashboard</p>
-            </div>
-          </NavLink>
-          {
-            user.isFormateur &&
-                      <NavLink
-            to="/dashboard/interventions"
-            className={({ isActive }) =>
-              ` ${styles.menuItem} ${isActive ? styles.active : ""}`
-            }
-          >
-            <div className={styles.menuItemContent}>
-              <Icon
-                className={styles.menuIcon}
-                icon="hugeicons:file-euro"
-                width={"1.8rem"}
-                fill={"green"}
-              />
-              <p>Interventions</p>
-            </div>
-          </NavLink>
-          }
-          {
-            user.isAdmin &&
-                      <NavLink
-            to="/dashboard/interventions-admin"
-            className={({ isActive }) =>
-              ` ${styles.menuItem} ${isActive ? styles.active : ""}`
-            }
-          >
-            <div className={styles.menuItemContent}>
-              <Icon
-                className={styles.menuIcon}
-                icon="hugeicons:file-euro"
-                width={"1.8rem"}
-                fill={"green"}
-              />
-              <p>Interventions</p>
-            </div>
-          </NavLink>
-          }
+  
+    return (
+        <>
+            <div className={styles.menuContainer}>
+                <div className={styles.logoContainer}>
+                    <img src={logo} alt="logo de l'IFEN" />
+                    <hr />
+                </div>
+                <div className={styles.itemsList}>
+                    <NavLink
+                        to="/dashboard/main"
+                        className={({ isActive }) =>
+                            ` ${styles.menuItem} ${
+                                isActive ? styles.active : ""
+                            }`
+                        }
+                    >
+                        <div className={styles.menuItemContent}>
+                            <Icon
+                                className={styles.menuIcon}
+                                icon="hugeicons:dashboard-browsing"
+                                width={"1.8rem"}
+                                fill={"green"}
+                            />
+                            <p>Dashboard</p>
+                        </div>
+                    </NavLink>
+                    {user.isFormateur && (
+                        <NavLink
+                            to="/dashboard/interventions"
+                            className={({ isActive }) =>
+                                ` ${styles.menuItem} ${
+                                    isActive ? styles.active : ""
+                                }`
+                            }
+                        >
+                            <div className={styles.menuItemContent}>
+                                <Icon
+                                    className={styles.menuIcon}
+                                    icon="hugeicons:file-euro"
+                                    width={"1.8rem"}
+                                    fill={"green"}
+                                />
+                                <p>Interventions</p>
+                            </div>
+                        </NavLink>
+                    )}
 
                     {user.isAdmin && (
                         <>
-                            <NavLink
-                                to="/dashboard/users"
-                                className={({ isActive }) =>
-                                    ` ${styles.menuItem} ${
-                                        isActive ? styles.active : ""
-                                    }`
-                                }
-                            >
-                                <div className={styles.menuItemContent}>
-                                    <Icon
-                                        className={styles.menuIcon}
-                                        icon="hugeicons:user-group-02"
-                                        width={"1.8rem"}
-                                        fill={"green"}
-                                    />
-                                    <p>Utilisateurs</p>
-                                </div>
-                            </NavLink>
                             <NavLink
                                 to="/dashboard/notifications"
                                 className={({ isActive }) =>
@@ -132,6 +94,25 @@ useEffect(() => {
                                         fill={"green"}
                                     />
                                     <p>Formations</p>
+                                </div>
+                            </NavLink>
+
+                            <NavLink
+                                to="/dashboard/modules"
+                                className={({ isActive }) =>
+                                    ` ${styles.menuItem} ${
+                                        isActive ? styles.active : ""
+                                    }`
+                                }
+                            >
+                                <div className={styles.menuItemContent}>
+                                    <Icon
+                                        className={styles.menuIcon}
+                                        icon="hugeicons:block-game"
+                                        width={"1.8rem"}
+                                        fill={"green"}
+                                    />
+                                    <p>Modules de formation</p>
                                 </div>
                             </NavLink>
 
@@ -172,6 +153,44 @@ useEffect(() => {
                                 fill={"green"}
                             />
                             <p>Contrats</p>
+                        </div>
+                    </NavLink>
+
+                    <NavLink
+                        to="/dashboard/interventions-admin"
+                        className={({ isActive }) =>
+                            ` ${styles.menuItem} ${
+                                isActive ? styles.active : ""
+                            }`
+                        }
+                    >
+                        <div className={styles.menuItemContent}>
+                            <Icon
+                                className={styles.menuIcon}
+                                icon="hugeicons:file-euro"
+                                width={"1.8rem"}
+                                fill={"green"}
+                            />
+                            <p>Interventions</p>
+                        </div>
+                    </NavLink>
+
+                    <NavLink
+                        to="/dashboard/users"
+                        className={({ isActive }) =>
+                            ` ${styles.menuItem} ${
+                                isActive ? styles.active : ""
+                            }`
+                        }
+                    >
+                        <div className={styles.menuItemContent}>
+                            <Icon
+                                className={styles.menuIcon}
+                                icon="hugeicons:user-group-02"
+                                width={"1.8rem"}
+                                fill={"green"}
+                            />
+                            <p>Utilisateurs</p>
                         </div>
                     </NavLink>
 

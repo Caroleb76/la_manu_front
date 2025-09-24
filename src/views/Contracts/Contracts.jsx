@@ -112,7 +112,6 @@ export default function Contracts() {
                 } else {
                     setPageSize(pageSize);
                 }
-                // console.log(rows, response.data.total);
 
                 params.successCallback(rows, response.data.total);
             },

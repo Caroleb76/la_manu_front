@@ -24,11 +24,10 @@ export default function ViewContract() {
                 const contractResponse = await contractsHelper.getContract(
                     contractId
                 );
-                console.log(contractResponse);
                 if (!contractResponse) return;
                 setCurrentContract(contractResponse.data);
             } catch (error) {
-                console.log(error);
+                console.error(error);
             }
         };
         getContract();

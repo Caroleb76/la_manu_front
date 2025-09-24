@@ -28,7 +28,6 @@ export default function Home() {
                 // Get interventions
                 const interventionsResponse =
                     await interventionsHelper.getByUserId(user.id);
-                console.log("INTERVENTIONS", interventionsResponse.data);
 
                 const events = interventionsResponse.data.map(
                     (intervention) => ({
@@ -53,7 +52,7 @@ export default function Home() {
             }
         };
         getEvents().then(() => {
-            console.log("events", events);
+            console.info("events", events);
         });
     }, []);
     return (

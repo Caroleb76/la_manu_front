@@ -21,6 +21,7 @@ import Interventions from "./views/Interventions/Interventions";
 import EditContract from "./views/Contracts/editContract/EditContract";
 import ViewContract from "./views/Contracts/viewContract/ViewContract";
 import InterventionsAdmin from "./views/InterventionsAdmin/InterventionsAdmin";
+import Modules from "./views/Modules/Modules";
 
 createRoot(document.getElementById("root")).render(
     <UserProvider>
@@ -33,20 +34,26 @@ createRoot(document.getElementById("root")).render(
                         <Route path="signup" element={<Signup />} />
                         <Route path="login" element={<Login />} />
 
-
                         <Route path="dashboard" element={<Dashboard />}>
                             <Route path="main" element={<Home />} />
-                            <Route path="interventions" element={<Interventions />} />
-              <Route path="users" element={<Users />} />
+                            <Route
+                                path="interventions"
+                                element={<Interventions />}
+                            />
+                            <Route path="users" element={<Users />} />
                             <Route
                                 path="notifications"
                                 element={<Notifications />}
                             />
                             <Route path="formations" element={<Formations />} />
+                            <Route path="modules" element={<Modules />} />
                             <Route path="sessions" element={<Sessions />} />
                             <Route path="contracts">
                                 <Route index element={<Contracts />} />
-                                <Route path="view/:contractId" element={<ViewContract />} />
+                                <Route
+                                    path="view/:contractId"
+                                    element={<ViewContract />}
+                                />
                                 <Route
                                     path="create"
                                     element={<CreateContract />}
@@ -59,12 +66,17 @@ createRoot(document.getElementById("root")).render(
                                     path="sign/:contractId"
                                     element={<CreateContract />}
                                 />
-
                             </Route>
 
                             <Route path="profile" element={<Profile />} />
-                            <Route path="interventions" element={<Interventions />} />
-                            <Route path="interventions-admin" element={<InterventionsAdmin />} />
+                            <Route
+                                path="interventions"
+                                element={<Interventions />}
+                            />
+                            <Route
+                                path="interventions-admin"
+                                element={<InterventionsAdmin />}
+                            />
                         </Route>
                     </Route>
                 </Routes>

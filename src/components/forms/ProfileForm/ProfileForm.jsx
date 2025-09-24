@@ -60,7 +60,6 @@ export default function ProfileForm({ userId }) {
         });
         setUser(userData);
         const formattedInitials = handleNameInitials(userData.firstName + " " + userData.lastName)
-        // console.log(formattedInitials);
 
         setInitials(formattedInitials)
       }
@@ -71,7 +70,6 @@ export default function ProfileForm({ userId }) {
 
   const onSubmit = async (data) => {
     const formData = new FormData();
-    // console.log("Form data:", data);
 
     const { profilePicture, carteGrise, diplomeFile, ...userData } = data;
 
@@ -110,7 +108,6 @@ export default function ProfileForm({ userId }) {
         <section className={`${styles.grid} ${styles.profileSection}`}>
           <div className={styles.profileIconTitleWrapper}>
             <input hidden type="file" id="avatarFile" accept=".jpg,.png,.gif,.webp" onChange={(e) => {
-              console.log("photo", e.target.files[0]);
               setProfilePicture(e.target.files[0]);
               setFiles(prev => [...prev, { name: "profilePicture", file: e.target.files[0] }]);
             }} />

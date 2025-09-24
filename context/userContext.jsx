@@ -44,9 +44,7 @@ function normalizeUser(u) {
 }
 
 function updateUser(patch) {
-    console.log("updating user" , patch);
     if (!patch) return;
-    console.log("updating user" , user?.profilePicVersion);
   
   setUser(prev => {
     if (!prev) {

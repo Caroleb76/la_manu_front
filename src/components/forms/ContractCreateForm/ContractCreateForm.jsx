@@ -135,7 +135,6 @@ export default function ContractCreateForm({
         async function loadData() {
             if (!contractId) return;
             const contractResp = await contractsHelper.getContract(contractId);
-            console.log(contractResp);
 
             if (contractResp) {
                 // On reset le formulaire avec les données du contrat (préremplissage)

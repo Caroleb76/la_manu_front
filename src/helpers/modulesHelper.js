@@ -17,9 +17,20 @@ async function getModuleByFormation (moduleId){
     return response;
 }
 
+async function create (formData){
+
+    const response= await apiClient("moduleFormation", {
+        method:"POST",
+        body:formData
+    }
+    );
+    return response;
+}
+
 
 export default {
     getModules,
-    getModuleByFormation
+    getModuleByFormation,
+    create
 
 }

@@ -108,8 +108,6 @@ function calculateStats() {
     const p = [];
     const c = [];
     const v = [];
-    console.log("filtered", filtered);
-    console.log(selectedContractId);
     
     
     filtered?.forEach((iv) => {
@@ -187,7 +185,6 @@ const onInterventionValidated = (iv) => {
 
 // small components
 function Section({ title, items, onValidateClick,disableActions }) {
-  console.log(disableActions);
   return (
     <section>
       <div className={styles.sectionHeader}>

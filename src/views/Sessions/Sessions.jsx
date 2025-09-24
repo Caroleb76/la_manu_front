@@ -57,7 +57,6 @@ export default function Sessions() {
                 Lieu: session.Address.city,
                 Numero: session.serialNumber,
             }));
-            // console.log(rows, response.data.total);
 
             params.successCallback(rows, response.data.total);
 
@@ -66,7 +65,6 @@ export default function Sessions() {
 
     const onModifySession = (session) => {
         const selectedSession = sessions.find((s) => s.id === session.id);
-        console.log("selected session", selectedSession);
         selectedSession.startDate = new Date(selectedSession.startDate).toISOString().split("T")[0];
         selectedSession.endDate = new Date(selectedSession.endDate).toISOString().split("T")[0];
         setSelectedSession(selectedSession);

@@ -28,7 +28,6 @@ async function apiClient(endpoint, { method = "GET", headers = [], body, params 
     }
     try {
         const response = await fetch(url, config);
-        // console.log(response);
         
         const json = await response.json();
         return json;

@@ -29,7 +29,6 @@ export default function CreateContract() {
         const categoryResponse = interventionsCategoriesHelper.getInterventionsCategories();
         categoryResponse.then((categories) => {
             setInterventionsCategories(categories.data);
-            console.log(categories.data);
         });
     }, []);
 

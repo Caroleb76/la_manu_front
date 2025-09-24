@@ -57,7 +57,6 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose,s
         if (filtered.length <= 0) {
             return
         }
-        console.log(filtered[0].name)
         setValue("moduleName", filtered[0].name)
     }
 
@@ -75,9 +74,7 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose,s
         const getModules = async () => {
             const response = await modulesHelper.getModuleByFormation(formationId);
             if (response) {
-                //  console.log(response.data)
                 setModules(response.data)
-                // console.log(response.data.users)
             }
 
             return response
@@ -87,9 +84,7 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose,s
         const getExtraCosts = async () => {
             const response = await extraCostsCategoryHelper.getAll();
             if (response) {
-                console.log("extracostsResponse", response.data)
                 setExtraCostCategories(response.data)
-                // console.log(response.data.users)
             }
 
             return response
@@ -102,7 +97,6 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose,s
 
     
     async function onSubmit(data) {
-        console.log("submit", data)
 
         onInterventionCreated(data)
         onClose()

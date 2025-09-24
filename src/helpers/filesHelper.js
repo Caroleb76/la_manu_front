@@ -25,7 +25,6 @@ async function getExtraCostFiles(userId,extraCostId) {
 
 async function downloadFile(fullPath,fileName) {
     const token = localStorage.getItem("token");
-    console.log(fullPath);
     
     const response = await fetch(`${server}${fullPath}`, {
         method: "GET",
@@ -35,7 +34,6 @@ async function downloadFile(fullPath,fileName) {
     });
     
     if (!response.ok) {
-        console.log(response);
         
         throw new Error("Download failed");
     }

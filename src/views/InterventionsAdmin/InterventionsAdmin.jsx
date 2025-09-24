@@ -74,7 +74,6 @@ function InterventionsAdmin() {
                     setPageSize(pageSize);
 
                 }
-                // console.log(rows, response.data.total);
                 params.successCallback(rows, rows.length);
             },
         }),
@@ -88,7 +87,6 @@ function InterventionsAdmin() {
     };
 
     const onValidatePayment = async (intervention) => {
-        console.log(intervention);
         const response = await interventionsHelper.validatePayment(
             intervention.Id
         );
@@ -103,7 +101,7 @@ function InterventionsAdmin() {
     const onNotificationCreated = () => {
         setNotificationCreationMode(false);
         setReloadTrigger((prev) => prev + 1);
-        notify("La notification a bien été ajoutée", "success");
+        notify("L'intervention a bien été ajoutée", "success");
     };
 
     return (

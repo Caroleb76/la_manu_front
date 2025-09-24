@@ -1,24 +1,24 @@
-import DataGrid from "../../components/DataGrid/DataGrid";
+import DataGrid from "../../components/DataGrid/DataGrid.jsx";
 import { useState, useEffect, useMemo } from "react";
-import notificationsHelper from "../../helpers/notificationsHelper";
-import styles from "./Notifications.module.css";
+import notificationsHelper from "../../helpers/notificationsHelper.js";
+import styles from "./Modules.module.css";
 import PopupWrapper from "../../components/popups/PopupWrapper.jsx";
-import { useNotification } from "../../../context/notificationContext";
+import { useNotification } from "../../../context/notificationContext.jsx";
 import PopupformNotification from "../../components/forms/PopupFormNotification/PopupformNotification.jsx";
 import { PRIORITIES } from "../../utils/constants.js";
+import modulesHelper from "../../helpers/modulesHelper.js";
+import PopupformModule from "../../components/forms/PopupFormModule/PopupFormModule.jsx";
 
-function Notifications() {
+function Modules() {
     const [notificationCreationMode, setNotificationCreationMode] =
         useState(false);
     const { notify } = useNotification();
     const dataGridRef = null;
     const colDefs = [
-        { field: "Titre", filter: true },
-        { field: "Priorité", filter: true },
-        { field: "Contenu", filter: true },
-        { field: "Date de début", filter: false },
-        { field: "Date de fin", filter: false },
-        { field: "Actions", filter: false },
+        { field: "Nom", filter: true },
+        { field: "Formation", filter: true },
+        { field: "Description", filter: true },
+        // { field: "Actions", filter: false },
     ];
 
     const [searchText, setSearchText] = useState("");
@@ -30,25 +30,19 @@ function Notifications() {
                 const offset = params.startRow;
                 const pageSize = params.endRow - params.startRow;
 
-                const response = await notificationsHelper.getNotifications(
+                const response = await modulesHelper.getModules(
                     offset,
                     pageSize,
                     searchText
                 );
 
-                const rows = response.data.notifications.map(
-                    (notification) => ({
-                        id: notification.id,
-                        Titre: notification.title,
-                        Priorité: PRIORITIES[notification.priority],
-                        Contenu: notification.content,
-                        isActive: new Date(notification.endDate) > new Date(),
-                        "Date de début": new Date(
-                            notification.startDate
-                        ).toLocaleDateString(),
-                        "Date de fin": new Date(
-                            notification.endDate
-                        ).toLocaleDateString(),
+                
+                const rows = response?.data?.map(
+                    (module) => ({
+                        id: module.id,
+                        Nom: module.name,
+                        Formation: module.Formation.name,
+                        Description: module.description,
                     })
                 );
                 if (searchText.length > 0) {
@@ -57,7 +51,7 @@ function Notifications() {
                     setPageSize(pageSize);
                 }
 
-                params.successCallback(rows, response.data.total);
+                params.successCallback(rows, rows.length);
             },
         }),
         [reloadTrigger]
@@ -69,22 +63,14 @@ function Notifications() {
         setReloadTrigger((prev) => prev + 1);
     };
 
-    const onDeleteNotification = async (notification) => {
-        const response = await notificationsHelper.deleteNotification(
-            notification.id
-        );
-        if (response && response.success) {
-            setReloadTrigger((prev) => prev + 1);
-            notify("La notification a bien été supprimée", "success");
-        } else {
-            notify("Une erreur est survenue", "error");
-        }
+    const onEditModule = async (module) => {
+      //TODO
     };
 
     const onNotificationCreated = () => {
         setNotificationCreationMode(false);
         setReloadTrigger((prev) => prev + 1);
-        notify("La notification a bien été ajoutée", "success");
+        notify("Le module a bien été créé", "success");
     };
 
     return (
@@ -93,10 +79,10 @@ function Notifications() {
                 {notificationCreationMode && (
                     <>
                         <PopupWrapper
-                            title="Créer une notification"
+                            title="Créer un module de formation"
                             onClose={() => setNotificationCreationMode(false)}
                         >
-                            <PopupformNotification
+                            <PopupformModule
                                 onNotificationCreated={onNotificationCreated}
                             />
                         </PopupWrapper>
@@ -116,13 +102,13 @@ function Notifications() {
                 />
                 <DataGrid
                     pageSize={pageSize}
-                    onActionClick={onDeleteNotification}
+                    onActionClick={onEditModule}
                     colDefs={colDefs}
                     data={getDataSource}
-                    renderIconWithCondition={(row) =>
-                        "ic:baseline-delete-outline"
-                    }
-                    iconStyle={(row) => {
+                    // renderIconWithCondition={(module) =>
+                    //     "ic:outline-edit"
+                    // }
+                    iconStyle={(module) => {
                         return { color: "red" };
                     }}
                 />
@@ -131,4 +117,4 @@ function Notifications() {
     );
 }
 
-export default Notifications;
+export default Modules;

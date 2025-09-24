@@ -2,9 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { jsPDF } from "jspdf";
 
 const ContractPdf = ({ currentContract }) => {
-    useEffect(() => {
-        console.log("currentContract", currentContract);
-    });
+
     const printRef = useRef();
 
     const handleExportPDF = () => {

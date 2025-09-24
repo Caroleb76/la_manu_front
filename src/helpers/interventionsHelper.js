@@ -22,7 +22,6 @@ async function getByUserId (id){
 
 async function getInterventionsByContractId (contractId){
 
-    console.log("contractId",contractId);
     if(!contractId) return;
     const response= await apiClient(`interventions/contract/${contractId}`,{method:"GET"});
     return response;
@@ -32,7 +31,6 @@ async function getInterventionsByContractId (contractId){
 async function validateIntervention(interventionId){
 
     const response= await apiClient(`interventions/validate/${interventionId}`,{method:"POST"});
-    console.log(response);
     
     return response;
 }
