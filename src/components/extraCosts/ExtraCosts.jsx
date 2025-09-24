@@ -7,7 +7,7 @@ import { useNotification } from "../../../context/notificationContext";
 import filesHelper from "../../helpers/filesHelper";
 import extraCostsCategoryHelper from "../../helpers/extraCostsCategoryHelper";
 
-const ExtraConsts = ({ iv }) => {
+const ExtraCosts = ({ iv }) => {
   const { user } = useContext(UserContext);
   const [value, setValue] = useState("");
   const [fileIsSelected, setFileIsSelected] = useState(false);
@@ -247,4 +247,4 @@ const ExtraConsts = ({ iv }) => {
   );
 };
 
-export default ExtraConsts;
+export default ExtraCosts;

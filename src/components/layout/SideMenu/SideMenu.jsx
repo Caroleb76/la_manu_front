@@ -156,7 +156,7 @@ function SideMenu() {
                         </div>
                     </NavLink>
 
-                    <NavLink
+                  {user.isAdmin &&  <NavLink
                         to="/dashboard/interventions-admin"
                         className={({ isActive }) =>
                             ` ${styles.menuItem} ${
@@ -173,9 +173,9 @@ function SideMenu() {
                             />
                             <p>Interventions</p>
                         </div>
-                    </NavLink>
+                    </NavLink>}
 
-                    <NavLink
+                    {user.isAdmin && <NavLink
                         to="/dashboard/users"
                         className={({ isActive }) =>
                             ` ${styles.menuItem} ${
@@ -192,7 +192,7 @@ function SideMenu() {
                             />
                             <p>Utilisateurs</p>
                         </div>
-                    </NavLink>
+                    </NavLink>}
 
                     <NavLink
                         to="/dashboard/profile"

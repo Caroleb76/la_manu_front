@@ -87,12 +87,17 @@ function InterventionsAdmin() {
     };
 
     const onValidatePayment = async (intervention) => {
+       
+        if (intervention["A payer"] == "❌") {
+            notify("L'intervention n'a pas encore été validée par le formateur", "error");
+            return
+        }
         const response = await interventionsHelper.validatePayment(
             intervention.Id
         );
         if (response && response.success) {
             setReloadTrigger((prev) => prev + 1);
-            notify("L'intervention a bien été payée", "success");
+            notify("Le changement a bien été pris en compte", "success");
         } else {
             notify("Une erreur est survenue", "error");
         }

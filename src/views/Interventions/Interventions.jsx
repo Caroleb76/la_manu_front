@@ -4,10 +4,9 @@ import { UserContext } from "../../../context/userContext";
 import contractsHelper from "../../helpers/contractsHelper";
 import interventionsHelper from "../../helpers/interventionsHelper";
 import { useNotification } from "../../../context/notificationContext";
-import { set } from "zod/v4-mini";
 import PopupWrapper from "../../components/popups/PopupWrapper";
-import ExtraConsts from "../../components/extraCosts/ExtraCosts";
 import formationHelper from "../../helpers/formationHelper";
+import Section from "../../components/interventions/Section"; 
 
 
 // creation of the date in text (in french format)
@@ -34,15 +33,20 @@ export default function Interventions() {
   const { user } = useContext(UserContext);
   const [selectedFormation, setSelectedFormation] = useState(null);
   const [formations, setFormations] = useState([]);
+      const [extraCostMode, setExtraCostMode] = useState(false);
+
+  const [confirmValidation, setConfirmValidation] = useState(false);
 
 useEffect(() => {
   let ignore = false;
 
   (async () => {
+    
     setLoading(true);
     try {
 
       const res = await formationHelper.allFormationByFormateurId(user.id);
+   
       setFormations(res?.data ?? []);
       if (ignore) return;
       setSelectedFormation(res?.data[0]);
@@ -124,10 +128,19 @@ const onInterventionValidated = (iv) => {
             })
           });
 };
+
+
+
   return (
     <div className={styles.page}>
       <header className={styles.header}>
         <div>
+           {confirmValidation &&
+         <PopupWrapper onClose={() => setExtraCostMode(false)} title="Frais de déplacement">
+          <p>TEST</p>
+          <button>TEST</button>
+        </PopupWrapper>
+      }
           <h1 className={styles.title}>{selectedFormation?.name || "Formation"}</h1>
           <div className={styles.metaRow}>
             <span >
@@ -166,7 +179,7 @@ const onInterventionValidated = (iv) => {
         <div className={styles.sections}>
           {
             pending.length > 0 &&
-            <Section title="interventions passées à valider ⚠️" items={pending}  onValidateClick={onInterventionValidated}/>
+            <Section title="interventions passées à valider ⚠️" items={pending}  onValidateClick={onInterventionValidated} disableActions={false}/>
           }
           <Section title="Interventions à venir" disableActions={true} items={coming} onValidateClick={onInterventionValidated}/>
           <Section title="intervention validées"  disableActions={true} items={validated} onValidateClick={onInterventionValidated}/>
@@ -179,141 +192,7 @@ const onInterventionValidated = (iv) => {
 }
 
 // small components
-function Section({ title, items, onValidateClick,disableActions }) {
-  console.log(disableActions);
-  return (
-    <section>
-      <div className={styles.sectionHeader}>
-        <h2>{title}</h2>
-      </div>
-      {items.length === 0 ? (
-        <div className={styles.emptyCard}>Aucune donnée.</div>
-      ) : (
-        items.map((iv) => <InterventionCard disableActions={disableActions} onValidateClick={()=>onValidateClick(iv)} key={iv.id} iv={iv} />)
-      )}
-    </section>
-  );
-}
 
-function InterventionCard({ iv ,onValidateClick,disableActions}) {
-  const date = new Date(iv.dateIntervention);
-  const weekday = monthWithDot(date.toLocaleDateString("fr-FR", { weekday: "long" }));
-  const day = date.toLocaleDateString("fr-FR", { day: "2-digit" });
-  const month = cleanedMonth(date.toLocaleDateString("fr-FR", { month: "short" }));
-  const {notify} = useNotification();
-  const [extraCostMode, setExtraCostMode] = useState(false);
-  
-  
-  
-  const onExtraClick = () => {
-    setExtraCostMode(true);
-  };
 
-    const validate = async () => {
-    
-    const response = await interventionsHelper.validateIntervention(iv.id);
-    if(!response?.success){
-      notify(response.message, "error");
-      return
-    }
-    notify("Intervention validée", "success");
-    iv.validatedByFormateur = true;
-    onValidateClick();
-  };
 
-  return (
-    <article className={styles.card}>
-      {
-        extraCostMode &&
-        <PopupWrapper onClose={() => setExtraCostMode(false)} title="Frais additionnels" children={<ExtraConsts iv={iv}></ExtraConsts>}>
-        </PopupWrapper>
-      }
-      <div className={styles.cardMain}>
-        <div className={styles.cardLeft}>
 
-          <div className={styles.dateBox}>
-            <div className={styles.weekday}>{weekday}</div>
-            <div className={styles.dayMonth}>
-              {day} {month}
-            </div>
-          </div>
-
-          <div className={styles.infoCol}>
-            <div className={styles.line}>
-              <span className={styles.label}>Nombre des heures:</span>{" "}
-              <strong>{Number(iv.hours)} h</strong>
-            </div>
-            <div className={styles.line}>
-              <span className={styles.label}>Catégorie:</span>{" "}
-              <strong>{iv.InterventionCategory?.name ?? "—"}</strong>
-            </div>
-            <div className={styles.line}>
-              <span className={styles.label}></span>{" "}
-              <span>{iv.shift.toUpperCase() || "—"}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className={styles.cardRight}>
-          <div className={styles.upperRightCard}>
-            <StatusPill
-              ok={iv.validatedByFormateur}
-              label="Formateur"
-              title={
-                iv.validatedByFormateur
-                  ? "Validé par le formateur"
-                  : "En attente formateur"
-              }
-            />
-            <StatusPill
-              ok={iv.validatedByAdmin}
-              label="Admin"
-              title={
-                iv.validatedByAdmin ? "Validé par l’admin" : "En attente admin"
-              }
-            />
-          </div>
-
-          <div className={styles.lowerRightCard}>
-
-            <button
-              type="button"
-              className={styles.extraBtn + " " + (disableActions ? styles.disabled : "")}
-              onClick={onExtraClick}
-              disabled={disableActions}
-              title="Voir / ajouter des frais annexes"
-            >
-              Frais
-            </button>
-                       <button
-              type="button"
-              className={styles.extraBtn + " " + ((iv.validatedByFormateur || disableActions) ? styles.disabled : "")}
-              onClick={validate}
-              disabled={iv.validatedByFormateur || disableActions}
-              title="Valider l’intervention"
-            >
-              {iv.validatedByFormateur ? "Valide" : "Valider"}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {iv.description && (
-        <p className={styles.description}>{iv.description}</p>
-      )}
-    </article>
-  );
-}
-
-function StatusPill({ ok, label, title }) {
-  return (
-    <span
-      className={`${styles.status} ${ok ? styles.ok : styles.waiting}`}
-      title={title}
-      aria-label={`${label}: ${ok ? "validé" : "en attente"}`}
-    >
-      <span className={styles.statusDot} />
-      {label}
-    </span>
-  );
-}
