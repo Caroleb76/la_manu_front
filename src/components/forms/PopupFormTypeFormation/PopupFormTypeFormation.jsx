@@ -83,7 +83,7 @@ export default function PopupFormTypeFormation({ onFormationCreated, formation }
 
 
         <div className={styles.popupButtons}>
-          <button> {formation ? "Modifier" : "Créer"} </button>
+          <button className="btn btn-primary"> {formation ? "Modifier" : "Créer"} </button>
         </div>
         <DevTool control={control} />
       </form>

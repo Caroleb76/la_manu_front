@@ -208,7 +208,7 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
       {
         !userId &&
         <>
-          <label htmlFor="fileInput" className={`${styles.addButton} ${styles.fileAdd}`}>
+          <label htmlFor="fileInput" className={`btn btn-primary ${styles.fileAdd}`}>
             Ajouter un fichier
           </label>
           <input

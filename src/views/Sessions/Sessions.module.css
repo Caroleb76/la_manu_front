@@ -15,7 +15,7 @@
 button:hover{
     cursor: pointer;
 }
-.buttonContainer{
+.btnContainer{
     width: 100%;
     display: flex;
     justify-content: flex-end;

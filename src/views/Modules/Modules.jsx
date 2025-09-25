@@ -88,12 +88,14 @@ function Modules() {
                         </PopupWrapper>
                     </>
                 )}
-                <button
-                    className={styles.addButton}
-                    onClick={() => setNotificationCreationMode(true)}
-                >
-                    Créer
-                </button>
+               <div className={styles.btnContainer}>
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => setNotificationCreationMode(true)}
+                    >
+                        Créer
+                    </button>
+               </div>
                 <input
                     type="text"
                     placeholder="Rechercher"

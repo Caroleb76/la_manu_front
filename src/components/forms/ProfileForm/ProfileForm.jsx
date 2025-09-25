@@ -162,7 +162,8 @@ export default function ProfileForm({ userId }) {
             <InputText label="Nombre de CV de votre véhicule" {...register("horsePower")} error={errors.horsePower?.message} />
           </div>
         </section>
-        <button type="submit" className="btn-success"> valider les modifications </button>
+
+     <div className={styles.btnSubmit}>   <button type="submit" className="btn btn-primary"> valider les modifications </button></div>
 
 
       </form>

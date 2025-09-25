@@ -82,7 +82,7 @@ export default function Formations() {
                 )}
 
                 <button
-                    className={Styles.addButton}
+                    className="btn "
                     ref={popuRef}
                     onClick={() => setFormationCreationMode(true)}
                 >

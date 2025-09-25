@@ -56,7 +56,7 @@ export default function Login() {
           </div>
         </div>
 
-        <button type="submit" onClick={handleLogin}>Se connecter</button>
+        <button type="submit" onClick={handleLogin} className="btn btn-primary">Se connecter</button>
       </form>
     </div>
   );
