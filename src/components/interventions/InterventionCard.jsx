@@ -123,8 +123,8 @@ export default function InterventionCard({
                     <div className={styles.lowerRightCard}>
                         <button
                             type="button"
-                            className={`${styles.extraBtn} ${
-                                disableActions ? styles.disabled : ""
+                            className={`btn btn-primary  ${
+                                disableActions ? "btn-disabled" : ""
                             }`}
                             onClick={() => setExtraCostMode(true)}
                             disabled={disableActions}
@@ -134,9 +134,9 @@ export default function InterventionCard({
                         </button>
                         <button
                             type="button"
-                            className={`${styles.extraBtn} ${
+                            className={`btn btn-primary ${
                                 iv.validatedByFormateur || disableActions
-                                    ? styles.disabled
+                                    ? "btn-disabled"
                                     : ""
                             }`}
                             onClick={() => setConfirmValidation(true)}

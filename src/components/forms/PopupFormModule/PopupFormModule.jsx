@@ -88,7 +88,7 @@ export default function PopupformModule({ onNotificationCreated }) {
                 </section>
 
                 <div className={styles.popupButtons}>
-                    <button> Créer </button>
+                    <button className="btn btn-primary"> Créer </button>
                 </div>
                 <DevTool control={control} />
             </form>

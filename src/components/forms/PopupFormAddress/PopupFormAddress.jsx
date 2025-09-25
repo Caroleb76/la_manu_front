@@ -77,7 +77,7 @@ export default function PopupFormAddress({ onCreated } ) {
         </section>
 
         <div className={styles.popupButtons}>
-          <button type="submit">Créer Adresse</button>
+          <button type="submit" className="btn btn-primary">Créer Adresse</button>
 
         </div>
         <DevTool control={control} />

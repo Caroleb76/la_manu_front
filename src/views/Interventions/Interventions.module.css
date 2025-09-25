@@ -235,15 +235,7 @@
     color: var(--inactive-color);
     border: 1px solid #e3e5e8;
 }
-button{
-    padding: 0.2rem;
-    font-size: 0.8rem;
-    border: 1px solid #ccc;
-    border-radius: var(--radius);
-    background-color: white;
-    color: var(--text-color);
-    min-width: 200px;
-}
+
 button:hover{
     background-color: var(--primary-color);
     color: white;

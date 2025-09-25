@@ -58,7 +58,7 @@ export default function Home() {
     return (
         <section className={styles.widgetGrid}>
             {user && isAdmin(user) && (
-                <Widget titre="Statistiques" classString={styles.statsWidget + " " + styles.widget}>
+                <Widget titre="Statistiques" classString={styles.twoColumns + " " + styles.widget}>
                     {" "}
                     <StatsWidget/> 
                 </Widget>
@@ -67,23 +67,26 @@ export default function Home() {
             {user && isFormateur(user) && (
                 <Widget
                     titre="calendrier"
-                    classString={styles.calendarWidget + " " + styles.widget}
+                    classString={styles.twoColumns + " " + styles.widget}
                 >
                     {" "}
                     <BigCalendar events={events} />
                 </Widget>
             )}
-            <Widget titre="alertes" classString={styles.widget}>
+
+             {user && isAdmin(user) && (
+            <Widget titre="alertes" classString={styles.twoColumns}>
                 {" "}
                 <AlertWidget />
             </Widget>
+            )}
 
-           
+            {user && isFormateur(user) && (
             <Widget titre="widget" classString={styles.widget}>
                 {" "}
                 <Tasks />
             </Widget>
-      
+            )}      
 
            
         </section>

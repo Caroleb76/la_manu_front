@@ -176,7 +176,7 @@ const ExtraCosts = ({ iv }) => {
                             )} */}
                               <button
                               type="button"
-                              className={`${Styles.btnAdd}`}
+                              className="btn btn-primary"
                                onClick={() => onModifyExtraCost(ec)}
                             >
                               Modifier
@@ -233,7 +233,7 @@ const ExtraCosts = ({ iv }) => {
             <button
               onClick={submit}
               type="button"
-              className={` `}
+              className={`btn btn-primary `}
             >
               Enregistrer
             </button>

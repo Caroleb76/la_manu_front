@@ -9,13 +9,18 @@ padding-top: 2rem;
 padding-bottom: 2rem;
   }
 
+.flexRow {
+  display: flex;
+  flex-direction: row;
+  padding-top: 2rem;
+  align-items: start;
+  height: 100%;
+  gap: 1rem;
+}
 
-  .popupButtons{
-    display :flex;
-    justify-content: space-evenly;
-    margin-top: 3rem;
-
-
-  }
-
-  
+.btnWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}

@@ -9,9 +9,15 @@ import { PRIORITIES } from "../../utils/constants.js";
 import { convertDateToFranceTimeZone } from "../../utils/date.js";
 import { useContext } from "react";
 import { UserContext } from "../../../context/userContext";
+import { isAdmin } from "../../utils/userRole.js";
+import { set } from "zod/v4-mini";
+import ExtraCosts from "../../components/extraCosts/ExtraCosts.jsx";
 
 function InterventionsAdmin() {
     const { user } = useContext(UserContext);
+    const [showDetails, setShowDetails] = useState(false);
+    const [interventions, setInterventions] = useState([]);
+    const [selectedIntervention, setSelectedIntervention] = useState(null);
 
     const [notificationCreationMode, setNotificationCreationMode] =
         useState(false);
@@ -29,12 +35,42 @@ function InterventionsAdmin() {
         { field: "Tarif", filter: false },
         { field: "A payer", filter: false },
         { field: "Payée", filter: false },
-        { field: "Actions", filter: false },
+        {
+            field: "Actions",
+            filter: false,
+            actions: [
+                {
+                    visible: isAdmin(user),
+                    label: "Voir",
+                    onClick: (row) => {
+                        setShowDetails(true);
+                        setSelectedInterventionFromRow(row);
+                        console.log(selectedIntervention);
+                    },
+
+                    icon: {
+                        icon: "material-symbols:visibility",
+                    },
+                },
+                {
+                    visible: isAdmin(user),
+                    label: "Payer",
+                    onClick: (data) => onValidatePayment(data),
+
+                    icon: {
+                        icon: "ic:outline-price-check",
+                    },
+                },
+            ],
+        },
     ];
 
     const [searchText, setSearchText] = useState("");
     const [pageSize, setPageSize] = useState(10);
     const [reloadTrigger, setReloadTrigger] = useState(0);
+
+  
+
     const getDataSource = useMemo(
         () => ({
             getRows: async (params) => {
@@ -52,6 +88,8 @@ function InterventionsAdmin() {
                 } else {
                     response = await interventionsHelper.getByUserId(user.id);
                 }
+
+                setInterventions(response.data);
 
                 const rows = response.data.map((interventions) => ({
                     Id: interventions.id,
@@ -72,7 +110,6 @@ function InterventionsAdmin() {
                     setPageSize(rows.length);
                 } else {
                     setPageSize(pageSize);
-
                 }
                 params.successCallback(rows, rows.length);
             },
@@ -87,10 +124,12 @@ function InterventionsAdmin() {
     };
 
     const onValidatePayment = async (intervention) => {
-       
         if (intervention["A payer"] == "❌") {
-            notify("L'intervention n'a pas encore été validée par le formateur", "error");
-            return
+            notify(
+                "L'intervention n'a pas encore été validée par le formateur",
+                "error"
+            );
+            return;
         }
         const response = await interventionsHelper.validatePayment(
             intervention.Id
@@ -109,29 +148,24 @@ function InterventionsAdmin() {
         notify("L'intervention a bien été ajoutée", "success");
     };
 
+    const setSelectedInterventionFromRow = async (row) => {
+        const response = await  interventionsHelper.getById(row.Id);
+        setSelectedIntervention(response.data);
+    };
+
     return (
         <>
             <div className={styles.mainContainer}>
-                {notificationCreationMode && (
-                    <>
-                        <PopupWrapper
-                            title="Créer une notification"
-                            onClose={() => setNotificationCreationMode(false)}
-                        >
-                            <PopupformNotification
-                                onNotificationCreated={onNotificationCreated}
-                            />
-                        </PopupWrapper>
-                    </>
-                )}
-                <div className={styles.btnContainer}>
-                    <button
-                        className="btn btn-primary"
-                        onClick={() => setNotificationCreationMode(true)}
+                {showDetails && (
+                    <PopupWrapper
+                        title="Détails de l'intervention"
+                        onClose={() => setShowDetails(false)}
                     >
-                        Créer
-                    </button>
-                </div>
+                        
+                        <ExtraCosts iv={selectedIntervention} />
+                    </PopupWrapper>
+                )}
+
                 <input
                     type="text"
                     placeholder="Rechercher"
@@ -140,17 +174,8 @@ function InterventionsAdmin() {
                 />
                 <DataGrid
                     pageSize={pageSize}
-                    onActionClick={(intervention) => {
-                        onValidatePayment(intervention);
-                    }}
                     colDefs={colDefs}
                     data={getDataSource}
-                    renderIconWithCondition={(intervention) =>
-                        intervention?.Payée === "✅"
-                            ? "ic:outline-cancel"
-                            :  "ic:outline-price-check"
-                    }
-                   
                 />
             </div>
         </>

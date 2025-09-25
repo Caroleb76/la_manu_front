@@ -235,7 +235,7 @@ export default function PopupFormIntervention({ onInterventionCreated, onClose,s
 
 
                 <div className={styles.popupButtons}>
-                    <button className="btn "> Créer </button>
+                    <button className="btn btn-primary"> Créer </button>
                 </div>
                 <DevTool control={control} />
             </form>

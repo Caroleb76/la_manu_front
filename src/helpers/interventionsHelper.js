@@ -10,6 +10,11 @@ async function getInterventions (offset=0,limit=10,searchText=""){
     return response;
 }
 
+async function getById (userId){
+    const response= await apiClient("interventions/id/"+userId,{method:"GET"});
+    return response;
+}
+
 async function getByUserId (id){
 
     const params= {
@@ -66,6 +71,7 @@ async function getTotalAmountPerMonth(){
 async function getTotalExtraCostPerMonth(){
 const date = dayjs(new Date()).format("YYYY-MM-DD");
     const response= await apiClient(`extraCosts/monthlyAmount/` + date,{method:"GET"});
+    console.log("total",response);
     return response;
 }
 
@@ -88,5 +94,6 @@ export default {
     getTotalHoursPerCategory,
     getTotalAmountPerMonth,
     getTotalExtraCostPerMonth,
-    validatePayment
+    validatePayment,
+    getById
 }

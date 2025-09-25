@@ -4,7 +4,7 @@ import InputSelect from "../../ui/InputSelect.jsx";
 import { useEffect, useState } from "react";
 import sessionFormationsHelper from "../../../helpers/sessionFormationsHelper.js";
 import rolesHelper from "../../../helpers/rolesHelper.js";
-import { useForm , Controller} from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { popupSessionSchema } from "./popupSessionSchema.js";
 import { DevTool } from "@hookform/devtools";
@@ -34,11 +34,10 @@ export default function PopupFormSession({ onSessionCreated, session }) {
         defaultValues: {
             ...session,
             addressId: session?.Address?.id || "",
-        }
+        },
     });
 
     const selectedStartDate = watch("startDate");
-  
 
     useEffect(() => {
         loadFormations();
@@ -46,7 +45,6 @@ export default function PopupFormSession({ onSessionCreated, session }) {
         if (session) {
             reset({ ...session, addressId: session.Address.id });
             loadAddresses();
-            
         }
     }, []);
 
@@ -55,16 +53,14 @@ export default function PopupFormSession({ onSessionCreated, session }) {
         setFormations(response.data.formations);
     };
 
-        const loadAddresses = async () => {
+    const loadAddresses = async () => {
         const response = await addressesHelper.getAddresses();
-        const dataConverted = response.data.map(address => ({
-                ...address,
-                label: address.city + " - " + address.address,
-            }));
+        const dataConverted = response.data.map((address) => ({
+            ...address,
+            label: address.city + " - " + address.address,
+        }));
         setAddressesOptions(dataConverted);
     };
-
-  
 
     async function onSubmit(data) {
         try {
@@ -72,12 +68,21 @@ export default function PopupFormSession({ onSessionCreated, session }) {
             let response;
             if (session) {
                 data.id = session.id;
-                response = await sessionFormationsHelper.updateSessionFormation(data);
+                response = await sessionFormationsHelper.updateSessionFormation(
+                    data
+                );
             } else {
-                response = await sessionFormationsHelper.createSessionFormation(data);
+                response = await sessionFormationsHelper.createSessionFormation(
+                    data
+                );
             }
             if (response.success) {
-                notify(session ? "Session modifiée" : "La formation a bien été ajoutée", "success");
+                notify(
+                    session
+                        ? "Session modifiée"
+                        : "La formation a bien été ajoutée",
+                    "success"
+                );
                 onSessionCreated();
                 reset();
             } else {
@@ -93,7 +98,6 @@ export default function PopupFormSession({ onSessionCreated, session }) {
         notify("Adresse ajoutée", "success");
         loadAddresses();
     };
-
 
     return (
         <div className={styles.borderPopup}>
@@ -149,78 +153,28 @@ export default function PopupFormSession({ onSessionCreated, session }) {
                         {...register("endDate")}
                         error={errors.endDate?.message}
                     />
-                    <div
-                        style={{
-                            display: "flex",
-                            gap: "0.5rem",
-                            alignItems: "flex-end",
-                        }}
-                    >
-
-
-<Controller
-  name="addressId"
-  control={control}
-  render={({ field }) => (
-    <Combobox
-      label="Lieu"
-      options={addressesOptions}
-      loading={loading}
-      {...field}
-    />
-  )}
-/>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 
+                        <Controller
+                            name="addressId"
+                            control={control}
+                            render={({ field }) => (
+                                <Combobox
+                                    label="Lieu"
+                                    options={addressesOptions}
+                                    loading={loading}
+                                    {...field}
+                                />
+                            )}
+                        />
 
-                        <div
-                            style={{
-                                display: "flex",
-                                gap: "0.5rem",
-                                alignItems: "center",
-                                flexDirection: "column",
-                            }}
-                        >
-                            <small
-                                style={{
-                                    fontSize: "0.7rem",
-                                    width: "100%",
-                                    textAlign: "center",
-                                }}
-                            >
+                        <div className={styles.flexRow}>
+                            <small>
                                 {addressCreation
                                     ? "Annuler"
                                     : "Nouvelle adresse"}
                             </small>
-                            <button className="btn-sm"
-                                
+                            <button
+                                className="btn-plus"
                                 type="button"
                                 onClick={() =>
                                     setAddressCreation(!addressCreation)
@@ -229,11 +183,14 @@ export default function PopupFormSession({ onSessionCreated, session }) {
                                 {addressCreation ? "-" : "+"}
                             </button>
                         </div>
-                    </div>
+                    
                 </section>
-                <div className={styles.popupButtons}>
+                <div className={styles.btnWrapper}>
                     {!addressCreation && (
-                        <button> {session ? "Modifier" : "Créer"} </button>
+                        <button className="btn btn-primary">
+                            {" "}
+                            {session ? "Modifier" : "Créer"}{" "}
+                        </button>
                     )}
                 </div>
                 <DevTool control={control} />
@@ -241,10 +198,7 @@ export default function PopupFormSession({ onSessionCreated, session }) {
             {addressCreation && (
                 <>
                     <p
-                        style={{
-                            textAlign: "center",
-                            color: "var(--primary-color)",
-                        }}
+                       
                     >
                         Ajouter une adresse
                     </p>

@@ -29,3 +29,17 @@
     width: 100%;
     text-align: end;
 }
+
+.popupForm__container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap : 1rem;
+
+
+}
+
+.popupForm__input{
+    width: 100%;
+}

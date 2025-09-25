@@ -19,9 +19,9 @@ export const popupFormUserSchema = z.object({
         .email('L’email est invalide.'),
 
 
-    password: z
-        .string()
-        .min(1, 'Le mot de passe est requis.'),
+    // password: z
+    //     .string()
+    //     .min(1, 'Le mot de passe est requis.'),
 
     role: z
         .string()

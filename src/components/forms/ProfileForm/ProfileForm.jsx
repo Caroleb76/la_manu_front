@@ -51,10 +51,10 @@ export default function ProfileForm({ userId }) {
 
         reset({
           ...userData,
-          birthDate: convertDateToStandardString(new Date(userData.birthDate)),
-          address: userData.address.address,
-          postalCode: userData.address.postalCode,
-          city: userData.address.city,
+          birthDate: userData.birthDate ? convertDateToStandardString( new Date(userData.birthDate)) : "",
+          address: userData?.address?.address,
+          postalCode: userData?.address?.postalCode,
+          city: userData?.address?.city,
           profilePicture: "",
           diploma: "",
         });
