@@ -57,6 +57,22 @@ export default function InterventionCard({
                     <ExtraCosts iv={iv} />
                 </PopupWrapper>
             )}
+
+              {confirmValidation && (
+                <PopupWrapper
+                    onClose={() => setConfirmValidation(false)}
+                    title="Frais de déplacement"
+                >
+                   <div className={styles.validatePopup__wrapper}>
+                        <h1 className={styles.validatePopup__title}>Etes vous certain de vouloir valider cette intervention ?</h1>
+                        <p>Veillez à bien renseigner les frais de déplacement avant de valider</p>
+                      <div className={styles.validatePopup__btnWrap}>
+                            <button className="btn btn-success btn-sm" onClick={validate}>Valider</button>
+                            <button className="btn btn-error btn-sm" onClick={() => setConfirmValidation(false)}>Annuler</button>
+                      </div>
+                   </div>
+                </PopupWrapper>
+            )}
             <div className={styles.cardMain}>
                 <div className={styles.cardLeft}>
                     <div className={styles.dateBox}>

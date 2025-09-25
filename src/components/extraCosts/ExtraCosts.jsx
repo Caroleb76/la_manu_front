@@ -9,7 +9,7 @@ import extraCostsCategoryHelper from "../../helpers/extraCostsCategoryHelper";
 
 const ExtraCosts = ({ iv }) => {
   const { user } = useContext(UserContext);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(null);
   const [fileIsSelected, setFileIsSelected] = useState(false);
   const filesManagerRef = useRef(null);
   const { notify } = useNotification();
@@ -45,7 +45,7 @@ const ExtraCosts = ({ iv }) => {
       return;
     }
     try {
-      const payload = { category: selectedExtraCost.id, val: String(value).trim(), interventionId: iv.id };
+      const payload = { category: selectedExtraCost.id, val: parseInt(value), interventionId: iv.id };
       const response = await extraCostsHelper.update(payload, selectedExtraCost.id);
       if (!response?.success) {
         notify(response?.message || "Échec de la création du frais.", "error");
@@ -53,7 +53,7 @@ const ExtraCosts = ({ iv }) => {
       }
       const extraCostId = response.data.id;
       await filesManagerRef.current?.uploadPendingFiles(extraCostId);
-      setValue("");
+      setValue(null);
       setFileIsSelected(false);
       setModificationMode(false);
       await loadExtraCosts();
@@ -99,7 +99,13 @@ const ExtraCosts = ({ iv }) => {
   const onModifyExtraCost = (ec) => {
     setSelectedExtraCost(ec);
     setModificationMode(true);
-    setValue(ec.val);
+    try {
+       setValue(parseInt(ec.val));
+    } catch (error) {
+      console.error(error);
+      setValue(null);
+    }
+   
     
   }
 
@@ -204,13 +210,15 @@ const ExtraCosts = ({ iv }) => {
 
            
             <input
-              type="text"
+              type="number"
               name="Valeur du frais"
               placeholder="Montant"
-              onChange={(e) => setValue(e.target.value)}
+              min={0}
+              onChange={(e) => setValue(parseInt(e.target.value))}
               value={value}
             />
           </div>
+       
 
           <div className={Styles.row}>
             <FilesManager
@@ -232,7 +240,7 @@ const ExtraCosts = ({ iv }) => {
             <button
               onClick={() => {
                 setModificationMode(false);
-                setValue("");
+                setValue(null)
                 setFileIsSelected(false);
               }}
               type="button"

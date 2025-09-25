@@ -37,7 +37,7 @@ export default function CreateContract() {
     const addIntervention = (intervention) => {
         const extraCosts = intervention.extraCosts.map((extraCost) => ({
                 categoryId: extraCost,
-                val:""
+                val: null
             }))
         const formattedIntervention = {
             ...intervention,
