@@ -83,12 +83,20 @@ function Notifications() {
                         </PopupWrapper>
                     </>
                 )}
-                <button
-                    className={styles.addButton}
-                    onClick={() => setNotificationCreationMode(true)}
-                >
-                    Créer
-                </button>
+                <div className={styles.btnContainer}>
+                    <button
+                        className="btn"
+                        onClick={() => setNotificationCreationMode(true)}
+                    >
+                        Créer
+                    </button>
+                </div>
+                <input
+                    type="text"
+                    placeholder="Rechercher"
+                    value={searchText}
+                    onChange={(e) => onSearchTextChange(e)}
+                />
                 <DataGrid
                     pageSize={pageSize}
                     onActionClick={onDeleteNotification}

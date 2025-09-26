@@ -9,10 +9,18 @@ import { PRIORITIES } from "../../utils/constants.js";
 import { convertDateToFranceTimeZone } from "../../utils/date.js";
 import { useContext } from "react";
 import { UserContext } from "../../../context/userContext";
+import { isAdmin } from "../../utils/userRole.js";
+import ExtraCosts from "../../components/extraCosts/ExtraCosts.jsx";
 import { set } from "zod/v4-mini";
 
 function InterventionsAdmin() {
     const { user } = useContext(UserContext);
+    const [showDetails, setShowDetails] = useState(false);
+    const [interventions, setInterventions] = useState([]);
+    const [selectedIntervention, setSelectedIntervention] = useState(null);
+
+    const [notificationCreationMode, setNotificationCreationMode] =
+        useState(false);
     const { notify } = useNotification();
 
 
@@ -27,7 +35,34 @@ function InterventionsAdmin() {
         { field: "Tarif", filter: false },
         { field: "A payer", filter: false },
         { field: "Payée", filter: false },
-        { field: "Actions", filter: false },
+        {
+            field: "Actions",
+            filter: false,
+            actions: [
+                {
+                    visible: isAdmin(user),
+                    label: "Voir",
+                    onClick: (row) => {
+                        setShowDetails(true);
+                        setSelectedInterventionFromRow(row);
+                        console.log(selectedIntervention);
+                    },
+
+                    icon: {
+                        icon: "material-symbols:visibility",
+                    },
+                },
+                {
+                    visible: isAdmin(user),
+                    label: "Payer",
+                    onClick: (data) => onValidatePayment(data),
+
+                    icon: {
+                        icon: "ic:outline-price-check",
+                    },
+                },
+            ],
+        },
     ];
 
     const [searchText, setSearchText] = useState("");
@@ -82,18 +117,34 @@ function InterventionsAdmin() {
 
 
     const onValidatePayment = async (intervention) => {
-        console.log(intervention);
+        if (intervention["A payer"] == "❌") {
+            notify(
+                "L'intervention n'a pas encore été validée par le formateur",
+                "error"
+            );
+            return;
+        }
         const response = await interventionsHelper.validatePayment(
             intervention.Id
         );
         if (response && response.success) {
             setReloadTrigger((prev) => prev + 1);
-            notify("L'intervention a bien été payée", "success");
+            notify("Le changement a bien été pris en compte", "success");
         } else {
             notify("Une erreur est survenue", "error");
         }
     };
 
+    const onNotificationCreated = () => {
+        setNotificationCreationMode(false);
+        setReloadTrigger((prev) => prev + 1);
+        notify("L'intervention a bien été ajoutée", "success");
+    };
+
+    const setSelectedInterventionFromRow = async (row) => {
+        const response = await  interventionsHelper.getById(row.Id);
+        setSelectedIntervention(response.data);
+    };
 // const onSearchTextChange = (e) => {
 //     setSearchText(e.target.value);
 //     if (e.target.value.length < 3 && e.target.value.length > 0) return;
@@ -103,20 +154,26 @@ function InterventionsAdmin() {
     return (
         <>
             <div className={styles.mainContainer}>
-               
+                {showDetails && (
+                    <PopupWrapper
+                        title="Détails de l'intervention"
+                        onClose={() => setShowDetails(false)}
+                    >
+                        
+                        <ExtraCosts iv={selectedIntervention} />
+                    </PopupWrapper>
+                )}
+
                 {/* <input
                     type="text"
                     placeholder="Rechercher"
                     value={searchText}
                     onChange={(e) => onSearchTextChange(e)}
-                /> */}
+                />  */}
                 {
                     rows.length > 0 && 
                 <DataGrid
                     pageSize={pageSize}
-                    onActionClick={(intervention) => {
-                        onValidatePayment(intervention);
-                    }}
                     colDefs={colDefs}
                     rowData={rows}
                     renderIconWithCondition={(intervention) =>

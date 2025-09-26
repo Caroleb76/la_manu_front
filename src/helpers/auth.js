@@ -17,5 +17,11 @@ async function authMe(){
     return response.data;
 }
 
+async function resetPassword(email){
+    const body = {"email":email};
+    const response =await apiClient("auth/resetPassword",{method:"POST",body});
+    return response;
+}
 
-export {login,authMe};
+
+export {login,authMe, resetPassword};

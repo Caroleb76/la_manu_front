@@ -94,7 +94,7 @@ export default function PopupformNotification({ onNotificationCreated }) {
                 />
 
                 <div className={styles.popupButtons}>
-                    <button> Créer </button>
+                    <button className="btn btn-primary"> Créer </button>
                 </div>
                 <DevTool control={control} />
             </form>

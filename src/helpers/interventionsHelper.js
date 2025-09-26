@@ -7,6 +7,11 @@ async function getInterventions (){
     return response;
 }
 
+async function getById (userId){
+    const response= await apiClient("interventions/id/"+userId,{method:"GET"});
+    return response;
+}
+
 async function getByUserId (id){
 
     const params= {
@@ -19,7 +24,6 @@ async function getByUserId (id){
 
 async function getInterventionsByContractId (contractId){
 
-    console.log("contractId",contractId);
     if(!contractId) return;
     const response= await apiClient(`interventions/contract/${contractId}`,{method:"GET"});
     return response;
@@ -35,7 +39,6 @@ async function getByFormationAndUserId (formationId,userId){
 async function validateIntervention(interventionId){
 
     const response= await apiClient(`interventions/validate/${interventionId}`,{method:"POST"});
-    console.log(response);
     
     return response;
 }
@@ -65,6 +68,7 @@ async function getTotalAmountPerMonth(){
 async function getTotalExtraCostPerMonth(){
 const date = dayjs(new Date()).format("YYYY-MM-DD");
     const response= await apiClient(`extraCosts/monthlyAmount/` + date,{method:"GET"});
+    console.log("total",response);
     return response;
 }
 
@@ -87,5 +91,6 @@ export default {
     getTotalHoursPerCategory,
     getTotalAmountPerMonth,
     getTotalExtraCostPerMonth,
-    validatePayment
+    validatePayment,
+    getById
 }

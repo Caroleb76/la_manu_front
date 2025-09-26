@@ -43,9 +43,8 @@ body {
     margin-bottom: 0.5rem;
 }
 
-button,
 .btn {
-    padding: 1rem 2rem;
+    padding: 0.5rem 1rem;
     border-radius: var(--radius);
     background-color: var(--primary-color);
     color: var(--background-color);
@@ -56,7 +55,6 @@ button,
     width: fit-content;
 }
 
-button:hover,
 .btn:hover {
     opacity: 0.8;
 }
@@ -82,6 +80,17 @@ button:hover,
 
 .btn-inactive {
     background-color: var(--inactive-color);
+}
+
+.btn-plus {
+    padding: 0.3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--radius);
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    width: 2rem;
 }
 
 .btn-add {
@@ -141,6 +150,10 @@ input::placeholder {
     align-items: center;
 }
 
+.inputCheckbox__input {
+    margin-right: 0.5rem;
+}
+
 .inputError {
     color: var(--error-color);
     font-size: small;
@@ -169,7 +182,7 @@ a {
 }
 
 .hover-list:hover {
-  text-decoration: underline; /* souligné au survol */
+    text-decoration: underline; /* souligné au survol */
 }
 /* grid styling */
 .ag-header-cell-text {
@@ -294,6 +307,6 @@ a {
 
 .bigCalendar {
     div {
-      color: white !important;
+        color: white !important;
     }
 }

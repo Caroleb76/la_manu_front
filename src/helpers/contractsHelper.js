@@ -12,15 +12,12 @@ async function getContractsByUserId (id, offset=0,limit=10,searchText="",filter=
     const params= {
        id, offset,limit,searchText,filter
     };
-    console.log("USER_ID_",id)
     const response= await apiClient("contracts/user/"+id,{method:"GET",params});
-    console.log("RESPONSE",response)
     return response;
 }
 
 async function getContract (id){
     const response= await apiClient("contracts/"+id,{method:"GET"});
-     console.log("RESPONSE",response)
     return response;
 
 }
@@ -41,7 +38,6 @@ async function editContract (contract){
 }
 
 async function signContract(contractId){
-    console.log("contractId",contractId);
     const response= await apiClient("contracts/sign/"+contractId,{method:"PUT"});
     return response;
 }

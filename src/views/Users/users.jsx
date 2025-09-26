@@ -3,7 +3,7 @@ import DataGrid from "../../components/DataGrid/DataGrid";
 import usersHelper from "../../helpers/usersHelper";
 import Styles from "./User.module.css";
 import { useNotification } from "../../../context/notificationContext";
-import PopupFormUser from "../../components/forms/PopupFormUser/PopupformUser.jsx"
+import PopupFormUser from "../../components/forms/PopupFormUser/PopupformUser.jsx";
 import PopupWrapper from "../../components/popups/PopupWrapper";
 import Profile from "../Profile/Profile.jsx";
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -28,16 +28,18 @@ function Users() {
           label: "Bloquer",
           onClick: (data) => blockUser(data),
 
-          icon: {
-            icon: "material-symbols:lock-outline",
-            condition: (user) => {
-              return user?.blocked ? "material-symbols:lock-open-outline" : "material-symbols:lock-outline";
-            }
-          }
-        },
-        {
-          label: "Editer",
-          onClick: (data) => editUser(data),
+                    icon: {
+                        icon: "material-symbols:lock-outline",
+                        condition: (user) => {
+                            return user?.blocked
+                                ? "material-symbols:lock-open-outline"
+                                : "material-symbols:lock-outline";
+                        },
+                    },
+                },
+                {
+                    label: "Editer",
+                    onClick: (data) => editUser(data),
 
           icon: {
             icon: "material-symbols:edit-outline",
@@ -54,15 +56,15 @@ function Users() {
     })();
   }, []);
 
-  function refreshDataGrid() {
-    setReloadTrigger(prev => prev + 1);
-    if (dataGridRef?.current) dataGridRef.current.refreshData();
-  }
-  const onUserCreated = () => {
-    setUserCreationMode(false);
-    refreshDataGrid();
-    notify("L'utilisateur a bien été ajouté", "success");
-  }
+    function refreshDataGrid() {
+        setReloadTrigger((prev) => prev + 1);
+        if (dataGridRef?.current) dataGridRef.current.refreshData();
+    }
+    const onUserCreated = () => {
+        setUserCreationMode(false);
+        refreshDataGrid();
+        notify("L'utilisateur a bien été ajouté", "success");
+    };
 
   const onSearchTextChange = (e) => {
     setSearchText(e.target.value);

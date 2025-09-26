@@ -5,10 +5,10 @@
     gap: 3rem;
 }
 
-.calendarWidget {
+.twoColumns {
     grid-column: span 2;
 }
 
-.statsWidget {
-    grid-column: span 2;
+.oneColumn {
+    grid-column: span 1;
 }

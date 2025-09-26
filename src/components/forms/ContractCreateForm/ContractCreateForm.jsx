@@ -135,7 +135,6 @@ export default function ContractCreateForm({
         async function loadData() {
             if (!contractId) return;
             const contractResp = await contractsHelper.getContract(contractId);
-            console.log(contractResp);
 
             if (contractResp) {
                 // On reset le formulaire avec les données du contrat (préremplissage)
@@ -481,7 +480,7 @@ export default function ContractCreateForm({
                             {currentSessionId && (
                                 <button
                                     type="button"
-                                    className={styles.btnPlus}
+                                    className="btn-plus"
                                     onClick={showPopup}
                                     disabled={
                                         userRole.name == "FORMATEUR" || isSigned
@@ -545,7 +544,7 @@ export default function ContractCreateForm({
                                     <td>
                                         <button
                                             type="button"
-                                            className="btn-sm"
+                                            className="btn-plus"
                                             disabled={
                                                 userRole.name == "FORMATEUR" ||
                                                 isSigned
@@ -576,7 +575,7 @@ export default function ContractCreateForm({
                         </h3>
                     )}
                     {!contractId && userRole.name == "ADMIN" && (
-                        <button onClick={handleSubmit(onCreate)}> Créer</button>
+                        <button onClick={handleSubmit(onCreate)} className="btn btn-primary"> Créer</button>
                     )}
                     {contractId && userRole.name == "ADMIN" && (
                         <button

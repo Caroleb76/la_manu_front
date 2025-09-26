@@ -23,7 +23,6 @@ export default function StatsWidget() {
                     await interventionsHelper.getTotalExtraCostPerMonth(),
             };
 
-            console.log("reponse", response);
             if (response) {
                 setCategoryWithHours(response.categoryWithHours.data);
                 setTotalAmountPerMonth(response.totalAmountPerMonth.data);

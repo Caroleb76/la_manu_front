@@ -43,7 +43,6 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
 
         files = await filesHelper.getUserFiles(currentUserId);
       }
-      console.log(files);
 
       setFiles(files.data);
     } catch (error) {
@@ -87,9 +86,7 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
     return true;
   }
   async function uploadFile(createdExtraCostId) {
-    console.log("selectedFile", selectedFile, "docType", docType, "fileNameInput", fileNameInput);
     if ((!selectedFile || !docType || (docType === "Autre" && !fileNameInput.trim())) && !createdExtraCostId) return;
-    console.log("passed the first condition");
     
     setMiniModeFileDisplayName(fileNameInput);
     // if hte reference of the form data is null, it means that the form data is not yet created
@@ -106,7 +103,6 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
       }
       formData = formDataRef.current;
       formData.append("extraCostId", createdExtraCostId);
-      console.log("setting formData from ref", formData, formDataRef.current);
     }
 
     // we add the file as the last element to the format data so we will be able to use all the data before (when adding the file as the first element all other data will be lost)
@@ -114,7 +110,6 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
     
     try {
       await filesHelper.uploadFile(formData);
-      console.log("file uploaded");
 
       reset();
       loadFiles();
@@ -213,7 +208,7 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
       {
         !userId &&
         <>
-          <label htmlFor="fileInput" className={`${styles.addButton} ${styles.fileAdd}`}>
+          <label htmlFor="fileInput" className={`btn btn-primary ${styles.fileAdd}`}>
             Ajouter un fichier
           </label>
           <input

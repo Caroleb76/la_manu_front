@@ -14,6 +14,7 @@ export default function PopupFormUser({ onUserCreated }) {
   const {
     register,
     handleSubmit,
+    watch,
     control,
     formState: { errors },
   } = useForm({
@@ -31,6 +32,7 @@ export default function PopupFormUser({ onUserCreated }) {
   }, [])
 
 
+
   async function onSubmit(data) {
 
     const response = await usersHelper.createUser(data);
@@ -43,7 +45,7 @@ export default function PopupFormUser({ onUserCreated }) {
 
   return (
     <div className={styles.borderPopup}>
-
+     
       <form action="" onSubmit={handleSubmit(onSubmit)}>
 
         <section className={`${styles.grid} ${styles.popupSection}`}>
@@ -69,13 +71,13 @@ export default function PopupFormUser({ onUserCreated }) {
             error={errors.email?.message}
           />
 
-          <InputText
+          {/* <InputText
             label="Mot de passe"
             type="password"
             placeholder="minimum 8 caractères dont 1 maj et 1 chiffre"
             {...register("password")}
             error={errors.password?.message}
-          />
+          /> */}
 
           <InputSelect
             label="Rôle"
@@ -88,7 +90,7 @@ export default function PopupFormUser({ onUserCreated }) {
           </InputSelect>
         </section>
         <div className={styles.popupButtons}>
-          <button> Créer </button>
+          <button className="btn btn-primary"> Créer </button>
         </div>
         <DevTool control={control} />
       </form>

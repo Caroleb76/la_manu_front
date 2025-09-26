@@ -29,7 +29,6 @@ export default function CreateContract() {
         const categoryResponse = interventionsCategoriesHelper.getInterventionsCategories();
         categoryResponse.then((categories) => {
             setInterventionsCategories(categories.data);
-            console.log(categories.data);
         });
     }, []);
 
@@ -38,7 +37,7 @@ export default function CreateContract() {
     const addIntervention = (intervention) => {
         const extraCosts = intervention.extraCosts.map((extraCost) => ({
                 categoryId: extraCost,
-                val:""
+                val: null
             }))
         const formattedIntervention = {
             ...intervention,

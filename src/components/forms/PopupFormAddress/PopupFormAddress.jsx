@@ -28,7 +28,6 @@ export default function PopupFormAddress({ onCreated } ) {
 
   async function onSubmit(data) {
 
-    console.log(data);
     const response= await addressesHelper.createAddress(data);
     if (response.success) {
       reset();
@@ -78,7 +77,7 @@ export default function PopupFormAddress({ onCreated } ) {
         </section>
 
         <div className={styles.popupButtons}>
-          <button type="submit">Créer Adresse</button>
+          <button type="submit" className="btn btn-primary">Créer Adresse</button>
 
         </div>
         <DevTool control={control} />

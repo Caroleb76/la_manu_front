@@ -125,7 +125,6 @@ export default function Contracts() {
                 } else {
                     setPageSize(pageSize);
                 }
-                // console.log(rows, response.data.total);
 
                 params.successCallback(rows, response.data.total);
             },
@@ -159,12 +158,14 @@ export default function Contracts() {
             <div className={styles.mainContainer}>
                 {user.isAdmin && (
                     <>
-                        <Link
-                            to="/dashboard/contracts/create"
-                            className="btn btn-add"
-                        >
-                            Créer un contrat
-                        </Link>
+                      <div className={styles.btnContainer}>
+                            <Link
+                                to="/dashboard/contracts/create"
+                                className="btn btn-primary"
+                            >
+                                Créer un contrat
+                            </Link>
+                      </div>
                         <input
                             type="text"
                             placeholder="Rechercher"

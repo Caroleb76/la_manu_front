@@ -7,9 +7,9 @@ import { useNotification } from "../../../context/notificationContext";
 import filesHelper from "../../helpers/filesHelper";
 import extraCostsCategoryHelper from "../../helpers/extraCostsCategoryHelper";
 
-const ExtraConsts = ({ iv }) => {
+const ExtraCosts = ({ iv }) => {
   const { user } = useContext(UserContext);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(null);
   const [fileIsSelected, setFileIsSelected] = useState(false);
   const filesManagerRef = useRef(null);
   const { notify } = useNotification();
@@ -45,7 +45,7 @@ const ExtraConsts = ({ iv }) => {
       return;
     }
     try {
-      const payload = { category: selectedExtraCost.id, val: String(value).trim(), interventionId: iv.id };
+      const payload = { category: selectedExtraCost.id, val: parseInt(value), interventionId: iv.id };
       const response = await extraCostsHelper.update(payload, selectedExtraCost.id);
       if (!response?.success) {
         notify(response?.message || "Échec de la création du frais.", "error");
@@ -53,7 +53,7 @@ const ExtraConsts = ({ iv }) => {
       }
       const extraCostId = response.data.id;
       await filesManagerRef.current?.uploadPendingFiles(extraCostId);
-      setValue("");
+      setValue(null);
       setFileIsSelected(false);
       setModificationMode(false);
       await loadExtraCosts();
@@ -99,7 +99,13 @@ const ExtraConsts = ({ iv }) => {
   const onModifyExtraCost = (ec) => {
     setSelectedExtraCost(ec);
     setModificationMode(true);
-    setValue(ec.val);
+    try {
+       setValue(parseInt(ec.val));
+    } catch (error) {
+      console.error(error);
+      setValue(null);
+    }
+   
     
   }
 
@@ -170,7 +176,7 @@ const ExtraConsts = ({ iv }) => {
                             )} */}
                               <button
                               type="button"
-                              className={`${Styles.btnAdd}`}
+                              className="btn btn-primary"
                                onClick={() => onModifyExtraCost(ec)}
                             >
                               Modifier
@@ -204,13 +210,15 @@ const ExtraConsts = ({ iv }) => {
 
            
             <input
-              type="text"
+              type="number"
               name="Valeur du frais"
-              placeholder="Valeur du frais"
-              onChange={(e) => setValue(e.target.value)}
+              placeholder="Montant"
+              min={0}
+              onChange={(e) => setValue(parseInt(e.target.value))}
               value={value}
             />
           </div>
+       
 
           <div className={Styles.row}>
             <FilesManager
@@ -225,14 +233,14 @@ const ExtraConsts = ({ iv }) => {
             <button
               onClick={submit}
               type="button"
-              className={` `}
+              className={`btn btn-primary `}
             >
               Enregistrer
             </button>
             <button
               onClick={() => {
                 setModificationMode(false);
-                setValue("");
+                setValue(null)
                 setFileIsSelected(false);
               }}
               type="button"
@@ -247,4 +255,4 @@ const ExtraConsts = ({ iv }) => {
   );
 };
 
-export default ExtraConsts;
+export default ExtraCosts;

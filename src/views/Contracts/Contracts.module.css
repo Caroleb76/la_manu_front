@@ -15,10 +15,11 @@
 button:hover{
     cursor: pointer;
 }
-.buttonContainer{
+
+.btnContainer{
     width: 100%;
     display: flex;
     justify-content: flex-end;
     gap: 0.5rem;
-    padding: 1rem;
+
 }

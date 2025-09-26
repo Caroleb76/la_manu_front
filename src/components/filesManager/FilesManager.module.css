@@ -84,7 +84,7 @@
   border-radius: var(--radius);
   background-color: white;
   color: var(--text-color);
-  min-width: 200px;
+
 }
 
 .closeIcon{

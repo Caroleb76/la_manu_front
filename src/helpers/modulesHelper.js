@@ -1,12 +1,10 @@
 import apiClient from "./apiClient";
 
 
-async function getModules (offset=0,limit=10,searchText=""){
+async function getModules (){
 
-    const params= {
-        offset,limit,searchText
-    };
-    const response= await apiClient("moduleFormation/",{method:"GET",params});
+
+    const response= await apiClient("moduleFormation/",{method:"GET"});
     return response;
 
 }
@@ -17,9 +15,20 @@ async function getModuleByFormation (moduleId){
     return response;
 }
 
+async function create (formData){
+
+    const response= await apiClient("moduleFormation", {
+        method:"POST",
+        body:formData
+    }
+    );
+    return response;
+}
+
 
 export default {
     getModules,
-    getModuleByFormation
+    getModuleByFormation,
+    create
 
 }

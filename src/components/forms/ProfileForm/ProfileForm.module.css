@@ -86,3 +86,9 @@
    gap: 2rem;
    align-items: flex-end
  }
+
+ .btnSubmit{
+  display: flex;
+  justify-content: center;
+  padding-top: 2rem;
+ }

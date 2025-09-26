@@ -18,10 +18,8 @@ async function getUsers (){
 
 // }
 
-    // console.log("the params of searching users are",params);
     
     const response= await apiClient("users/",{method:"GET"});
-    // console.log(response)
     return response;
 
 }
@@ -29,7 +27,6 @@ async function getUserById (userId){
    
     
     const response= await apiClient(`users/${userId}`,{method:"GET"});
-    // console.log(response)
     return response;
 
 }

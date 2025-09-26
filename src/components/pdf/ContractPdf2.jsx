@@ -44,9 +44,7 @@ const styles = {
     },
 };
 const ContractPdf2 = ({ currentContract, totalHours }) => {
-    useEffect(() => {
-        console.log("currentContract", currentContract);
-    });
+    
     const printRef = useRef();
 
     const handleExportPDF = () => {

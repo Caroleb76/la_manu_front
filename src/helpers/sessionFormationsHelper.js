@@ -24,7 +24,6 @@ async function createSessionFormation(sessionFormation){
     
 }
 async function updateSessionFormation(sessionFormation){
-    console.log("SessionFormation from helper",sessionFormation);
     const response= await apiClient(`SessionFormation/${sessionFormation.id}`,{method:"PUT",body:sessionFormation});
     return response;
     
