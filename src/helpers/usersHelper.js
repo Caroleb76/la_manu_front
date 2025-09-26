@@ -1,26 +1,26 @@
 import apiClient from "./apiClient";
 
 
-async function getUsers (props){
+async function getUsers (){
     // offset=0,limit=10,searchText="",role=null
 
-    let params = {
-            offset: props.offset ?? 0,
-            limit: props.limit ?? 10,
-            role: props?.role ?? null,
-            searchText: props.searchText ?? null
-};
-if(!props.role){
-    delete params.role
-}
-if(!props.searchText){
-    delete params.searchText
+//     let params = {
+//             offset: props.offset ?? 0,
+//             limit: props.limit ?? 10,
+//             role: props?.role ?? null,
+//             searchText: props.searchText ?? null
+// };
+// if(!props.role){
+//     delete params.role
+// }
+// if(!props.searchText){
+//     delete params.searchText
 
-}
+// }
 
-    console.log("the params of searching users are",params);
+    // console.log("the params of searching users are",params);
     
-    const response= await apiClient("users/",{method:"GET",params});
+    const response= await apiClient("users/",{method:"GET"});
     // console.log(response)
     return response;
 

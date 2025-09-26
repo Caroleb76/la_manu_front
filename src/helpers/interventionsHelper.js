@@ -1,12 +1,9 @@
 import apiClient from "./apiClient";
 import dayjs from "dayjs";
 
-async function getInterventions (offset=0,limit=10,searchText=""){
+async function getInterventions (){
 
-    const params= {
-        offset,limit,searchText
-    };
-    const response= await apiClient("interventions/",{method:"GET",params});
+    const response= await apiClient("interventions/",{method:"GET"});
     return response;
 }
 

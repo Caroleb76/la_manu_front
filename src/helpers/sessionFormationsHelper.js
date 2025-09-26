@@ -1,12 +1,10 @@
 import apiClient from "./apiClient";
 
 
-async function getSessions (offset=0,limit=10){
+async function getSessions (){
 
-    const params= {
-        offset,limit
-    };
-    const response= await apiClient("SessionFormation/",{method:"GET",params});
+
+    const response= await apiClient("SessionFormation/",{method:"GET"});
     return response;
 
 }

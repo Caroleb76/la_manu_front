@@ -13,12 +13,13 @@ export default function Formations() {
 
     const { notify } = useNotification();
     const [selectedFormation, setSelectedFormation] = useState(null);
+    const [rows, setRows] = useState([]);
     const popuRef = useRef(null);
     let formations = [];
     const onFormationCreated = () => {
         setFormationCreationMode(false);
         refreshDataGrid();
-        
+
     };
     const colDefs = [
         { field: "Nom", filter: true },
@@ -26,33 +27,27 @@ export default function Formations() {
         { field: "Actions", filter: false },
     ];
 
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
+
+        const response = await formationHelper.getFormations();
+        const convertedData = response.data.formations.map(convertRow);
+        setRows(convertedData);
+
+    }
+    const convertRow = (formation) => ({
+        id: formation.id,
+        Nom: formation.name,
+        Description: formation.description,
+    });
     const refreshDataGrid = () => {
         setReloadTrigger((prev) => prev + 1);
     };
     const [reloadTrigger, setReloadTrigger] = useState(0);
-    const getDataSource = useMemo(
-        () => ({
-            getRows: async (params) => {
-                const offset = params.startRow;
-                const pageSize = params.endRow - params.startRow;
 
-                const response = await formationHelper.getFormations(
-                    offset,
-                    pageSize
-                );
-                console.log(response);
-                formations = response.data.formations;
-                const rows = response.data.formations.map((formation) => ({
-                    id: formation.id,
-                    Nom: formation.name,
-                    Description: formation.description,
-                }));
-console.log(rows, response.data.total);
-                params.successCallback(rows, response.data.total);
-            },
-        }),
-        [reloadTrigger]
-    );
 
     const onModifyFormation = (formation) => {
         const selectedFormation = formations.find((s) => s.id === formation.id);
@@ -94,7 +89,7 @@ console.log(rows, response.data.total);
             <div className={Styles.mainContainer}>
                 <DataGrid
                     colDefs={colDefs}
-                    data={getDataSource}
+                    rowData={rows}
                     onActionClick={(formation) => {
                         onModifyFormation(formation);
                     }}

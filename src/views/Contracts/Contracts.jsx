@@ -60,7 +60,49 @@ export default function Contracts() {
     const [searchText, setSearchText] = useState("");
     const [pageSize, setPageSize] = useState(10);
     const [selectedContactId, setSelectedContractId] = useState(null);
+    const [rows, setRows] = useState([]);
 
+    useEffect(() => {
+        fetchData();
+    }, [reloadTrigger]);
+
+    const convertRow = (contract) => {
+        const hasUnvalidatedInterventions =
+            contract?.Interventions?.some(
+                (intervention) =>
+                    !intervention.validatedByAdmin ||
+                    !intervention.validatedByFormateur
+            );
+        return {
+            id: contract.id,
+            "Nom Prénom":
+                contract.User.firstName +
+                " " +
+                contract.User.lastName,
+            Formation: contract.SessionFormation.Formation.name,
+            "Date de Début": convertDateToFranceTimeZone(
+                contract.startDate
+            ),
+            "Date de Fin": convertDateToFranceTimeZone(
+                contract.endDate
+            ),
+            Heures: contract.totalHours, //somme des temps des interventions
+            Interventions: contract.interventions.length,
+            Signé: contract.signed ? "✅" : "❌",
+            Déclaré: contract.declared ? "✅" : "❌",
+            ValidéFormateur: contract.validatedByFormateur
+                ? "✅"
+                : "❌",
+            ValidéAdmin: contract.validatedByAdmin ? "✅" : "❌",
+        };
+    };
+
+    const fetchData = async () => {
+        const response = await contractsHelper.getContracts();
+        const convertedData = response.data.contracts.map(convertRow);
+        setRows(convertedData);
+        // setContracts(response.data.contracts);
+    }
     const getDataSource = useMemo(
         () => ({
             getRows: async (params) => {
@@ -77,36 +119,7 @@ export default function Contracts() {
                     filter
                 );
 
-                const rows = response.data.contracts.map((contract) => {
-                    const hasUnvalidatedInterventions =
-                        contract?.Interventions?.some(
-                            (intervention) =>
-                                !intervention.validatedByAdmin ||
-                                !intervention.validatedByFormateur
-                        );
-                    return {
-                        id: contract.id,
-                        "Nom Prénom":
-                            contract.User.firstName +
-                            " " +
-                            contract.User.lastName,
-                        Formation: contract.SessionFormation.Formation.name,
-                        "Date de Début": convertDateToFranceTimeZone(
-                            contract.startDate
-                        ),
-                        "Date de Fin": convertDateToFranceTimeZone(
-                            contract.endDate
-                        ),
-                        Heures: contract.totalHours, //somme des temps des interventions
-                        Interventions: contract.interventions.length,
-                        Signé: contract.signed ? "✅" : "❌",
-                        Déclaré: contract.declared ? "✅" : "❌",
-                        ValidéFormateur: contract.validatedByFormateur
-                            ? "✅"
-                            : "❌",
-                        ValidéAdmin: contract.validatedByAdmin ? "✅" : "❌",
-                    };
-                });
+                const rows = response.data.contracts.map();
                 if (searchText.length > 0) {
                     setPageSize(rows.length);
                 } else {
@@ -163,7 +176,7 @@ export default function Contracts() {
                 <DataGrid
                     pageSize={pageSize}
                     colDefs={colDefs}
-                    data={getDataSource}
+                    rowData={rows}
                 />
             </div>
         </>

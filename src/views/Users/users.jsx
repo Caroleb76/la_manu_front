@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import DataGrid from "../../components/DataGrid/DataGrid";
 import usersHelper from "../../helpers/usersHelper";
 import Styles from "./User.module.css";
@@ -12,15 +12,16 @@ function Users() {
   const [userCreationMode, setUserCreationMode] = useState(false);
   const dataGridRef = null;
   const [reloadTrigger, setReloadTrigger] = useState(0);
+  const [rows,setRows] = useState([]);
   const [searchText, setSearchText] = useState("");
   const { notify } = useNotification();
   const [pageSize, setPageSize] = useState(10);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const colDefs = [
-    { field: "Email", filter: false },
-    { field: "Nom", filter: false },
-    { field: "Prenom", filter: false },
-    { field: "Role", filter: false },
+    { field: "Email", filter: true },
+    { field: "Nom", filter: true },
+    { field: "Prenom", filter: true },
+    { field: "Role", filter: true },
     {
       field: "Actions", filter: false, actions: [
         {
@@ -46,6 +47,13 @@ function Users() {
     },
   ];
 
+  useEffect(() => {
+    (async () => {
+      const users = await fetchUsers();
+      setRows(users);
+    })();
+  }, []);
+
   function refreshDataGrid() {
     setReloadTrigger(prev => prev + 1);
     if (dataGridRef?.current) dataGridRef.current.refreshData();
@@ -61,32 +69,25 @@ function Users() {
     if (e.target.value.length < 3 && e.target.value.length > 0) return;
     refreshDataGrid();
   }
-  const getDataSource = useMemo(() => ({
-    getRows: async (params) => {
 
-      const offset = params.startRow;
-      const pageSize = params.endRow - params.startRow;
+  const mapToRow = (user) => ({
+    id: user.id,
+    Nom: user.lastName,
+    Prenom: user.firstName,
+    Email: user.email,
+    Role: user.role.name,
+    blocked: user.blocked,
+  });
 
-      // console.log("Requête : offset=", offset, "limit=", pageSize, "page=", pageNumberRef.current);
-      // pageNumberRef.current=Math.floor(offset/pageSize);
-      const response = await usersHelper.getUsers({ offset, pageSize, searchText });
-      const rows = response.data.users.map((user) => ({
-        id: user.id,
-        Nom: user.lastName,
-        Prenom: user.firstName,
-        Email: user.email,
-        Role: user.role.name,
-        blocked: user.blocked,
-      }));
-      if (searchText.length > 0) {
-        setPageSize(rows.length);
-      } else {
-        setPageSize(pageSize);
-      }
-      params.successCallback(rows, response.data.total);
+  const fetchUsers = async () => {
 
-    },
-  }), [reloadTrigger]);
+
+    // console.log("Requête : offset=", offset, "limit=", pageSize, "page=", pageNumberRef.current);
+    // pageNumberRef.current=Math.floor(offset/pageSize);
+    const response = await usersHelper.getUsers();
+    const rows = response.data.users.map(mapToRow);
+    return rows;
+  }
 
   const blockUser = async (data) => {
     const updatedUser = { ...data, blocked: !data.blocked };
@@ -100,19 +101,20 @@ function Users() {
     setUserCreationMode(false);
 
   };
+
   return (
     <>
       <div className={Styles.mainContainer}>
 
         {
-          selectedUserId ? 
-          <>
-          <div  className={Styles.backButtonContainer}>
-            <Icon className={Styles.backButton} icon="material-symbols:arrow-back-ios-rounded" width="1.8rem" onClick={() => setSelectedUserId(null)} />
-            <p>Liste des utilisateurs</p>
-          </div>
-          <Profile userId={selectedUserId} />
-          </>
+          selectedUserId ?
+            <>
+              <div className={Styles.backButtonContainer}>
+                <Icon className={Styles.backButton} icon="material-symbols:arrow-back-ios-rounded" width="1.8rem" onClick={() => setSelectedUserId(null)} />
+                <p>Liste des utilisateurs</p>
+              </div>
+              <Profile userId={selectedUserId} />
+            </>
             :
             <>
               {/* case of creating a new user */}
@@ -123,18 +125,20 @@ function Users() {
               }
               {/* case of showing the data grid */}
               <button className={Styles.addButton} onClick={() => setUserCreationMode(true)}>Créer</button>
-              <input type="text" placeholder="Rechercher" value={searchText} onChange={(e) => onSearchTextChange(e)} />
+              {/* <input type="text" placeholder="Rechercher" value={searchText} onChange={(e) => onSearchTextChange(e)} /> */}
+                {rows.length > 0 && 
+                
               <DataGrid
                 pageSize={pageSize}
                 colDefs={colDefs}
-                data={getDataSource}
+                rowData={rows}
                 onActionClick={blockUser}
                 renderIconWithCondition={(user) =>
                   user?.blocked
                     ? "material-symbols:lock-outline"
                     : "material-symbols:lock-open-right-outline-sharp"
                 }
-              />
+              />}
             </>
 
         }

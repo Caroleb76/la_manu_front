@@ -1,12 +1,9 @@
 import apiClient from "./apiClient";
 
 
-async function getNotifications (offset=0,limit=10,searchText=""){
+async function getNotifications (){
 
-    const params= {
-        offset,limit,searchText
-    };
-    const response= await apiClient("notification/",{method:"GET",params});
+    const response= await apiClient("notification/",{method:"GET"});
     return response;
 
 }

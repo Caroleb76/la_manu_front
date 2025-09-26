@@ -11,7 +11,7 @@ import formationHelper from "../../../helpers/formationHelper.js";
 import { useNotification } from "../../../../context/notificationContext.jsx";
 
 export default function PopupFormTypeFormation({ onFormationCreated, formation }) {
-  const setRoles = useState([]);
+  // const setRoles = useState([]);
   const {
     register,
     reset,
@@ -28,7 +28,7 @@ export default function PopupFormTypeFormation({ onFormationCreated, formation }
   useEffect(() => {
     async function loadRoles() {
       const response = await rolesHelper.getRoles();
-      setRoles(response.data);
+      // setRoles(response.data);
 
 
     }

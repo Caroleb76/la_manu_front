@@ -20,62 +20,42 @@ function Notifications() {
         { field: "Date de fin", filter: false },
         { field: "Actions", filter: false },
     ];
-
+    const [rows, setRows] = useState([]);
     const [searchText, setSearchText] = useState("");
     const [pageSize, setPageSize] = useState(10);
     const [reloadTrigger, setReloadTrigger] = useState(0);
-    const getDataSource = useMemo(
-        () => ({
-            getRows: async (params) => {
-                const offset = params.startRow;
-                const pageSize = params.endRow - params.startRow;
 
-                const response = await notificationsHelper.getNotifications(
-                    offset,
-                    pageSize,
-                    searchText
-                );
+    useEffect(() => {
+        fetchData();
+    }, []);
 
-                const rows = response.data.notifications.map(
-                    (notification) => ({
-                        id: notification.id,
-                        Titre: notification.title,
-                        Priorité: PRIORITIES[notification.priority],
-                        Contenu: notification.content,
-                        isActive: new Date(notification.endDate) > new Date(),
-                        "Date de début": new Date(
-                            notification.startDate
-                        ).toLocaleDateString(),
-                        "Date de fin": new Date(
-                            notification.endDate
-                        ).toLocaleDateString(),
-                    })
-                );
-                if (searchText.length > 0) {
-                    setPageSize(rows.length);
-                } else {
-                    setPageSize(pageSize);
-                }
-                // console.log(rows, response.data.total);
+    const convertRow = (notification) => ({
+        id: notification.id,
+        Titre: notification.title,
+        Priorité: PRIORITIES[notification.priority],
+        Contenu: notification.content,
+        isActive: new Date(notification.endDate) > new Date(),
+        "Date de début": new Date(
+            notification.startDate
+        ).toLocaleDateString(),
+        "Date de fin": new Date(
+            notification.endDate
+        ).toLocaleDateString(),
+    });
 
-                params.successCallback(rows, response.data.total);
-            },
-        }),
-        [reloadTrigger]
-    );
+    const fetchData = async () => {
+        const response = await notificationsHelper.getNotifications();
+        const data = response.data.notifications.map(convertRow);
+        setRows(data);
+    }
 
-    const onSearchTextChange = (e) => {
-        setSearchText(e.target.value);
-        if (e.target.value.length < 3 && e.target.value.length > 0) return;
-        setReloadTrigger((prev) => prev + 1);
-    };
 
     const onDeleteNotification = async (notification) => {
         const response = await notificationsHelper.deleteNotification(
             notification.id
         );
         if (response && response.success) {
-            setReloadTrigger((prev) => prev + 1);
+            setRows((prev) => prev.filter((row) => row.id !== notification.id));
             notify("La notification a bien été supprimée", "success");
         } else {
             notify("Une erreur est survenue", "error");
@@ -84,7 +64,7 @@ function Notifications() {
 
     const onNotificationCreated = () => {
         setNotificationCreationMode(false);
-        setReloadTrigger((prev) => prev + 1);
+       fetchData();
         notify("La notification a bien été ajoutée", "success");
     };
 
@@ -109,17 +89,11 @@ function Notifications() {
                 >
                     Créer
                 </button>
-                <input
-                    type="text"
-                    placeholder="Rechercher"
-                    value={searchText}
-                    onChange={(e) => onSearchTextChange(e)}
-                />
                 <DataGrid
                     pageSize={pageSize}
                     onActionClick={onDeleteNotification}
                     colDefs={colDefs}
-                    data={getDataSource}
+                    rowData={rows}
                     renderIconWithCondition={(row) =>
                         "ic:baseline-delete-outline"
                     }

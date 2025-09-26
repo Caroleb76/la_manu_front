@@ -18,10 +18,11 @@ export default function Sessions() {
     const { notify } = useNotification();
     const [selectedSession, setSelectedSession] = useState(null);
     const popuRef = useRef(null);
-    let sessions = [];
+    const [rows,setRows] = useState([]);
+    const [sessions,setSessions] = useState([]);
     const onSessionCreated = () => {
         setSessionCreationMode(false);
-        refreshDataGrid();
+        fetchData();
         // notify("La session a bien été ajoutée", "success");
     };
     const colDefs = [
@@ -33,40 +34,33 @@ export default function Sessions() {
         { field: "Actions", filter: false },
     ];
 
-    const refreshDataGrid = () => {
-        setReloadTrigger(prev => prev + 1);
-    }
+
+
+    useEffect(() => {
+        fetchData();
+    },[])
     const [reloadTrigger, setReloadTrigger] = useState(0);
-    const getDataSource = useMemo(() => ({
 
-        getRows: async (params) => {
+    const fetchData = async () =>{
+        const response = await formationsHelper.getSessions( );
+        const convertedData = response.data.sessionFormations.map(convertRow);
+        setRows(convertedData);
+        setSessions(response.data.sessionFormations);
+    }
+    const convertRow = (session) => ({
+            id: session.id,
+            Formation: session.Formation.name,
+            Début: new Date(session.startDate).toLocaleDateString(),
+            Fin: new Date(session.endDate).toLocaleDateString(),
+            Lieu: session.Address.city,
+            Numero: session.serialNumber,
+        });
 
-            const offset = params.startRow;
-            const pageSize = params.endRow - params.startRow;
-
-            const response = await formationsHelper.getSessions(
-                offset,
-                pageSize
-            );
-            sessions = response.data.sessionFormations;
-            const rows = response.data.sessionFormations.map((session) => ({
-                id: session.id,
-                Formation: session.Formation.name,
-                Début: new Date(session.startDate).toLocaleDateString(),
-                Fin: new Date(session.endDate).toLocaleDateString(),
-                Lieu: session.Address.city,
-                Numero: session.serialNumber,
-            }));
-            // console.log(rows, response.data.total);
-
-            params.successCallback(rows, response.data.total);
-
-        },
-    }), [reloadTrigger]);
 
     const onModifySession = (session) => {
         const selectedSession = sessions.find((s) => s.id === session.id);
-        console.log("selected session", selectedSession);
+        if(!selectedSession) return;
+        // console.log("selected session", selectedSession);
         selectedSession.startDate = new Date(selectedSession.startDate).toISOString().split("T")[0];
         selectedSession.endDate = new Date(selectedSession.endDate).toISOString().split("T")[0];
         setSelectedSession(selectedSession);
@@ -102,11 +96,11 @@ export default function Sessions() {
             </div>
             <div className={Styles.mainContainer}>
 
-                <DataGrid 
-                colDefs={colDefs} 
-                data={getDataSource}
-                onActionClick={(session) => { onModifySession(session) }}
-                renderIconWithCondition={(session) => "ic:outline-edit"}
+                <DataGrid
+                    colDefs={colDefs}
+                    rowData={rows}
+                    onActionClick={(session) => { onModifySession(session) }}
+                    renderIconWithCondition={(session) => "ic:outline-edit"}
                 />
             </div>
         </>
