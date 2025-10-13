@@ -7,7 +7,6 @@ import rolesHelper from "../../../helpers/rolesHelper.js";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { popupModuleSchema } from "./popupModuleSchema.js";
-import { DevTool } from "@hookform/devtools";
 import { useNotification } from "../../../../context/notificationContext.jsx";
 import formationHelper from "../../../helpers/formationHelper.js";
 import {
@@ -41,7 +40,6 @@ export default function PopupformModule({ onNotificationCreated }) {
         fetchData();
     }, []);
 
-
     async function onSubmit(formData) {
         const response = await modulesHelper.create(formData);
         if (response.success) {
@@ -56,7 +54,7 @@ export default function PopupformModule({ onNotificationCreated }) {
         <div className={styles.borderPopup}>
             <form action="" onSubmit={handleSubmit(onSubmit)}>
                 <section className={`${styles.grid} ${styles.popupSection}`}>
-                      <InputSelect
+                    <InputSelect
                         label="Formation"
                         {...register("formationId")}
                         error={errors.formationId?.message}
@@ -74,23 +72,20 @@ export default function PopupformModule({ onNotificationCreated }) {
                         {...register("name")}
                         error={errors.name?.message}
                     />
-                    
-                   <div className={styles.twoColumns}>
+
+                    <div className={styles.twoColumns}>
                         <InputText
                             label="Description"
                             placeholder="Description du module"
                             {...register("description")}
                             error={errors.description?.message}
                         />
-                   </div>
-
-                  
+                    </div>
                 </section>
 
                 <div className={styles.popupButtons}>
                     <button className="btn btn-primary"> Créer </button>
                 </div>
-                <DevTool control={control} />
             </form>
         </div>
     );

@@ -1,17 +1,19 @@
 import styles from "./PopupFormNotification.module.css";
 import InputText from "../../ui/InputText.jsx";
 import InputSelect from "../../ui/InputSelect.jsx";
-import InputCheckbox from "../../ui/InputCheckbox.jsx"
+import InputCheckbox from "../../ui/InputCheckbox.jsx";
 import { useEffect, useState } from "react";
 import usersHelper from "../../../helpers/usersHelper.js";
 import rolesHelper from "../../../helpers/rolesHelper.js";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { interventionCreateSchema } from "./interventionCreateSchema.js";
-import { DevTool } from "@hookform/devtools";
 import { useNotification } from "../../../../context/notificationContext.jsx";
 import interventionsHelper from "../../../helpers/interventionsHelper.js";
-import { convertDateToStandardString, convertDateToStandardStringPlusOne } from "../../../utils/date.js";
+import {
+    convertDateToStandardString,
+    convertDateToStandardStringPlusOne,
+} from "../../../utils/date.js";
 
 export default function InterventionCreateForm({ onInterventionCreated }) {
     const setRoles = useState([]);
@@ -27,9 +29,7 @@ export default function InterventionCreateForm({ onInterventionCreated }) {
         resolver: zodResolver(interventionCreateSchema),
     });
 
-    const selectedStartDate = watch("startDate")
-
-
+    const selectedStartDate = watch("startDate");
 
     async function onSubmit(data) {
         const response = await interventionsHelper.createIntervention(data);
@@ -45,7 +45,6 @@ export default function InterventionCreateForm({ onInterventionCreated }) {
         <div className={styles.borderPopup}>
             <form action="" onSubmit={handleSubmit(onSubmit)}>
                 <section className={`${styles.grid} ${styles.popupSection}`}>
-
                     <InputText
                         label="Date d'intervention"
                         type="date"
@@ -66,9 +65,7 @@ export default function InterventionCreateForm({ onInterventionCreated }) {
                         {...register("shift")}
                         error={errors.shift?.message}
                     >
-                        <option value="">
-                            -- Sélectionner --
-                        </option>
+                        <option value="">-- Sélectionner --</option>
                         <option value="am">Matin</option>
                         <option value="pm">Après-midi</option>
                         <option value="j">Journée</option>
@@ -80,17 +77,25 @@ export default function InterventionCreateForm({ onInterventionCreated }) {
                         {...register("description")}
                         error={errors.description?.message}
                     />
-                    <InputCheckbox label="" {...register("validatedByAdmin")} hidden />
-                    <InputCheckbox label="" {...register("validatedByFormateur")} hidden />
-                    
+                    <InputCheckbox
+                        label=""
+                        {...register("validatedByAdmin")}
+                        hidden
+                    />
+                    <InputCheckbox
+                        label=""
+                        {...register("validatedByFormateur")}
+                        hidden
+                    />
+
                     <InputText
                         label="Date d'expiration"
                         type="date"
                         min={
                             selectedStartDate
                                 ? convertDateToStandardStringPlusOne(
-                                    new Date(selectedStartDate)
-                                )
+                                      new Date(selectedStartDate)
+                                  )
                                 : convertDateToStandardStringPlusOne(new Date())
                         }
                         {...register("endDate")}
@@ -107,7 +112,6 @@ export default function InterventionCreateForm({ onInterventionCreated }) {
                 <div className={styles.popupButtons}>
                     <button> Créer </button>
                 </div>
-                <DevTool control={control} />
             </form>
         </div>
     );

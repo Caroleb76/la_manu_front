@@ -1,39 +1,42 @@
 .title {
-display:flex;
-align-items: center;
-gap: 1rem;
->h3{
-    font-size: large;
-    font-weight: bold;
-}
->p{
-    font-size: small;
-}
+    display: flex;
+    align-items: center;
+
+    gap: 1rem;
+    > h3 {
+        font-size: large;
+        font-weight: bold;
+        color: #fff !important;
+    }
+    > p {
+        font-size: small;
+        color: #fff !important;
+    }
 }
 
 .content {
-
+    > p {
+        color: #fff !important;
+    }
 }
 
 .card {
-padding: 1rem;
-border-radius: var(--radius);
-
+    padding: 1rem;
+    border-radius: var(--radius);
 }
 
-.priorityDefault{
+.priorityDefault {
     background-color: var(--inactive-color);
 }
 
-
 .priorityHigh {
-background-color: var(--error-color);
+    background-color: var(--error-color);
 }
 
 .priorityMedium {
-background-color: var(--warning-color);
+    background-color: var(--warning-color);
 }
 
 .priorityLow {
-background-color: var(--success-color);
+    background-color: var(--success-color);
 }

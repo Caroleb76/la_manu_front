@@ -10,7 +10,6 @@ import rolesHelper from "../../../helpers/rolesHelper.js";
 import styles from "./ContractEditForm.module.css";
 import InputText from "../../ui/InputText.jsx";
 import InputSelect from "../../ui/InputSelect.jsx";
-import { DevTool } from "@hookform/devtools";
 import { convertDateToFranceTimeZone } from "../../../utils/date.js";
 
 export default function ContractEditForm({
@@ -27,7 +26,9 @@ export default function ContractEditForm({
     const [formateurs, setFormateurs] = useState([]);
     const [sessionsFormation, setSessionsFormation] = useState([]);
     const [currentSessionId, setCurrentSessionId] = useState(null);
-    const [currentInterventions, setCurrentInterventions] = useState(interventions || []);
+    const [currentInterventions, setCurrentInterventions] = useState(
+        interventions || []
+    );
 
     // React Hook Form
     const {
@@ -221,7 +222,7 @@ export default function ContractEditForm({
                         <div className={styles.grid}>
                             {/* TODO Compléter le menu de recherche des vacataires */}
                             <InputSelect
-                            disabled
+                                disabled
                                 className={styles.twoColumns}
                                 label="Session de formation"
                                 {...register("sessionId")}
@@ -322,7 +323,9 @@ export default function ContractEditForm({
                                         : "Journée"}
                                 </td>
                                 <td>{intervention.hours} heures</td>
-                                <td>{intervention.InterventionCategory.name}</td>
+                                <td>
+                                    {intervention.InterventionCategory.name}
+                                </td>
                                 <td>
                                     {index + 1 == interventions.length - 1 ? (
                                         ""
@@ -346,7 +349,6 @@ export default function ContractEditForm({
                 <div className={styles.popupButtons}>
                     <button> Modifier </button>
                 </div>
-                <DevTool control={control} />
             </form>
         </div>
     );

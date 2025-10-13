@@ -45,8 +45,12 @@ export default function StatsWidget() {
 
             <StatWidgetWrapper title="Côut total des interventions du mois">
                 <h3 className={styles.statLabel}>
-                    Pour le mois de{" "}
-                    {new Date().toLocaleDateString("fr-FR", { month: "long" })}
+                    Pour le mois :{" "}
+                    <span className={styles.date}>
+                        {new Date().toLocaleDateString("fr-FR", {
+                            month: "long",
+                        })}
+                    </span>
                 </h3>
                 <p className={styles.statLabel}>
                     {totalAmountPerMonth.count} intervention(s)
@@ -57,9 +61,13 @@ export default function StatsWidget() {
             </StatWidgetWrapper>
 
             <StatWidgetWrapper title="Coûts des frais de déplacement par mois">
- <h3 className={styles.statLabel}>
-                    Pour le mois de{" "}
-                    {new Date().toLocaleDateString("fr-FR", { month: "long" })}
+                <h3 className={styles.statLabel}>
+                    Pour le mois :{" "}
+                    <span className={styles.date}>
+                        {new Date().toLocaleDateString("fr-FR", {
+                            month: "long",
+                        })}
+                    </span>
                 </h3>
                 <p className={styles.statLabel}>
                     {totalExtraCostPerMonth.count} frais de déplacement
@@ -67,7 +75,6 @@ export default function StatsWidget() {
                 <p className={styles.statLabel}>
                     Total : {totalExtraCostPerMonth.totalAmount} €
                 </p>
-
             </StatWidgetWrapper>
         </div>
     );

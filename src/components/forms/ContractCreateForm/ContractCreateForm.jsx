@@ -8,7 +8,6 @@ import contractsHelper from "../../../helpers/contractsHelper.js";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { contractCreateSchema } from "./contractCreateSchema.js";
-import { DevTool } from "@hookform/devtools";
 import sessionFormationsHelper from "../../../helpers/sessionFormationsHelper.js";
 import { convertDateToFranceTimeZone } from "../../../utils/date.js";
 import { useNotification } from "../../../../context/notificationContext.jsx";
@@ -22,7 +21,7 @@ export default function ContractCreateForm({
     interventions,
     deleteIntervention,
     onSelectedSession,
-    interventionsCategories
+    interventionsCategories,
 }) {
     const { notify } = useNotification();
     const navigate = useNavigate();
@@ -65,7 +64,7 @@ export default function ContractCreateForm({
     const [contractStartDate, setContractStartDate] = useState(null);
     const [contractEndDate, setContractEndDate] = useState(null);
     const [currentContract, setCurrentContract] = useState(null);
-    
+
     const [isSigned, setIsSigned] = useState(false);
     const formateurId = watch("formateurId");
     const selectedStartDate = watch("startDate");
@@ -98,31 +97,30 @@ export default function ContractCreateForm({
             setRoles(response.data);
         };
 
-        
-
         getFormateurs();
         getSessionsList();
         getRoles();
-
     }, []);
-
-
 
     useEffect(() => {
         if (interventions && interventions.length > 0) {
             setCurrentInterventions(interventions);
             //Récupérer la date  de l'intervention la plus tôt
 
-            const oldestIntervention =interventions.reduce((oldest, current) =>
-                current.dateIntervention < oldest.dateIntervention ? current : oldest
+            const oldestIntervention = interventions.reduce((oldest, current) =>
+                current.dateIntervention < oldest.dateIntervention
+                    ? current
+                    : oldest
             );
 
             setContractStartDate(oldestIntervention.dateIntervention);
 
             //Récupérer la date  de l'intervention la plus tard
 
-            const latestIntervention =interventions.reduce((latest, current) =>
-                current.dateIntervention > latest.dateIntervention ? current : latest
+            const latestIntervention = interventions.reduce((latest, current) =>
+                current.dateIntervention > latest.dateIntervention
+                    ? current
+                    : latest
             );
             setContractEndDate(latestIntervention.dateIntervention);
         } else if (interventions && interventions.length === 0) {
@@ -321,7 +319,6 @@ export default function ContractCreateForm({
         }
 
         return;
-    
     }
 
     function getRateFromInterventionCategoryId(interventionCategoryId) {
@@ -329,13 +326,11 @@ export default function ContractCreateForm({
             (category) => category.id == interventionCategoryId
         )?.rate;
         return rate;
-      
     }
 
     return (
         //DEBUG
         <div className={styles.borderPopup}>
-
             {currentInterventions.length > 0 && (
                 <div className={styles.interventionsContainer}>
                     <h2 className="title">Interventions</h2>
@@ -519,9 +514,12 @@ export default function ContractCreateForm({
                         )}
                         {currentInterventions &&
                             currentInterventions.map((intervention, index) => (
-                                <tr key={index} >
+                                <tr key={index}>
                                     <td>{index + 1}</td>
-                                    <td>{intervention.ModuleFormation?.name ?? "N/A"}</td>
+                                    <td>
+                                        {intervention.ModuleFormation?.name ??
+                                            "N/A"}
+                                    </td>
                                     <td>
                                         {convertDateToFranceTimeZone(
                                             intervention.dateIntervention
@@ -536,10 +534,16 @@ export default function ContractCreateForm({
                                     </td>
                                     <td>{intervention.hours} heures</td>
                                     <td>
-                                        {intervention.InterventionCategory?.name ?? "N/A"}
+                                        {intervention.InterventionCategory
+                                            ?.name ?? "N/A"}
                                     </td>
                                     <td>
-                                        {intervention.InterventionCategory?.id? getRateFromInterventionCategoryId(intervention.InterventionCategory?.id) + "€"  : "N/A"}
+                                        {intervention.InterventionCategory?.id
+                                            ? getRateFromInterventionCategoryId(
+                                                  intervention
+                                                      .InterventionCategory?.id
+                                              ) + "€"
+                                            : "N/A"}
                                     </td>
                                     <td>
                                         <button
@@ -575,12 +579,19 @@ export default function ContractCreateForm({
                         </h3>
                     )}
                     {!contractId && userRole.name == "ADMIN" && (
-                        <button onClick={handleSubmit(onCreate)} className="btn btn-primary"> Créer</button>
+                        <button
+                            onClick={handleSubmit(onCreate)}
+                            className="btn btn-primary"
+                        >
+                            {" "}
+                            Créer
+                        </button>
                     )}
                     {contractId && userRole.name == "ADMIN" && (
                         <button
                             onClick={handleSubmit(onEdit)}
                             disabled={isSigned}
+                            className="btn btn-primary"
                         >
                             {" "}
                             Modifier
@@ -590,14 +601,13 @@ export default function ContractCreateForm({
                         <button
                             onClick={handleSubmit(onSign)}
                             disabled={isSigned}
+                            className="btn btn-primary"
                         >
                             {" "}
                             Signer{" "}
                         </button>
                     )}
                 </div>
-
-                <DevTool control={control} />
             </form>
         </div>
     );

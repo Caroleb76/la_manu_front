@@ -7,7 +7,6 @@ import rolesHelper from "../../../helpers/rolesHelper.js";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { popupSessionSchema } from "./popupSessionSchema.js";
-import { DevTool } from "@hookform/devtools";
 import formationHelper from "../../../helpers/formationHelper.js";
 import addressesHelper from "../../../helpers/addressesHelper.js";
 import SearchDropDown from "../../ui/searchDropdown.jsx";
@@ -153,37 +152,32 @@ export default function PopupFormSession({ onSessionCreated, session }) {
                         {...register("endDate")}
                         error={errors.endDate?.message}
                     />
-                
-                        <Controller
-                            name="addressId"
-                            control={control}
-                            render={({ field }) => (
-                                <Combobox
-                                    label="Lieu"
-                                    options={addressesOptions}
-                                    loading={loading}
-                                    {...field}
-                                />
-                            )}
-                        />
 
-                        <div className={styles.flexRow}>
-                            <small>
-                                {addressCreation
-                                    ? "Annuler"
-                                    : "Nouvelle adresse"}
-                            </small>
-                            <button
-                                className="btn-plus"
-                                type="button"
-                                onClick={() =>
-                                    setAddressCreation(!addressCreation)
-                                }
-                            >
-                                {addressCreation ? "-" : "+"}
-                            </button>
-                        </div>
-                    
+                    <Controller
+                        name="addressId"
+                        control={control}
+                        render={({ field }) => (
+                            <Combobox
+                                label="Lieu"
+                                options={addressesOptions}
+                                loading={loading}
+                                {...field}
+                            />
+                        )}
+                    />
+
+                    <div className={styles.flexRow}>
+                        <small>
+                            {addressCreation ? "Annuler" : "Nouvelle adresse"}
+                        </small>
+                        <button
+                            className="btn-plus"
+                            type="button"
+                            onClick={() => setAddressCreation(!addressCreation)}
+                        >
+                            {addressCreation ? "-" : "+"}
+                        </button>
+                    </div>
                 </section>
                 <div className={styles.btnWrapper}>
                     {!addressCreation && (
@@ -193,15 +187,10 @@ export default function PopupFormSession({ onSessionCreated, session }) {
                         </button>
                     )}
                 </div>
-                <DevTool control={control} />
             </form>
             {addressCreation && (
                 <>
-                    <p
-                       
-                    >
-                        Ajouter une adresse
-                    </p>
+                    <p>Ajouter une adresse</p>
 
                     <PopupFormAddress onCreated={onAddressCreated} />
                 </>

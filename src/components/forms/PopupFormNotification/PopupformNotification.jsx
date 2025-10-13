@@ -7,28 +7,28 @@ import rolesHelper from "../../../helpers/rolesHelper.js";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { popupNotificationSchema } from "./popupNotificationSchema.js";
-import { DevTool } from "@hookform/devtools";
 import { useNotification } from "../../../../context/notificationContext.jsx";
 import notificationsHelper from "../../../helpers/notificationsHelper.js";
-import { convertDateToStandardString,convertDateToStandardStringPlusOne } from "../../../utils/date.js";
+import {
+    convertDateToStandardString,
+    convertDateToStandardStringPlusOne,
+} from "../../../utils/date.js";
 
 export default function PopupformNotification({ onNotificationCreated }) {
-  const setRoles = useState([]);
-  const {notify}=useNotification();
-  const {
-    register,
-    reset,
-    handleSubmit,
-    watch,
-    control,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(popupNotificationSchema),
-  });
- 
-  const selectedStartDate=watch("startDate")
+    const setRoles = useState([]);
+    const { notify } = useNotification();
+    const {
+        register,
+        reset,
+        handleSubmit,
+        watch,
+        control,
+        formState: { errors },
+    } = useForm({
+        resolver: zodResolver(popupNotificationSchema),
+    });
 
-
+    const selectedStartDate = watch("startDate");
 
     async function onSubmit(data) {
         const response = await notificationsHelper.createNotification(data);
@@ -96,7 +96,6 @@ export default function PopupformNotification({ onNotificationCreated }) {
                 <div className={styles.popupButtons}>
                     <button className="btn btn-primary"> Créer </button>
                 </div>
-                <DevTool control={control} />
             </form>
         </div>
     );
