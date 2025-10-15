@@ -79,7 +79,7 @@ export default function Contracts() {
                 contract.User.firstName +
                 " " +
                 contract.User.lastName,
-            Formation: contract.SessionFormation.Formation.name,
+            Formation: contract?.SessionFormation?.Formation.name,
             "Date de Début": convertDateToFranceTimeZone(
                 contract.startDate
             ),
