@@ -1,7 +1,6 @@
 import styles from "./PopupFormTypeFormation.module.css";
 import InputText from "../../ui/InputText.jsx";
 import { useEffect, useState } from "react";
-import usersHelper from "../../../helpers/usersHelper.js";
 import rolesHelper from "../../../helpers/rolesHelper.js";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,10 +8,8 @@ import { popupFormTypeFormationSchema } from "./popupFormTypeFormationSchema.js"
 import formationHelper from "../../../helpers/formationHelper.js";
 import { useNotification } from "../../../../context/notificationContext.jsx";
 
-export default function PopupFormTypeFormation({
-    onFormationCreated,
-    formation,
-}) {
+export default function PopupFormTypeFormation({onFormationCreated,formation,}) {
+   
     // const setRoles = useState([]);
     const {
         register,
@@ -21,7 +18,10 @@ export default function PopupFormTypeFormation({
         control,
         formState: { errors },
     } = useForm({
-        values: formation,
+        defaultValues: {
+            name:formation?.name,
+            description:formation?.description
+        },
         resolver: zodResolver(popupFormTypeFormationSchema),
     });
 

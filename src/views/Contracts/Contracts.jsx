@@ -19,9 +19,7 @@ export default function Contracts() {
         { field: "Heures", filter: false },
         { field: "Interventions", filter: false },
         { field: "Signé", filter: false },
-        { field: "Déclaré", filter: false },
-        { field: "ValidéAdmin", filter: false },
-        { field: "ValidéFormateur", filter: false },
+        { field: "Validé Formateur", filter: false },
 
         {
             field: "Actions",
@@ -89,11 +87,11 @@ export default function Contracts() {
             Heures: contract.totalHours, //somme des temps des interventions
             Interventions: contract.interventions.length,
             Signé: contract.signed ? "✅" : "❌",
-            Déclaré: contract.declared ? "✅" : "❌",
-            ValidéFormateur: contract.validatedByFormateur
+
+            "Validé Formateur": contract.validatedByFormateur
                 ? "✅"
                 : "❌",
-            ValidéAdmin: contract.validatedByAdmin ? "✅" : "❌",
+
         };
     };
 
@@ -158,14 +156,14 @@ export default function Contracts() {
             <div className={styles.mainContainer}>
                 {user.isAdmin && (
                     <>
-                      <div className={styles.btnContainer}>
+                        <div className={styles.btnContainer}>
                             <Link
                                 to="/dashboard/contracts/create"
                                 className="btn btn-primary"
                             >
                                 Créer un contrat
                             </Link>
-                      </div>
+                        </div>
                         <input
                             type="text"
                             placeholder="Rechercher"

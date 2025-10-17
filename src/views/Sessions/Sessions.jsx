@@ -1,14 +1,13 @@
 import DataGrid from "../../components/DataGrid/DataGrid.jsx";
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import formationsHelper from "../../helpers/sessionFormationsHelper.js";
-import notificationsHelper from "../../helpers/notificationsHelper.js";
 import { useNotification } from "../../../context/notificationContext.jsx";
 import Styles from "./Sessions.module.css";
 import PopupWrapper from "../../components/popups/PopupWrapper.jsx";
 import PopupFormSession from "../../components/forms/PopupFormSession/PopupformSession.jsx";
 import PopupFormTypeFormation from "../../components/forms/PopupFormTypeFormation/PopupFormTypeFormation.jsx";
 
-export default function Sessions() {
+export default function Sessions() { 
     const [sessionCreationMode, setSessionCreationMode] = useState(false);
     const [typeFormationCreationMode, setTypeFormationCreationMode] =
         useState(false);

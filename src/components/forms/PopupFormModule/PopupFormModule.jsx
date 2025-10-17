@@ -2,21 +2,16 @@ import styles from "./PopupFormModule.module.css";
 import InputText from "../../ui/InputText.jsx";
 import InputSelect from "../../ui/InputSelect.jsx";
 import { useEffect, useState } from "react";
-import usersHelper from "../../../helpers/usersHelper.js";
-import rolesHelper from "../../../helpers/rolesHelper.js";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { popupModuleSchema } from "./popupModuleSchema.js";
 import { useNotification } from "../../../../context/notificationContext.jsx";
 import formationHelper from "../../../helpers/formationHelper.js";
-import {
-    convertDateToStandardString,
-    convertDateToStandardStringPlusOne,
-} from "../../../utils/date.js";
 import modulesHelper from "../../../helpers/modulesHelper.js";
 
-export default function PopupformModule({ onNotificationCreated }) {
-    const setRoles = useState([]);
+export default function PopupformModule({ onModuleCreated, module }) {
+
+    // const setRoles = useState([]);
     const [formations, setFormations] = useState([]);
     const { notify } = useNotification();
     const {
@@ -27,6 +22,13 @@ export default function PopupformModule({ onNotificationCreated }) {
         control,
         formState: { errors },
     } = useForm({
+        defaultValues: {
+            formationId: module?.Formation?.id ?module.Formation.id:"",
+            name: module?.name,
+            description: module?.description
+
+        },
+
         resolver: zodResolver(popupModuleSchema),
     });
 
@@ -40,15 +42,32 @@ export default function PopupformModule({ onNotificationCreated }) {
         fetchData();
     }, []);
 
-    async function onSubmit(formData) {
-        const response = await modulesHelper.create(formData);
-        if (response.success) {
-            onNotificationCreated();
-            reset();
-        } else {
-            notify(response.message, "error");
+    async function onSubmit(data) {
+        try {
+            let response = null;
+            if (module) {
+                // edit
+                data.id = module.id;
+                response = await modulesHelper.updateModule(data);
+            } else {
+                // creation
+
+                response = await modulesHelper.createModule(data);
+            }
+            if (response.success) {
+                module
+                    ? notify("Module modifié", "success")
+                    : notify("Le module a bien été ajouté", "success");
+                onModuleCreated();
+                reset();
+            } else {
+                alert(response.message);
+            }
+        } catch (e) {
+            console.error(e);
         }
     }
+
 
     return (
         <div className={styles.borderPopup}>
@@ -59,11 +78,25 @@ export default function PopupformModule({ onNotificationCreated }) {
                         {...register("formationId")}
                         error={errors.formationId?.message}
                     >
-                        {formations?.map((formation) => (
-                            <option key={formation.id} value={formation.id}>
-                                {formation.name}
+                       {module ? (
+                            <option value={module.Formation.id}>
+                                {module.Formation.name}
                             </option>
-                        ))}
+                        ) : (
+                            <>
+                                <option value="">
+                                    -- Choisir une formation --
+                                </option>
+                                {formations?.map((formation) => (
+                                    <option
+                                        key={formation.id}
+                                        value={formation.id}
+                                    >
+                                        {formation.name}
+                                    </option>
+                                ))}
+                            </>
+                        )}
                     </InputSelect>
 
                     <InputText
@@ -84,7 +117,10 @@ export default function PopupformModule({ onNotificationCreated }) {
                 </section>
 
                 <div className={styles.popupButtons}>
-                    <button className="btn btn-primary"> Créer </button>
+                    <button className="btn btn-primary">
+                        {" "}
+                        {module ? "Modifier" : "Créer"}{" "}
+                    </button>
                 </div>
             </form>
         </div>

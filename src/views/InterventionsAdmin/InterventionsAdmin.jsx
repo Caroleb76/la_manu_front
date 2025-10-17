@@ -156,7 +156,7 @@ function InterventionsAdmin() {
             <div className={styles.mainContainer}>
                 {showDetails && (
                     <PopupWrapper
-                        title="Détails de l'intervention"
+                        title="Liste des frais de déplacement"
                         onClose={() => setShowDetails(false)}
                     >
                         

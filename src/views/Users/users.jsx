@@ -10,13 +10,13 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 
 function Users() {
     const [userCreationMode, setUserCreationMode] = useState(false);
-    const dataGridRef = null;
-    const [reloadTrigger, setReloadTrigger] = useState(0);
+    const [users, setUsers] = useState([]);
+
     const [rows, setRows] = useState([]);
-    const [searchText, setSearchText] = useState("");
+
     const { notify } = useNotification();
     const [pageSize, setPageSize] = useState(10);
-    const [selectedUserId, setSelectedUserId] = useState(null);
+    const [selectedUser, setSelectedUser] = useState(null);
     const colDefs = [
         { field: "Email", filter: true },
         { field: "Nom", filter: true },
@@ -52,29 +52,13 @@ function Users() {
     ];
 
     useEffect(() => {
-        (async () => {
-            const users = await fetchUsers();
-            setRows(users);
-        })();
+       fetchData();
     }, []);
 
-    function refreshDataGrid() {
-        setReloadTrigger((prev) => prev + 1);
-        if (dataGridRef?.current) dataGridRef.current.refreshData();
-    }
-    const onUserCreated = () => {
-        setUserCreationMode(false);
-        refreshDataGrid();
-        notify("L'utilisateur a bien été ajouté", "success");
-    };
 
-    const onSearchTextChange = (e) => {
-        setSearchText(e.target.value);
-        if (e.target.value.length < 3 && e.target.value.length > 0) return;
-        refreshDataGrid();
-    };
 
-    const mapToRow = (user) => ({
+    const convertData = (user) => ({
+    
         id: user.id,
         Nom: user.lastName,
         Prenom: user.firstName,
@@ -83,41 +67,68 @@ function Users() {
         blocked: user.blocked,
     });
 
-    const fetchUsers = async () => {
-        // console.log("Requête : offset=", offset, "limit=", pageSize, "page=", pageNumberRef.current);
-        // pageNumberRef.current=Math.floor(offset/pageSize);
+    const fetchData = async () => {
+        
         const response = await usersHelper.getUsers();
-        const rows = response.data.users.map(mapToRow);
-        return rows;
+        console.log(response.data)
+         const convertedData = response.data.users.map(convertData);
+         console.log(convertedData)
+        setUsers(response.data.users);
+        setRows(convertedData);
+   
     };
 
     const blockUser = async (data) => {
         const updatedUser = { ...data, blocked: !data.blocked };
-        await usersHelper.blockUser(updatedUser.id, updatedUser);
-        refreshDataGrid();
-        notify("L'utilisateur a bien été modifié", "success");
+        const response = await usersHelper.blockUser(updatedUser.id, updatedUser);
+        console.log(response)
+        fetchData();
+        notify("L'utilisateur a bien été bloqué", "success");
+
     };
     const editUser = async (data) => {
         console.log("edit user", data);
-        setSelectedUserId(data.id);
+        setSelectedUser(data.id);
         setUserCreationMode(false);
     };
+    const onUserCreated = () => {
+        closePopup();                   // ferme + reset le selectedModule
+        fetchData();                    // recharge la grille
+    };
+
+    const onModifyUser = (row) => {
+        const m = users.find((s) => s.id === row.id);
+        openPopup(m);                   // plus de ref.click()
+    };
+
+
+    const openPopup = (m = null) => {
+        setSelectedUser(m);           // null => mode création, objet => mode édition
+        setUserCreationMode(true);
+    };
+
+    const closePopup = () => {
+        setUserCreationMode(false);
+        setSelectedUser(null);        // IMPORTANT : reset après update/close
+    };
+
+
 
     return (
         <>
             <div className={Styles.mainContainer}>
-                {selectedUserId ? (
+                {selectedUser ? (
                     <>
                         <div className={Styles.backButtonContainer}>
                             <Icon
                                 className={Styles.backButton}
                                 icon="material-symbols:arrow-back-ios-rounded"
                                 width="1.8rem"
-                                onClick={() => setSelectedUserId(null)}
+                                onClick={() => setSelectedUser(null)}
                             />
                             <p>Liste des utilisateurs</p>
                         </div>
-                        <Profile userId={selectedUserId} />
+                        <Profile userId={selectedUser} />
                     </>
                 ) : (
                     <>
@@ -134,13 +145,13 @@ function Users() {
                         <div className={Styles.btnContainer}>
                             <button
                                 className="btn btn-primary btn-sm"
-                                onClick={() => setUserCreationMode(true)}
+                                onClick={() => openPopup()}
                             >
                                 Créer
                             </button>
                         </div>
-                        {/* <input type="text" placeholder="Rechercher" value={searchText} onChange={(e) => onSearchTextChange(e)} /> */}
-                        {rows.length > 0 && (
+
+                        {rows?.length > 0 && (
                             <DataGrid
                                 pageSize={pageSize}
                                 colDefs={colDefs}

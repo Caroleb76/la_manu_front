@@ -4,8 +4,9 @@ a faire interface de creation de module de formation
 a faire interface de creation de catégorie d'intervention
 
 
-# Priority High
-- gérer les fichiers dans le formulaire "profil"
+# Priority High (mis le 17/10)
+voir pour bloquer le profil quand il est bloqué
+changé le message quand on débloque un utilisateur
 
 
 # Priority Medium

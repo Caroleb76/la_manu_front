@@ -47,8 +47,8 @@ export const profileSchema = z.object({
 
   phone: z
     .string()
-    .min(8, 'Le téléphone doit contenir au moins 8 chiffres.')
-    .max(12, 'Le téléphone est trop long.'),
+    .min(10, 'Le téléphone doit contenir au moins 8 chiffres.')
+    .max(20, 'Le téléphone est trop long.'),
 
   email: z.string().email('L’email est invalide.'),
 

@@ -146,7 +146,7 @@ export default function PopupFormSession({ onSessionCreated, session }) {
                     />
 
                     <InputText
-                        label="Date d'expiration"
+                        label="Date de fin"
                         type="date"
                         min={selectedStartDate}
                         {...register("endDate")}

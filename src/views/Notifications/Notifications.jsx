@@ -25,6 +25,7 @@ function Notifications() {
     const [pageSize, setPageSize] = useState(10);
     const [reloadTrigger, setReloadTrigger] = useState(0);
 
+    
     useEffect(() => {
         fetchData();
     }, []);

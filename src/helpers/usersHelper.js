@@ -39,8 +39,9 @@ async function createUser (user){
 
 
 async function blockUser (id,data){
-
+console.log(data)
     const response= await apiClient("users/block/"+id,{method:"PUT",body:data});
+    console.log(response)
     return response;
 
 }

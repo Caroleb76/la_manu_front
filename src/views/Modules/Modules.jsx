@@ -1,34 +1,37 @@
 import DataGrid from "../../components/DataGrid/DataGrid.jsx";
-import { useState, useEffect, useMemo } from "react";
-import notificationsHelper from "../../helpers/notificationsHelper.js";
+import { useState, useEffect, useRef } from "react";
 import styles from "./Modules.module.css";
 import PopupWrapper from "../../components/popups/PopupWrapper.jsx";
 import { useNotification } from "../../../context/notificationContext.jsx";
-import PopupformNotification from "../../components/forms/PopupFormNotification/PopupformNotification.jsx";
-import { PRIORITIES } from "../../utils/constants.js";
 import modulesHelper from "../../helpers/modulesHelper.js";
 import PopupformModule from "../../components/forms/PopupFormModule/PopupFormModule.jsx";
 
-function Modules() {
-    const [notificationCreationMode, setNotificationCreationMode] =
-        useState(false);
-    const { notify } = useNotification();
-    const dataGridRef = null;
+export default function Modules() {
+    const [moduleCreationMode, setModuleCreationMode] = useState(false);
+    const [selectedModule, setSelectedModule] = useState(null);
     const [rows, setRows] = useState([]);
+    const popuRef = useRef(null);
+    const [modules, setModules] = useState([]);
+
     const colDefs = [
         { field: "Nom", filter: true },
         { field: "Formation", filter: true },
         { field: "Description", filter: true },
-        // { field: "Actions", filter: false },
+        { field: "Actions", filter: false },
     ];
 
-    const [searchText, setSearchText] = useState("");
-    const [pageSize, setPageSize] = useState(10);
-    const [reloadTrigger, setReloadTrigger] = useState(0);
 
     useEffect(() => {
         fetchData();
     }, [])
+
+    const fetchData = async () => {
+        const response = await modulesHelper.getModules();
+        const convertedData = response.data.map(convertData);
+        setModules(response.data);
+        setRows(convertedData);
+    }
+
     const convertData = (module) => ({
         id: module.id,
         Nom: module.name,
@@ -36,72 +39,72 @@ function Modules() {
         Description: module.description,
     });
 
-    const fetchData = async () => {
-        const response = await modulesHelper.getModules();
-        const convertedData = response?.data?.map(convertData);
-        setRows(convertedData);
-    }
 
-    // const onSearchTextChange = (e) => {
-    //     setSearchText(e.target.value);
-    //     if (e.target.value.length < 3 && e.target.value.length > 0) return;
-    //     setReloadTrigger((prev) => prev + 1);
-    // };
 
-    const onEditModule = async (module) => {
-        //TODO
+    const onModuleCreated = () => {
+        closePopup();                   // ferme + reset le selectedModule
+        fetchData();                    // recharge la grille
     };
 
-    const onNotificationCreated = () => {
-        setNotificationCreationMode(false);
-        setReloadTrigger((prev) => prev + 1);
-        notify("Le module a bien été créé", "success");
+    const onModifyModule = (row) => {
+        const m = modules.find((s) => s.id === row.id);
+        openPopup(m);                   // plus de ref.click()
     };
+
+
+    const openPopup = (m = null) => {
+        setSelectedModule(m);           // null => mode création, objet => mode édition
+        setModuleCreationMode(true);
+    };
+
+    const closePopup = () => {
+        setModuleCreationMode(false);
+        setSelectedModule(null);        // IMPORTANT : reset après update/close
+    };
+
 
     return (
         <>
             <div className={styles.mainContainer}>
-                {notificationCreationMode && (
-                    <>
-                        <PopupWrapper
-                            title="Créer un module de formation"
-                            onClose={() => setNotificationCreationMode(false)}
-                        >
-                            <PopupformModule
-                                onNotificationCreated={onNotificationCreated}
-                            />
-                        </PopupWrapper>
-                    </>
+
+                {moduleCreationMode && (
+
+                    <PopupWrapper
+                        // key force le remount quand on passe de edit -> create et inversement
+                        key={selectedModule ? `edit-${selectedModule.id}` : "create"}
+                        title={selectedModule ? "Modifier le module" : "Créer un module"}
+                        onClose={closePopup}
+                    >
+                        <PopupformModule
+                            onModuleCreated={onModuleCreated}
+                            module={selectedModule}
+                            modules={modules}
+                        />
+                    </PopupWrapper>
                 )}
                 <div className={styles.btnContainer}>
                     <button
                         className="btn btn-primary"
-                        onClick={() => setNotificationCreationMode(true)}
+                        ref={popuRef}
+                        onClick={() => openPopup()}
                     >
                         Créer
                     </button>
+
                 </div>
-                {/* <input
-                    type="text"
-                    placeholder="Rechercher"
-                    value={searchText}
-                    onChange={(e) => onSearchTextChange(e)}
-                /> */}
+
                 <DataGrid
-                    pageSize={pageSize}
-                    onActionClick={onEditModule}
+
+                    onActionClick={onModifyModule}
                     colDefs={colDefs}
+
                     rowData={rows}
-                    // renderIconWithCondition={(module) =>
-                    //     "ic:outline-edit"
-                    // }
-                    iconStyle={(module) => {
-                        return { color: "red" };
-                    }}
+
+                    renderIconWithCondition={(module) => "ic:outline-edit"}
                 />
             </div>
         </>
     );
 }
 
-export default Modules;
+

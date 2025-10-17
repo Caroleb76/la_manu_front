@@ -1,24 +1,22 @@
 import DataGrid from "../../components/DataGrid/DataGrid";
 import { useState, useEffect, useMemo, useRef } from "react";
 import formationHelper from "../../helpers/formationHelper";
-import notificationsHelper from "../../helpers/notificationsHelper";
 import { useNotification } from "../../../context/notificationContext";
 import Styles from "./Formations.module.css";
 import PopupWrapper from "../../components/popups/PopupWrapper";
-import PopupFormSession from "../../components/forms/PopupFormSession/PopupformSession.jsx";
 import PopupFormTypeFormation from "../../components/forms/PopupFormTypeFormation/PopupFormTypeFormation.jsx";
 
 export default function Formations() {
     const [formationCreationMode, setFormationCreationMode] = useState(false);
-
     const { notify } = useNotification();
     const [selectedFormation, setSelectedFormation] = useState(null);
     const [rows, setRows] = useState([]);
     const popuRef = useRef(null);
-    let formations = [];
+    let [formations, setFormations]  =useState([]);
+
     const onFormationCreated = () => {
         setFormationCreationMode(false);
-        refreshDataGrid();
+         fetchData();
 
     };
     const colDefs = [
@@ -29,12 +27,12 @@ export default function Formations() {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, []); 
 
     const fetchData = async () => {
-
         const response = await formationHelper.getFormations();
         const convertedData = response.data.formations.map(convertRow);
+        setFormations(response.data.formations)
         setRows(convertedData);
 
     }
@@ -43,13 +41,9 @@ export default function Formations() {
         Nom: formation.name,
         Description: formation.description,
     });
-    const refreshDataGrid = () => {
-        setReloadTrigger((prev) => prev + 1);
-    };
-    const [reloadTrigger, setReloadTrigger] = useState(0);
-
 
     const onModifyFormation = (formation) => {
+     console.log(formations)
         const selectedFormation = formations.find((s) => s.id === formation.id);
         setSelectedFormation(selectedFormation);
         popuRef.current.click();
@@ -74,6 +68,7 @@ export default function Formations() {
                         <PopupFormTypeFormation
                             onFormationCreated={onFormationCreated}
                             formation={selectedFormation}
+                            formations={formations}
                         />
                     </PopupWrapper>
                 )}

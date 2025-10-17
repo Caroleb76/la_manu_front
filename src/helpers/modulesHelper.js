@@ -15,7 +15,7 @@ async function getModuleByFormation (moduleId){
     return response;
 }
 
-async function create (formData){
+async function createModule (formData){
 
     const response= await apiClient("moduleFormation", {
         method:"POST",
@@ -24,11 +24,18 @@ async function create (formData){
     );
     return response;
 }
-
+async function updateModule(module) {
+    const response = await apiClient(`moduleFormation/${module.id}`, {
+        method: "PUT",
+        body: module,
+    });
+    return response;
+}
 
 export default {
     getModules,
     getModuleByFormation,
-    create
+    updateModule,
+    createModule
 
 }
