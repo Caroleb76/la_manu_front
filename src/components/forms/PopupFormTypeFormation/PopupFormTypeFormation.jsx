@@ -19,22 +19,26 @@ export default function PopupFormTypeFormation({ onFormationCreated, formation }
     control,
     formState: { errors },
   } = useForm({
-    values: formation,
+    defaultValues:{
+      name: "",
+      description: "",
+    },
     resolver: zodResolver(popupFormTypeFormationSchema),
   });
 
   const {notify}=useNotification();
 
   useEffect(() => {
-    async function loadRoles() {
-      const response = await rolesHelper.getRoles();
-      // setRoles(response.data);
-
-
+    
+    if (formation) {
+      
+      reset({
+        name: formation.name ?? "",
+        description: formation.description ?? "",
+      
+      });
     }
-    loadRoles();
-
-  }, [])
+  }, [formation, reset]);
 
 
   async function onSubmit(data) {

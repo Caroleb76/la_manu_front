@@ -20,6 +20,8 @@ export default function Sessions() {
     const onSessionCreated = () => {
         setSessionCreationMode(false);
         fetchData();
+        console.log("onSessionCreated");
+        
         // notify("La session a bien été ajoutée", "success");
     };
     const colDefs = [

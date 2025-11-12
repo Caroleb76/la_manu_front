@@ -15,10 +15,10 @@ export default function Formations() {
     const [selectedFormation, setSelectedFormation] = useState(null);
     const [rows, setRows] = useState([]);
     const popuRef = useRef(null);
-    let formations = [];
+    const [formations, setFormations] = useState([]);
     const onFormationCreated = () => {
         setFormationCreationMode(false);
-        refreshDataGrid();
+        fetchData();
 
     };
     const colDefs = [
@@ -34,6 +34,7 @@ export default function Formations() {
     const fetchData = async () => {
 
         const response = await formationHelper.getFormations();
+        setFormations(response.data.formations);
         const convertedData = response.data.formations.map(convertRow);
         setRows(convertedData);
 
@@ -52,6 +53,8 @@ export default function Formations() {
     const onModifyFormation = (formation) => {
         const selectedFormation = formations.find((s) => s.id === formation.id);
         setSelectedFormation(selectedFormation);
+
+        
         popuRef.current.click();
     };
     const onClosePopup = () => {

@@ -83,8 +83,8 @@ export default function PopupFormSession({ onSessionCreated, session }) {
                         : "La formation a bien été ajoutée",
                     "success"
                 );
-                onSessionCreated();
                 reset();
+                onSessionCreated();
             } else {
                 notify(response.message, "error");
             }
