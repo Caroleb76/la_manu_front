@@ -7,6 +7,7 @@ import usersHelper from "../../../helpers/usersHelper";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { popupFormUserSchema } from "./popupFormUserSchema.js";
+import { SUPERADMIN_ROLE } from "../../../utils/constants.js";
 
 export default function PopupFormUser({ onUserCreated }) {
     const [roles, setRoles] = useState([]);
@@ -22,7 +23,8 @@ export default function PopupFormUser({ onUserCreated }) {
     useEffect(() => {
         async function loadRoles() {
             const response = await rolesHelper.getRoles();
-            setRoles(response.data);
+            var cleanedRoles= response.data.filter(it => it.name !== SUPERADMIN_ROLE );
+            setRoles(cleanedRoles);
         }
         loadRoles();
     }, []);
