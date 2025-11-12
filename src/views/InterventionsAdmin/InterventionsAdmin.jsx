@@ -58,7 +58,10 @@ function InterventionsAdmin() {
                     onClick: (data) => onValidatePayment(data),
 
                     icon: {
-                        icon: "ic:outline-price-check",
+                        // with condition
+                        condition: (data) => data["Payée"] == "❌" ? "ic:outline-price-check"  : "ic:outline-cancel",
+                        // default
+                        icon: "material-symbols:lock-open-right-outline-sharp",
                     },
                 },
             ],
@@ -94,7 +97,17 @@ function InterventionsAdmin() {
       const resp = await interventionsHelper.getInterventions();
       const batch = Array.isArray(resp?.data) ? resp.data : [];
 
-    return batch.map(mapToRow);
+    let rows= batch.map(mapToRow);
+    
+    return rows.sort((a, b) =>{
+        if(a.Nom != b.Nom){
+            return a.Nom.localeCompare(b.Nom);
+        }else if ( a.Prenom != b.Prenom){
+            return a.Prenom.localeCompare(b.Prenom);
+        }
+        return a.Date.localeCompare(b.Date);
+
+    });
   };
 
   const mapToRow = (interventions) => ({
@@ -129,6 +142,8 @@ function InterventionsAdmin() {
         );
         if (response && response.success) {
             setReloadTrigger((prev) => prev + 1);
+
+            
             notify("Le changement a bien été pris en compte", "success");
         } else {
             notify("Une erreur est survenue", "error");
@@ -176,11 +191,7 @@ function InterventionsAdmin() {
                     pageSize={pageSize}
                     colDefs={colDefs}
                     rowData={rows}
-                    renderIconWithCondition={(intervention) =>
-                        intervention?.Payée === "✅"
-                            ? "ic:outline-cancel"
-                            :  "ic:outline-price-check"
-                    }
+                
                    
                 />
                 }

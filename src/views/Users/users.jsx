@@ -70,10 +70,17 @@ function Users() {
     const fetchData = async () => {
         
         const response = await usersHelper.getUsers();
-        console.log(response.data)
-         const convertedData = response.data.users.map(convertData);
-         console.log(convertedData)
+         let convertedData = response.data.users.map(convertData);
         setUsers(response.data.users);
+        convertedData.sort((a, b) =>{
+            if(a.Nom != b.Nom){
+                return a.Nom.localeCompare(b.Nom);
+            }else if ( a.Prenom != b.Prenom){
+                return a.Prenom.localeCompare(b.Prenom);
+            }
+            return a.Email.localeCompare(b.Email);
+
+    });
         setRows(convertedData);
    
     };
