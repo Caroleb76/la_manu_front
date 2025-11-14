@@ -16,15 +16,20 @@ export const filesManagerType = {
 const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostId, interventionId,onFileSelectedCallback }, ref) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileNameInput, setFileNameInput] = useState("");
+  const [showFileNameInput, setShowFileNameInput] = useState(false);
+  const [showFileTypeSelection, setShowFileTypeSelection] = useState(false);
   const [files, setFiles] = useState([]);
   const { user } = useContext(UserContext);
   const [docType, setDocType] = useState(interventionId ? "Autre" : "");
   const [diplomaType, setDiplomaType] = useState("");
-  const [miniMode, setMiniMode] = useState(type === filesManagerType.INTERVENTIONS);
+  const [miniMode, setMiniMode] = useState(false);
   const [miniModeFileDisplayName, setMiniModeFileDisplayName] = useState("");
   const { notify } = useNotification();
   const formDataRef = useRef(null);
   useEffect(() => {
+    setMiniMode(type == filesManagerType.INTERVENTIONS);
+    console.log("filesManagerType", type);
+    console.log("miniMode", miniMode);
     loadFiles();
   }, []);
 
@@ -55,8 +60,9 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
       const file = e.target.files[0];
       setSelectedFile(file);
       setFileNameInput(file.name);
+      setShowFileTypeSelection(true);
       if(interventionId) setDocType("Autre");
-      if(onFileSelected) onFileSelectedCallback(file);
+      if(onFileSelectedCallback) onFileSelectedCallback(file);
     }
   }
   function reset() {
@@ -64,6 +70,8 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
     setFileNameInput("");
     setDocType("");
     setDiplomaType("");
+    setShowFileNameInput(false);
+    setShowFileTypeSelection(false);
 
   }
 
@@ -131,7 +139,7 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
     <div className={styles.fileContainer + " " + (miniMode ? styles.miniMode : "")}>
 
 
-      {(fileNameInput) && (
+      {(showFileTypeSelection ) && (
         <div className={styles.fileAddPopupBlock}>
           <div className={styles.fileAddPopup}>
             <Icon
@@ -143,6 +151,8 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
                 setFileNameInput("");
                 setDocType("");
                 setDiplomaType("");
+                setShowFileNameInput(false);
+                setShowFileTypeSelection(false);
               }}
             />
 
@@ -151,16 +161,20 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
               <select
                 value={docType}
                 onChange={(e) => {
+                  console.log(e.target.value);
+                  
                   setDocType(e.target.value);
                   if (e.target.value !== "Autre") {
                     setFileNameInput(e.target.value);
+                    setShowFileNameInput(false);
                   } else {
                     setFileNameInput("");
+                    setShowFileNameInput(true);
                   }
                 }}
                 className={styles.select}
               >
-                <option value="">Type de fichier</option>
+                {/* <option value="">Type de fichier</option> */}
                 <option value="Photo de profil">Photo de profil</option>
                 <option value="CV de moins de 3 mois">CV de moins de 3 mois</option>
                 <option value="Carte grise">Carte grise</option>
@@ -184,7 +198,7 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
             )}
 
 
-            {(docType === "Autre" || miniMode) && (
+            {(showFileNameInput || miniMode) && (
               <input
                 type="text"
                 placeholder="Nom du fichier"

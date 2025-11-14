@@ -1,7 +1,7 @@
 import apiClient from "./apiClient";
 
 
-async function getUsers (){
+async function getUsers (peops=null){
     // offset=0,limit=10,searchText="",role=null
 
 //     let params = {
@@ -18,8 +18,8 @@ async function getUsers (){
 
 // }
 
-    
-    const response= await apiClient("users/",{method:"GET"});
+    const role = peops?.role ?? null;
+    const response= await apiClient( role ? "users?role="+role : "users/",{method:"GET"});
     return response;
 
 }
