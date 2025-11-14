@@ -82,7 +82,7 @@ const ContractPdf2 = ({ currentContract, totalHours }) => {
             >
                 <h2 style={styles.h2}>Récapitulatif du contrat</h2>
 
-                <button onClick={handleExportPDF}>Exporter en PDF</button>
+                <button className="btn" onClick={handleExportPDF}>Exporter en PDF</button>
             </div>
 
             <div div ref={printRef} style={{ width: "100%", maxWidth: "515pt" }}>
@@ -92,7 +92,8 @@ const ContractPdf2 = ({ currentContract, totalHours }) => {
                         <img
                             src={LogoIFEN}
                             alt="Logo IFEN"
-                            style={{ width: "240px", height: "auto", marginBottom: "60px" }}
+                            aria-label="Logo de l'Institut de Formation"
+                            style={{ width: "auto", height: "auto", marginBottom: "60px" }}
                         />
 
                         <p style={{ ...styles.capitalize,  marginLeft: "400px", marginBottom: "40px" }}>

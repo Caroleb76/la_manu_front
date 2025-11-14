@@ -88,9 +88,9 @@ export default function Contracts() {
             Interventions: contract.interventions.length,
             Signé: contract.signed ? "✅" : "❌",
 
-            "Validé Formateur": contract.validatedByFormateur
-                ? "✅"
-                : "❌",
+            "Validé Formateur": contract.interventions.some(it=>!it.validatedByFormateur)
+                ? "❌"
+                : "✅",
 
         };
     };

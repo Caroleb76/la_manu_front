@@ -144,7 +144,7 @@ const ContractPdf = ({ currentContract }) => {
                     </div>
                 )}
             </div>
-            <button onClick={handleExportPDF} style={{ marginTop: 20 }}>
+            <button className="btn btn-primary" onClick={handleExportPDF} style={{ marginTop: 20 }}>
                 Exporter en PDF
             </button>
         </div>

@@ -74,8 +74,8 @@ export default function Home() {
                 </Widget>
             )}
 
-             {user && isAdmin(user) && (
-            <Widget titre="alertes" classString={styles.twoColumns}>
+             {user &&  (
+            <Widget titre="alertes" classString={isAdmin(user)?styles.twoColumns:styles.oneColumn}>
                 {" "}
                 <AlertWidget />
             </Widget>
