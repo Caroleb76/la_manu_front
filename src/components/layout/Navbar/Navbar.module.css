@@ -1,72 +1,68 @@
-.navbarContainer{
-    width: 100%;
-    /* background-color: grey; */
-    height: 100px;
-    padding-right: 4rem;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
+.navbarContainer {
+  width: 100%;
+  /* background-color: grey; */
+  height: 100px;
+  padding-right: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
-.userAvatar{
-    width: 50px;
-    height: 50px;
-    border-radius: 50px;
-    background-color: var(--primary-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;   
-    position: relative; 
-    
+.userAvatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  background-color: var(--primary-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
-.userAvatar:hover{
- cursor: pointer;
+.userAvatar:hover {
+  cursor: pointer;
 }
-.userAvatar img{
-   width: 50px;
-   height: 50px;
-   border-radius: 50%;
-   object-fit: cover;
+.userAvatar img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
 }
-.userAvatar p{
-    color: white;
-    font-weight: bold;
-}
-
-
-.dropdownContent{
-    display: none;
-
+.userAvatar p {
+  color: white;
+  font-weight: bold;
 }
 
-.dropdownVisible{
-    position: absolute;
-    background-color: #f9f9f9;
-    /* min-width: 160px; */
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    padding: 0.7rem;
-    border-radius: var(--radius);
-    z-index: 1;
-    top: 3.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 0.5rem 0;
-    width: 150px;
+.dropdownContent {
+  display: none;
 }
-.dropdownItem{
-    width: 100%;
-    
+
+.dropdownVisible {
+  position: absolute;
+  background-color: #f9f9f9;
+  /* min-width: 160px; */
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  padding: 0.7rem;
+  border-radius: var(--radius);
+  z-index: 1;
+  top: 3.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  width: 150px;
 }
-.dropdownItem p{
-    color: var(--primary-color);
-    border: none;
-    padding:0.5rem;
-    /* width: 80%; */
-    font-size: 0.8rem;
+.dropdownItem {
+  width: 100%;
 }
-.dropdownItem:hover{
-    background-color: var(--secondary-color);
-    color: white;
-    cursor: pointer;
+.dropdownItem p {
+  color: var(--primary-color);
+  border: none;
+  padding: 0.5rem;
+  /* width: 80%; */
+  font-size: 0.8rem;
+}
+.dropdownItem:hover {
+  background-color: var(--secondary-color);
+  color: white;
+  cursor: pointer;
 }

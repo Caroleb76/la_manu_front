@@ -9,67 +9,67 @@ import notificationsHelper from "../../../helpers/notificationsHelper.js";
 import addressesHelper from "../../../helpers/addressesHelper.js";
 
 export default function PopupFormAddress({ onCreated }) {
-    const { notify } = useNotification();
-    const {
-        register,
-        reset,
-        handleSubmit,
-        control,
-        formState: { errors },
-    } = useForm({
-        resolver: zodResolver(popupFormAddressSchema),
-    });
+  const { notify } = useNotification();
+  const {
+    register,
+    reset,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(popupFormAddressSchema),
+  });
 
-    async function onSubmit(data) {
-        const response = await addressesHelper.createAddress(data);
-        if (response.success) {
-            reset();
-            onCreated(response.data);
-        } else {
-            notify(response.message, "error");
-        }
-        // const response = await notificationsHelper.createNotification(data);
-        // if (response.success) {
-        //   onNotificationCreated();
-        //   reset();
-        // } else {
-        //   notify(response.message,"error")
-        // }
+  async function onSubmit(data) {
+    const response = await addressesHelper.createAddress(data);
+    if (response.success) {
+      reset();
+      onCreated(response.data);
+    } else {
+      notify(response.message, "error");
     }
+    // const response = await notificationsHelper.createNotification(data);
+    // if (response.success) {
+    //   onNotificationCreated();
+    //   reset();
+    // } else {
+    //   notify(response.message,"error")
+    // }
+  }
 
-    return (
-        <div className={styles.borderPopup}>
-            <form action="" onSubmit={handleSubmit(onSubmit)}>
-                <section className={`${styles.grid} ${styles.popupSection}`}>
-                    <div className={styles.fullRow}>
-                        <InputText
-                            label="Adresse"
-                            placeholder="Adresse"
-                            {...register("address")}
-                            error={errors.title?.message}
-                        />
-                    </div>
+  return (
+    <div className={styles.borderPopup}>
+      <form action="" onSubmit={handleSubmit(onSubmit)}>
+        <section className={`${styles.grid} ${styles.popupSection}`}>
+          <div className={styles.fullRow}>
+            <InputText
+              label="Adresse"
+              placeholder="Adresse"
+              {...register("address")}
+              error={errors.title?.message}
+            />
+          </div>
 
-                    <InputText
-                        label="Code postal"
-                        placeholder="Code postal"
-                        {...register("postalCode")}
-                        error={errors.title?.message}
-                    />
-                    <InputText
-                        label="Ville"
-                        placeholder="ville"
-                        {...register("city")}
-                        error={errors.title?.message}
-                    />
-                </section>
+          <InputText
+            label="Code postal"
+            placeholder="Code postal"
+            {...register("postalCode")}
+            error={errors.title?.message}
+          />
+          <InputText
+            label="Ville"
+            placeholder="ville"
+            {...register("city")}
+            error={errors.title?.message}
+          />
+        </section>
 
-                <div className={styles.popupButtons}>
-                    <button type="submit" className="btn btn-primary">
-                        Créer Adresse
-                    </button>
-                </div>
-            </form>
+        <div className={styles.popupButtons}>
+          <button type="submit" className="btn btn-primary">
+            Créer Adresse
+          </button>
         </div>
-    );
+      </form>
+    </div>
+  );
 }

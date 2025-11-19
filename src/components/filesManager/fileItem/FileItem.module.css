@@ -1,29 +1,28 @@
-.fileItem{
-   position: relative;
-    display: flex;
-    align-items: center;
-    /* gap: 0.5rem; */
-    flex-direction: column;
+.fileItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+  /* gap: 0.5rem; */
+  flex-direction: column;
 }
 
-
-.fileItem:hover{
-    cursor: pointer;
-    background-color: rgba(243,147,54,0.2);
+.fileItem:hover {
+  cursor: pointer;
+  background-color: rgba(243, 147, 54, 0.2);
 }
 .fileItem img {
   width: 48px;
   margin-bottom: 8px;
 }
-.active{
-     background-color: rgba(243,147,54,0.2);
+.active {
+  background-color: rgba(243, 147, 54, 0.2);
 }
 .fileItem p {
   font-size: 14px;
   word-break: break-word;
 }
 
-.options{
+.options {
   position: absolute;
   bottom: -4rem;
   right: -1rem;
@@ -34,7 +33,7 @@
   /* padding: 0.5rem; */
   border-radius: var(--radius);
 }
-.options p{
+.options p {
   border-radius: var(--radius);
   display: flex;
   gap: 0.5rem;
@@ -44,11 +43,11 @@
   color: var(--text-color);
   justify-content: space-between;
 }
-.options p:hover{
+.options p:hover {
   background-color: var(--secondary-color);
   color: white;
 }
-.confirmatiionDialogBlock{
+.confirmatiionDialogBlock {
   position: fixed;
   top: 0;
   left: 0;
@@ -60,7 +59,7 @@
   align-items: center;
   z-index: 999;
 }
-.confirmationDialog{
+.confirmationDialog {
   background-color: white;
   padding: 1rem;
   border-radius: var(--radius);
@@ -70,25 +69,25 @@
   align-items: center;
   justify-content: center;
 }
-.dialogButtons{
+.dialogButtons {
   display: flex;
   gap: 1rem;
   justify-content: center;
 }
-.dialogButtons p{
-  padding: 0.5rem;;
+.dialogButtons p {
+  padding: 0.5rem;
 }
-.dialogButtons p:hover{
+.dialogButtons p:hover {
   cursor: pointer;
   background-color: var(--secondary-color);
   color: white;
 }
 
-.miniMode{
-   p{
+.miniMode {
+  p {
     font-size: 0.7rem;
   }
-  img{
+  img {
     width: 32px;
   }
 }

@@ -1,12 +1,8 @@
 import apiClient from "./apiClient";
 
-
-async function getRoles (){
-
-
-    const response= await apiClient("roles/",{method:"GET"});
-    return response;
-
+async function getRoles() {
+  const response = await apiClient("roles/", { method: "GET" });
+  return response;
 }
 
-export default {getRoles};
+export default { getRoles };

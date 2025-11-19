@@ -9,14 +9,13 @@ function SearchDropDown({
     <div>
       <input
         value={value || ""}
-        onChange={e => onChange(e.target.value)}
+        onChange={(e) => onChange(e.target.value)}
         {...rest}
       />
       {options && options.length > 0 && (
         <ul>
-          {options.map(option => (
-            <li key={option.id}
-              onClick={() => onChange(option.id)}>
+          {options.map((option) => (
+            <li key={option.id} onClick={() => onChange(option.id)}>
               {option[valueField]}
             </li>
           ))}

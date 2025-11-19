@@ -10,93 +10,91 @@ import { popupNotificationSchema } from "./popupNotificationSchema.js";
 import { useNotification } from "../../../../context/notificationContext.jsx";
 import notificationsHelper from "../../../helpers/notificationsHelper.js";
 import {
-    convertDateToStandardString,
-    convertDateToStandardStringPlusOne,
+  convertDateToStandardString,
+  convertDateToStandardStringPlusOne,
 } from "../../../utils/date.js";
 
 export default function PopupformNotification({ onNotificationCreated }) {
-    const setRoles = useState([]);
-    const { notify } = useNotification();
-    const {
-        register,
-        reset,
-        handleSubmit,
-        watch,
-        control,
-        formState: { errors },
-    } = useForm({
-        resolver: zodResolver(popupNotificationSchema),
-    });
+  const setRoles = useState([]);
+  const { notify } = useNotification();
+  const {
+    register,
+    reset,
+    handleSubmit,
+    watch,
+    control,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(popupNotificationSchema),
+  });
 
-    const selectedStartDate = watch("startDate");
+  const selectedStartDate = watch("startDate");
 
-    async function onSubmit(data) {
-        const response = await notificationsHelper.createNotification(data);
-        if (response.success) {
-            onNotificationCreated();
-            reset();
-        } else {
-            notify(response.message, "error");
-        }
+  async function onSubmit(data) {
+    const response = await notificationsHelper.createNotification(data);
+    if (response.success) {
+      onNotificationCreated();
+      reset();
+    } else {
+      notify(response.message, "error");
     }
+  }
 
-    return (
-        <div className={styles.borderPopup}>
-            <form action="" onSubmit={handleSubmit(onSubmit)}>
-                <section className={`${styles.grid} ${styles.popupSection}`}>
-                    <InputText
-                        label="Titre"
-                        placeholder="Titre de la notification"
-                        {...register("title")}
-                        error={errors.title?.message}
-                    />
+  return (
+    <div className={styles.borderPopup}>
+      <form action="" onSubmit={handleSubmit(onSubmit)}>
+        <section className={`${styles.grid} ${styles.popupSection}`}>
+          <InputText
+            label="Titre"
+            placeholder="Titre de la notification"
+            {...register("title")}
+            error={errors.title?.message}
+          />
 
-                    <InputSelect
-                        label="Priorité"
-                        {...register("priority")}
-                        error={errors.priority?.message}
-                    >
-                        <option value="">
-                            -- Sélectionner une priorité --
-                        </option>
-                        <option value="1">Haute</option>
-                        <option value="2">Moyenne</option>
-                        <option value="3">Basse</option>
-                    </InputSelect>
+          <InputSelect
+            label="Priorité"
+            {...register("priority")}
+            error={errors.priority?.message}
+          >
+            <option value="">-- Sélectionner une priorité --</option>
+            <option value="1">Haute</option>
+            <option value="2">Moyenne</option>
+            <option value="3">Basse</option>
+          </InputSelect>
 
-                    <InputText
-                        label="Date de publication"
-                        type="date"
-                        min={convertDateToStandardString(new Date())}
-                        {...register("startDate")}
-                        error={errors.startDate?.message}
-                    />
+          <InputText
+            label="Date de publication"
+            type="date"
+            min={convertDateToStandardString(new Date())}
+            {...register("startDate")}
+            error={errors.startDate?.message}
+          />
 
-                    <InputText
-                        label="Date d'expiration"
-                        type="date"
-                        min={
-                            selectedStartDate
-                                ? convertDateToStandardStringPlusOne(
-                                      new Date(selectedStartDate)
-                                  )
-                                : convertDateToStandardStringPlusOne(new Date())
-                        }
-                        {...register("endDate")}
-                        error={errors.endDate?.message}
-                    />
-                </section>
-                <InputText
-                    label="Contenu"
-                    placeholder="contenu de la notification"
-                    {...register("content")}
-                    error={errors.content?.message}
-                />
+          <InputText
+            label="Date d'expiration"
+            type="date"
+            min={
+              selectedStartDate
+                ? convertDateToStandardStringPlusOne(
+                    new Date(selectedStartDate),
+                  )
+                : convertDateToStandardStringPlusOne(new Date())
+            }
+            {...register("endDate")}
+            error={errors.endDate?.message}
+          />
+        </section>
+        <InputText
+          label="Contenu"
+          placeholder="contenu de la notification"
+          {...register("content")}
+          error={errors.content?.message}
+        />
 
-                <div className={styles.popupButtons}>
-                    <button className="btn btn-primary"> Créer </button>
-                </div>
-            </form>
+        <div className={styles.popupButtons}>
+          <button className="btn btn-primary"> Créer </button>
         </div>
-    );
+      </form>
+    </div>
+  );
 }

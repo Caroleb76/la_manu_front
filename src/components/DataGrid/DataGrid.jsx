@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 const DataGrid = ({
-  rowData,                    
+  rowData,
   colDefs,
   renderIconWithCondition,
   onActionClick,
@@ -16,7 +16,6 @@ const DataGrid = ({
   pageSize = 10,
 }) => {
   const [columnDefs, setColumnDefs] = useState([]);
-
 
   useEffect(() => {
     let newDefs = [...colDefs];
@@ -30,33 +29,40 @@ const DataGrid = ({
         cellRenderer: (params) => (
           <div style={{ position: "relative", height: "100%" }}>
             <div className={styles.actions}>
-              {actionsCol?.actions?.length
-                ? actionsCol.actions.map((action, i) => (
-                    <Icon
-                      key={i}
-                      onClick={() => action.onClick?.(params.data)}
-                      icon={action.icon.condition
+              {actionsCol?.actions?.length ? (
+                actionsCol.actions.map((action, i) => (
+                  <Icon
+                    key={i}
+                    onClick={() => action.onClick?.(params.data)}
+                    icon={
+                      action.icon.condition
                         ? action.icon.condition(params.data)
-                        : action.icon.icon}
-                      width="1.8rem"
-                      style={{
-                        color: iconStyle ? iconStyle(params.data).color : "inherit",
-                        visibility: action.visible === false ? "hidden" : "visible",
-                      }}
-                    />
-                  ))
-                : (
-                    <Icon
-                      onClick={() => onActionClick?.(params.data)}
-                      icon={renderIconWithCondition
-                        ? renderIconWithCondition(params.data)
-                        : ""}
-                      width="1.8rem"
-                      style={{
-                        color: iconStyle ? iconStyle(params.data).color : "inherit",
-                      }}
-                    />
-                  )}
+                        : action.icon.icon
+                    }
+                    width="1.8rem"
+                    style={{
+                      color: iconStyle
+                        ? iconStyle(params.data).color
+                        : "inherit",
+                      visibility:
+                        action.visible === false ? "hidden" : "visible",
+                    }}
+                  />
+                ))
+              ) : (
+                <Icon
+                  onClick={() => onActionClick?.(params.data)}
+                  icon={
+                    renderIconWithCondition
+                      ? renderIconWithCondition(params.data)
+                      : ""
+                  }
+                  width="1.8rem"
+                  style={{
+                    color: iconStyle ? iconStyle(params.data).color : "inherit",
+                  }}
+                />
+              )}
             </div>
           </div>
         ),
@@ -65,21 +71,23 @@ const DataGrid = ({
     setColumnDefs(newDefs);
   }, [colDefs, iconStyle, onActionClick, renderIconWithCondition]);
 
-
-
-
-
-
   return (
-    <div className={styles.customAgGrid} style={{ height: "90%", width: "100%" }}>
+    <div
+      className={styles.customAgGrid}
+      style={{ height: "90%", width: "100%" }}
+    >
       <AgGridReact
         rowData={rowData}
         columnDefs={columnDefs}
         pagination
         paginationPageSize={pageSize}
         paginationPageSizeSelector={[10, 20, 30]}
-        defaultColDef={{ flex: 1, filter: true, sortable: true, resizable: true }}
-        
+        defaultColDef={{
+          flex: 1,
+          filter: true,
+          sortable: true,
+          resizable: true,
+        }}
       />
     </div>
   );

@@ -24,63 +24,42 @@ import InterventionsAdmin from "./views/InterventionsAdmin/InterventionsAdmin";
 import Modules from "./views/Modules/Modules";
 
 createRoot(document.getElementById("root")).render(
-    <UserProvider>
-        <NotificaitonProvider>
-            <BrowserRouter>
-                <Routes>
-                    <Route index element={<AuthGuard />} />
-                    <Route path="about" element={<AboutUs />} />
-                    <Route element={<AuthGuard />}>
-                        <Route path="signup" element={<Signup />} />
-                        <Route path="login" element={<Login />} />
+  <UserProvider>
+    <NotificaitonProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<AuthGuard />} />
+          <Route path="about" element={<AboutUs />} />
+          <Route element={<AuthGuard />}>
+            <Route path="signup" element={<Signup />} />
+            <Route path="login" element={<Login />} />
 
-                        <Route path="dashboard" element={<Dashboard />}>
-                            <Route path="main" element={<Home />} />
-                            <Route
-                                path="interventions"
-                                element={<Interventions />}
-                            />
-                            <Route path="users" element={<Users />} />
-                            <Route
-                                path="notifications"
-                                element={<Notifications />}
-                            />
-                            <Route path="formations" element={<Formations />} />
-                            <Route path="modules" element={<Modules />} />
-                            <Route path="sessions" element={<Sessions />} />
-                            <Route path="contracts">
-                                <Route index element={<Contracts />} />
-                                <Route
-                                    path="view/:contractId"
-                                    element={<ViewContract />}
-                                />
-                                <Route
-                                    path="create"
-                                    element={<CreateContract />}
-                                />
-                                <Route
-                                    path="edit/:contractId"
-                                    element={<CreateContract />}
-                                />
-                                <Route
-                                    path="sign/:contractId"
-                                    element={<CreateContract />}
-                                />
-                            </Route>
+            <Route path="dashboard" element={<Dashboard />}>
+              <Route path="main" element={<Home />} />
+              <Route path="interventions" element={<Interventions />} />
+              <Route path="users" element={<Users />} />
+              <Route path="notifications" element={<Notifications />} />
+              <Route path="formations" element={<Formations />} />
+              <Route path="modules" element={<Modules />} />
+              <Route path="sessions" element={<Sessions />} />
+              <Route path="contracts">
+                <Route index element={<Contracts />} />
+                <Route path="view/:contractId" element={<ViewContract />} />
+                <Route path="create" element={<CreateContract />} />
+                <Route path="edit/:contractId" element={<CreateContract />} />
+                <Route path="sign/:contractId" element={<CreateContract />} />
+              </Route>
 
-                            <Route path="profile" element={<Profile />} />
-                            <Route
-                                path="interventions"
-                                element={<Interventions />}
-                            />
-                            <Route
-                                path="interventions-admin"
-                                element={<InterventionsAdmin />}
-                            />
-                        </Route>
-                    </Route>
-                </Routes>
-            </BrowserRouter>
-        </NotificaitonProvider>
-    </UserProvider>
+              <Route path="profile" element={<Profile />} />
+              <Route path="interventions" element={<Interventions />} />
+              <Route
+                path="interventions-admin"
+                element={<InterventionsAdmin />}
+              />
+            </Route>
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </NotificaitonProvider>
+  </UserProvider>,
 );

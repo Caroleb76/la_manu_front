@@ -7,7 +7,11 @@ function ExportButton() {
     doc.save("document.pdf");
   };
 
-  return <button className="btn btn-primary" onClick={handleExportPDF}>Exporter en PDF</button>;
+  return (
+    <button className="btn btn-primary" onClick={handleExportPDF}>
+      Exporter en PDF
+    </button>
+  );
 }
 
 export default ExportButton;

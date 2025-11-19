@@ -8,81 +8,83 @@ import { popupFormTypeFormationSchema } from "./popupFormTypeFormationSchema.js"
 import formationHelper from "../../../helpers/formationHelper.js";
 import { useNotification } from "../../../../context/notificationContext.jsx";
 
-export default function PopupFormTypeFormation({onFormationCreated,formation,}) {
-   
-    // const setRoles = useState([]);
-    const {
-        register,
-        reset,
-        handleSubmit,
-        control,
-        formState: { errors },
-    } = useForm({
-        defaultValues: {
-            name:formation?.name,
-            description:formation?.description
-        },
-        resolver: zodResolver(popupFormTypeFormationSchema),
-    });
+export default function PopupFormTypeFormation({
+  onFormationCreated,
+  formation,
+}) {
+  // const setRoles = useState([]);
+  const {
+    register,
+    reset,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      name: formation?.name,
+      description: formation?.description,
+    },
+    resolver: zodResolver(popupFormTypeFormationSchema),
+  });
 
-    const { notify } = useNotification();
+  const { notify } = useNotification();
 
-    useEffect(() => {
-        async function loadRoles() {
-            const response = await rolesHelper.getRoles();
-            // setRoles(response.data);
-        }
-        loadRoles();
-    }, []);
-
-    async function onSubmit(data) {
-        let response = null;
-        if (formation) {
-            // edit
-            data.id = formation.id;
-            response = await formationHelper.updateFormation(data);
-        } else {
-            // creation
-
-            response = await formationHelper.createFormation(data);
-        }
-        if (response.success) {
-            formation
-                ? notify("Formation modifiée", "success")
-                : notify("La formation a bien été ajoutée", "success");
-            onFormationCreated();
-            reset();
-        } else {
-            alert(response.message);
-        }
+  useEffect(() => {
+    async function loadRoles() {
+      const response = await rolesHelper.getRoles();
+      // setRoles(response.data);
     }
+    loadRoles();
+  }, []);
 
-    return (
-        <div className={styles.borderPopup}>
-            <form action="" onSubmit={handleSubmit(onSubmit)}>
-                <section className={`${styles.grid} ${styles.popupSection}`}>
-                    <InputText
-                        label="Titre"
-                        placeholder="Nom de la Formation"
-                        {...register("name")}
-                        error={errors.name?.message}
-                    />
+  async function onSubmit(data) {
+    let response = null;
+    if (formation) {
+      // edit
+      data.id = formation.id;
+      response = await formationHelper.updateFormation(data);
+    } else {
+      // creation
 
-                    <InputText
-                        label="Description"
-                        placeholder="description de la formation"
-                        {...register("description")}
-                        error={errors.description?.message}
-                    />
-                </section>
+      response = await formationHelper.createFormation(data);
+    }
+    if (response.success) {
+      formation
+        ? notify("Formation modifiée", "success")
+        : notify("La formation a bien été ajoutée", "success");
+      onFormationCreated();
+      reset();
+    } else {
+      alert(response.message);
+    }
+  }
 
-                <div className={styles.popupButtons}>
-                    <button className="btn btn-primary">
-                        {" "}
-                        {formation ? "Modifier" : "Créer"}{" "}
-                    </button>
-                </div>
-            </form>
+  return (
+    <div className={styles.borderPopup}>
+      <form action="" onSubmit={handleSubmit(onSubmit)}>
+        <section className={`${styles.grid} ${styles.popupSection}`}>
+          <InputText
+            label="Titre"
+            placeholder="Nom de la Formation"
+            {...register("name")}
+            error={errors.name?.message}
+          />
+
+          <InputText
+            label="Description"
+            placeholder="description de la formation"
+            {...register("description")}
+            error={errors.description?.message}
+          />
+        </section>
+
+        <div className={styles.popupButtons}>
+          <button className="btn btn-primary">
+            {" "}
+            {formation ? "Modifier" : "Créer"}{" "}
+          </button>
         </div>
-    );
+      </form>
+    </div>
+  );
 }

@@ -27,7 +27,7 @@ const Combobox = ({
 
   // Filter options by label (case-insensitive substring match)
   const filtered = options.filter((option) =>
-    option.label.toLowerCase().includes(inputValue.toLowerCase())
+    option.label.toLowerCase().includes(inputValue.toLowerCase()),
   );
 
   // On select, set the id and display the label in the input
@@ -63,7 +63,7 @@ const Combobox = ({
             width: "100%",
             margin: 0,
             padding: 0,
-            listStyle: "none"
+            listStyle: "none",
           }}
         >
           {filtered.map((option) => (
@@ -72,8 +72,7 @@ const Combobox = ({
               style={{
                 padding: "0.5em",
                 cursor: "pointer",
-                background:
-                  value === option.id ? "#eef" : "transparent"
+                background: value === option.id ? "#eef" : "transparent",
               }}
               onMouseDown={() => handleSelect(option)}
             >

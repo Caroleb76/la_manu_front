@@ -1,4 +1,12 @@
-import { forwardRef, use, useContext, useEffect, useImperativeHandle, useRef, useState } from "react";
+import {
+  forwardRef,
+  use,
+  useContext,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import FileItem from "./fileItem/FileItem";
 import styles from "./FilesManager.module.css";
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -12,8 +20,11 @@ import { set } from "zod/v4-mini";
 export const filesManagerType = {
   PROFILE: "profile",
   INTERVENTIONS: "interventions",
-}
-const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostId, interventionId,onFileSelectedCallback }, ref) {
+};
+const FilesManager = forwardRef(function FilesManager(
+  { userId, type, extraCostId, interventionId, onFileSelectedCallback },
+  ref,
+) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileNameInput, setFileNameInput] = useState("");
   const [showFileNameInput, setShowFileNameInput] = useState(false);
@@ -36,7 +47,7 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
   async function loadFiles() {
     let currentUserId = userId;
     if (!currentUserId) {
-      currentUserId = user.id
+      currentUserId = user.id;
     }
 
     try {
@@ -45,7 +56,6 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
         if (!extraCostId) return;
         files = await filesHelper.getExtraCostFiles(currentUserId, extraCostId);
       } else {
-
         files = await filesHelper.getUserFiles(currentUserId);
       }
 
@@ -61,8 +71,8 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
       setSelectedFile(file);
       setFileNameInput(file.name);
       setShowFileTypeSelection(true);
-      if(interventionId) setDocType("Autre");
-      if(onFileSelectedCallback) onFileSelectedCallback(file);
+      if (interventionId) setDocType("Autre");
+      if (onFileSelectedCallback) onFileSelectedCallback(file);
     }
   }
   function reset() {
@@ -72,11 +82,10 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
     setDiplomaType("");
     setShowFileNameInput(false);
     setShowFileTypeSelection(false);
-
   }
 
   function buildFormData(formData) {
-    const idToSend = userId ? userId : user.id
+    const idToSend = userId ? userId : user.id;
     formData.append("filename", fileNameInput.trim());
     formData.append("docType", docType);
     formData.append("userId", idToSend);
@@ -94,20 +103,24 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
     return true;
   }
   async function uploadFile(createdExtraCostId) {
-    if ((!selectedFile || !docType || (docType === "Autre" && !fileNameInput.trim())) && !createdExtraCostId) return;
-    
+    if (
+      (!selectedFile ||
+        !docType ||
+        (docType === "Autre" && !fileNameInput.trim())) &&
+      !createdExtraCostId
+    )
+      return;
+
     setMiniModeFileDisplayName(fileNameInput);
     // if hte reference of the form data is null, it means that the form data is not yet created
     let formData = new FormData();
     if (!formDataRef.current) {
-      const uploadFileNow =buildFormData(formData);
-      if(!uploadFileNow) return;
-    } 
-    
-    else {
+      const uploadFileNow = buildFormData(formData);
+      if (!uploadFileNow) return;
+    } else {
       if (!createdExtraCostId) {
-      const uploadFileNow =buildFormData(formData);
-      if(!uploadFileNow) return;
+        const uploadFileNow = buildFormData(formData);
+        if (!uploadFileNow) return;
       }
       formData = formDataRef.current;
       formData.append("extraCostId", createdExtraCostId);
@@ -115,7 +128,7 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
 
     // we add the file as the last element to the format data so we will be able to use all the data before (when adding the file as the first element all other data will be lost)
     formData.append("file", selectedFile);
-    
+
     try {
       await filesHelper.uploadFile(formData);
 
@@ -129,17 +142,16 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
 
   useImperativeHandle(ref, () => ({
     uploadPendingFiles: async (createdExtraCostId) => {
-
       await uploadFile(createdExtraCostId);
       await loadFiles();
-    }
+    },
   }));
 
   return (
-    <div className={styles.fileContainer + " " + (miniMode ? styles.miniMode : "")}>
-
-
-      {(showFileTypeSelection ) && (
+    <div
+      className={styles.fileContainer + " " + (miniMode ? styles.miniMode : "")}
+    >
+      {showFileTypeSelection && (
         <div className={styles.fileAddPopupBlock}>
           <div className={styles.fileAddPopup}>
             <Icon
@@ -156,13 +168,12 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
               }}
             />
 
-
-            {!miniMode &&
+            {!miniMode && (
               <select
                 value={docType}
                 onChange={(e) => {
                   console.log(e.target.value);
-                  
+
                   setDocType(e.target.value);
                   if (e.target.value !== "Autre") {
                     setFileNameInput(e.target.value);
@@ -176,12 +187,14 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
               >
                 {/* <option value="">Type de fichier</option> */}
                 <option value="Photo de profil">Photo de profil</option>
-                <option value="CV de moins de 3 mois">CV de moins de 3 mois</option>
+                <option value="CV de moins de 3 mois">
+                  CV de moins de 3 mois
+                </option>
                 <option value="Carte grise">Carte grise</option>
                 <option value="Diplome">Diplôme</option>
                 <option value="Autre">Autre</option>
               </select>
-            }
+            )}
 
             {docType === "Diplome" && (
               <select
@@ -197,7 +210,6 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
               </select>
             )}
 
-
             {(showFileNameInput || miniMode) && (
               <input
                 type="text"
@@ -208,21 +220,23 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
               />
             )}
 
-            <button className={styles.addButton} onClick={(e) => uploadFile(null)}>
+            <button
+              className={styles.addButton}
+              onClick={(e) => uploadFile(null)}
+            >
               Ajouter
             </button>
           </div>
         </div>
       )}
 
-      {
-
-        <p> {miniModeFileDisplayName}</p>
-      }
-      {
-        !userId &&
+      {<p> {miniModeFileDisplayName}</p>}
+      {!userId && (
         <>
-          <label htmlFor="fileInput" className={`btn btn-primary ${styles.fileAdd}`}>
+          <label
+            htmlFor="fileInput"
+            className={`btn btn-primary ${styles.fileAdd}`}
+          >
             Ajouter un fichier
           </label>
           <input
@@ -232,27 +246,30 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
             accept=".pdf,.doc,.docx,.jpg,.png"
             hidden
             onChange={onFileSelected}
-          /></>
-      }
+          />
+        </>
+      )}
 
-      {
-        !miniMode &&
+      {!miniMode && (
         <div className={styles.fileSection}>
           <div className={styles.fileGrid}>
             {files?.length > 0 ? (
               files.map((file, index) => (
-                <FileItem miniMode={miniMode} key={index} file={file} onFileDeleted={loadFiles} />
+                <FileItem
+                  miniMode={miniMode}
+                  key={index}
+                  file={file}
+                  onFileDeleted={loadFiles}
+                />
               ))
             ) : (
               <p className={styles.noFile}>Aucun fichier</p>
             )}
           </div>
         </div>
-
-      }
+      )}
     </div>
   );
 });
 
 export default FilesManager;
-

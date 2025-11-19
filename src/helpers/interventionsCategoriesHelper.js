@@ -1,14 +1,20 @@
 import apiClient from "./apiClient";
 
-
-async function getInterventionsCategories (offset=0,limit=10,searchText=""){
-
-    const params= {
-        offset,limit,searchText
-    };
-    const response= await apiClient("interventionCategories/",{method:"GET",params});
-    return response;
-
+async function getInterventionsCategories(
+  offset = 0,
+  limit = 10,
+  searchText = "",
+) {
+  const params = {
+    offset,
+    limit,
+    searchText,
+  };
+  const response = await apiClient("interventionCategories/", {
+    method: "GET",
+    params,
+  });
+  return response;
 }
 
 // async function createIntervention (intervention){
@@ -23,9 +29,8 @@ async function getInterventionsCategories (offset=0,limit=10,searchText=""){
 //     return response;
 // }
 
-
 export default {
-    getInterventionsCategories,
-    // deleteIntervention,
-    // createIntervention
-}
+  getInterventionsCategories,
+  // deleteIntervention,
+  // createIntervention
+};

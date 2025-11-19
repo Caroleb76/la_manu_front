@@ -1,57 +1,52 @@
 .title {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 
-    gap: 1rem;
-    > h3 {
-        font-size: large;
-        font-weight: bold;
-        /* color: #fff !important; */
-    }
-    > p {
-        font-size: small;
-        /* color: #fff !important; */
-    }
+  gap: 1rem;
+  > h3 {
+    font-size: large;
+    font-weight: bold;
+    /* color: #fff !important; */
+  }
+  > p {
+    font-size: small;
+    /* color: #fff !important; */
+  }
 }
 
 .content {
-    > p {
-        color: black;
-    }
+  > p {
+    color: black;
+  }
 }
 
 .card {
-    padding: 1rem;
-    border-radius: var(--radius);
-    
-   
+  padding: 1rem;
+  border-radius: var(--radius);
 }
 
-.priorityDefault h3{
-    color: var(--inactive-color);
+.priorityDefault h3 {
+  color: var(--inactive-color);
 }
 
+.priorityHigh {
+  border: 1px solid var(--error-color);
 
-.priorityHigh{
-    border: 1px solid var(--error-color);
-    
-    h3{
-        color: var(--error-color);
-    }
+  h3 {
+    color: var(--error-color);
+  }
 }
 
 .priorityMedium {
-    border: 1px solid var(--warning-color);
-    h3{
-        
-        color: var(--warning-color);
-    }
+  border: 1px solid var(--warning-color);
+  h3 {
+    color: var(--warning-color);
+  }
 }
 
 .priorityLow {
-    border: 1px solid var(--success-color);
-    h3{
-
-        color: var(--success-color);
-    }
+  border: 1px solid var(--success-color);
+  h3 {
+    color: var(--success-color);
+  }
 }

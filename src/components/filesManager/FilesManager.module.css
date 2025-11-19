@@ -18,15 +18,14 @@
   border: none;
   cursor: pointer;
   text-align: center;
- 
 }
-.noFile{
- position: absolute;
- top: 50%;
- left: 50%;
- transform: translate(-50%, -50%);
- font-size: 1.5rem;
- color: var(--inactive-color);
+.noFile {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  color: var(--inactive-color);
 }
 .fileContainer button:hover {
   background-color: #2d5293;
@@ -37,8 +36,6 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
   gap: 1rem;
-
-
 }
 
 .fileSection {
@@ -47,11 +44,9 @@
   background-color: #e4e4e4;
   border-radius: var(--radius);
   padding: 0.5rem;
-
 }
 
-.fileAddPopupBlock{
-
+.fileAddPopupBlock {
   position: fixed;
   display: flex;
   justify-content: center;
@@ -66,7 +61,7 @@
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 9999;
 }
-.fileAddPopup{
+.fileAddPopup {
   position: relative;
   padding: 2rem;
   display: flex;
@@ -74,7 +69,9 @@
   align-items: center;
   gap: 1rem;
   background-color: #f8f9fa;
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  box-shadow:
+    rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
   animation: fadeIn 0.3s ease;
 }
 .select {
@@ -84,25 +81,24 @@
   border-radius: var(--radius);
   background-color: white;
   color: var(--text-color);
-
 }
 
-.closeIcon{
+.closeIcon {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
   cursor: pointer;
 }
 
-.fileAdd{
-    align-self: flex-end;
+.fileAdd {
+  align-self: flex-end;
 }
-.miniMode{
-  width: 100%!important;
-  .fileGrid{
+.miniMode {
+  width: 100% !important;
+  .fileGrid {
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   }
-  .fileContainer{
-    width: 100%!important;
+  .fileContainer {
+    width: 100% !important;
   }
 }

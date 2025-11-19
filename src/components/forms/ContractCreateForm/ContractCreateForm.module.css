@@ -1,61 +1,61 @@
 .grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
 }
 
 .popupSection {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
 .popupButtons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 3rem;
-    gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 3rem;
+  gap: 1rem;
 }
 
 .twoColumns {
-    grid-column: span 2;
+  grid-column: span 2;
 }
 .interventionTitle {
-    display: flex;
-    gap: 2rem;
-    align-items: center;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
 }
 
 .btnPlus {
-    padding: 0.5rem 1rem;
+  padding: 0.5rem 1rem;
 }
 
 .table {
-    width: 100%;
-    border: 1px solid lightgrey;
-    border-radius: var(--radius);
-    padding: 1rem;
-    margin: 1rem 0;
-    td {
-        padding: 0.5rem 0;
-    }
+  width: 100%;
+  border: 1px solid lightgrey;
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin: 1rem 0;
+  td {
+    padding: 0.5rem 0;
+  }
 
-    th {
-        text-align: left;
-        color: var(--secondary-color);
-        font-weight: bold;
-        font-size: 0.9rem;
-    }
+  th {
+    text-align: left;
+    color: var(--secondary-color);
+    font-weight: bold;
+    font-size: 0.9rem;
+  }
 }
 
 .isSigned {
-    color: var(--success-color);
-    font-weight: bold;
-    text-align: center;
+  color: var(--success-color);
+  font-weight: bold;
+  text-align: center;
 }
 
 .isNotSigned {
-    color: var(--error-color);
-    font-weight: bold;
-    text-align: center;
+  color: var(--error-color);
+  font-weight: bold;
+  text-align: center;
 }

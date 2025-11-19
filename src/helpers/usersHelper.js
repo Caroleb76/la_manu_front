@@ -1,61 +1,59 @@
 import apiClient from "./apiClient";
 
+async function getUsers(peops = null) {
+  // offset=0,limit=10,searchText="",role=null
 
-async function getUsers (peops=null){
-    // offset=0,limit=10,searchText="",role=null
+  //     let params = {
+  //             offset: props.offset ?? 0,
+  //             limit: props.limit ?? 10,
+  //             role: props?.role ?? null,
+  //             searchText: props.searchText ?? null
+  // };
+  // if(!props.role){
+  //     delete params.role
+  // }
+  // if(!props.searchText){
+  //     delete params.searchText
 
-//     let params = {
-//             offset: props.offset ?? 0,
-//             limit: props.limit ?? 10,
-//             role: props?.role ?? null,
-//             searchText: props.searchText ?? null
-// };
-// if(!props.role){
-//     delete params.role
-// }
-// if(!props.searchText){
-//     delete params.searchText
+  // }
 
-// }
-
-    const role = peops?.role ?? null;
-    const response= await apiClient( role ? "users?role="+role : "users/",{method:"GET"});
-    return response;
-
+  const role = peops?.role ?? null;
+  const response = await apiClient(role ? "users?role=" + role : "users/", {
+    method: "GET",
+  });
+  return response;
 }
-async function getUserById (userId){
-   
-    
-    const response= await apiClient(`users/${userId}`,{method:"GET"});
-    return response;
-
+async function getUserById(userId) {
+  const response = await apiClient(`users/${userId}`, { method: "GET" });
+  return response;
 }
-async function createUser (user){
-
-    const response= await apiClient("users/",{method:"POST",body:user});
-    return response;
-
+async function createUser(user) {
+  const response = await apiClient("users/", { method: "POST", body: user });
+  return response;
 }
 
-
-async function blockUser (id,data){
-console.log(data)
-    const response= await apiClient("users/block/"+id,{method:"PUT",body:data});
-    console.log(response)
-    return response;
-
+async function blockUser(id, data) {
+  console.log(data);
+  const response = await apiClient("users/block/" + id, {
+    method: "PUT",
+    body: data,
+  });
+  console.log(response);
+  return response;
 }
 
-async function updateUser (id,data){
-    const response= await apiClient("users/"+id,{method:"POST",body:data});
-    return response;
-
+async function updateUser(id, data) {
+  const response = await apiClient("users/" + id, {
+    method: "POST",
+    body: data,
+  });
+  return response;
 }
 
 export default {
-    getUsers,
-    createUser,
-    blockUser,
-    getUserById,
-    updateUser
-}
+  getUsers,
+  createUser,
+  blockUser,
+  getUserById,
+  updateUser,
+};

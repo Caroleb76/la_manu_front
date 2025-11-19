@@ -1,22 +1,17 @@
-
-
-
 .customAgGrid {
-    grid-column: span 2;
-    
-  }
- .actions{
-    display: flex;
-    height: 100%;
-    align-items: center;
-    
- }
-.green path{
-    fill: green;
+  grid-column: span 2;
 }
-.red path{
-    fill: red;
+.actions {
+  display: flex;
+  height: 100%;
+  align-items: center;
 }
-  .actions svg:hover{
-    cursor: pointer;
-  }
+.green path {
+  fill: green;
+}
+.red path {
+  fill: red;
+}
+.actions svg:hover {
+  cursor: pointer;
+}

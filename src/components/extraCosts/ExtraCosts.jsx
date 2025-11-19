@@ -15,15 +15,16 @@ const ExtraCosts = ({ iv }) => {
   const { notify } = useNotification();
   const [extraCosts, setExtraCosts] = useState([]);
   const [modificationMode, setModificationMode] = useState(false);
-  const [selectedExtraCost , setSelectedExtraCost] = useState(null);
+  const [selectedExtraCost, setSelectedExtraCost] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const loadExtraCosts = async () => {
     if (!iv?.id) return;
     try {
       setLoading(true);
-      const extraCostResponse = await extraCostsHelper.getExtraCostsByInterventionId(iv.id);
-      
+      const extraCostResponse =
+        await extraCostsHelper.getExtraCostsByInterventionId(iv.id);
+
       setExtraCosts(extraCostResponse.data || []);
     } catch (e) {
       console.error(e);
@@ -40,13 +41,26 @@ const ExtraCosts = ({ iv }) => {
   }, [iv?.id]);
 
   const submit = async () => {
-    if (!String(value).trim() || (!fileIsSelected && selectedExtraCost.files.length === 0)) {
-      notify("Veuillez remplir tous les champs, et ajouter un justificatif.", "error");
+    if (
+      !String(value).trim() ||
+      (!fileIsSelected && selectedExtraCost.files.length === 0)
+    ) {
+      notify(
+        "Veuillez remplir tous les champs, et ajouter un justificatif.",
+        "error",
+      );
       return;
     }
     try {
-      const payload = { category: selectedExtraCost.id, val: parseInt(value), interventionId: iv.id };
-      const response = await extraCostsHelper.update(payload, selectedExtraCost.id);
+      const payload = {
+        category: selectedExtraCost.id,
+        val: parseInt(value),
+        interventionId: iv.id,
+      };
+      const response = await extraCostsHelper.update(
+        payload,
+        selectedExtraCost.id,
+      );
       if (!response?.success) {
         notify(response?.message || "Échec de la création du frais.", "error");
         return;
@@ -69,24 +83,19 @@ const ExtraCosts = ({ iv }) => {
   const deleteFile = async (id) => {
     const ok = window.confirm("Confirmez-vous la suppression de ce frais ?");
     if (!ok) return;
-      try{
-        await extraCostsHelper.destroy(id);
-         notify("Fichier supprimé", "success");
-   
-       }finally{
-         await loadExtraCosts();
-   
-       }
+    try {
+      await extraCostsHelper.destroy(id);
+      notify("Fichier supprimé", "success");
+    } finally {
+      await loadExtraCosts();
+    }
   };
 
-    function onDownloadClicked(file) {
-      filesHelper.downloadFile(file.url, file.name);
-  
-    }
+  function onDownloadClicked(file) {
+    filesHelper.downloadFile(file.url, file.name);
+  }
 
   const valueFormating = (v) => {
-  
-    
     const n = Number(v);
     if (Number.isNaN(n)) return v;
     try {
@@ -100,19 +109,16 @@ const ExtraCosts = ({ iv }) => {
     setSelectedExtraCost(ec);
     setModificationMode(true);
     try {
-       setValue(parseInt(ec.val));
+      setValue(parseInt(ec.val));
     } catch (error) {
       console.error(error);
       setValue(null);
     }
-   
-    
-  }
+  };
 
   return (
     <>
-      {!modificationMode ? 
-      (
+      {!modificationMode ? (
         <div className={Styles.mainContainer}>
           {/* <div className={Styles.headerRow}>
             <h3 className={Styles.title}>Frais supplémentaires</h3>
@@ -135,8 +141,8 @@ const ExtraCosts = ({ iv }) => {
                     <tr>
                       <th>Type</th>
                       <th>Valeur</th>
-                      <th style={{textAlign:"center"}}>Justificatif</th>
-                      <th style={{textAlign:"center"}}>Actions</th>
+                      <th style={{ textAlign: "center" }}>Justificatif</th>
+                      <th style={{ textAlign: "center" }}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -174,10 +180,10 @@ const ExtraCosts = ({ iv }) => {
                                 Télécharger
                               </button>
                             )} */}
-                              <button
+                            <button
                               type="button"
                               className="btn btn-primary"
-                               onClick={() => onModifyExtraCost(ec)}
+                              onClick={() => onModifyExtraCost(ec)}
                             >
                               Modifier
                             </button>
@@ -188,7 +194,6 @@ const ExtraCosts = ({ iv }) => {
                             >
                               Supprimer
                             </button> */}
-                             
                           </div>
                         </td>
                       </tr>
@@ -197,18 +202,21 @@ const ExtraCosts = ({ iv }) => {
                 </table>
               </div>
             ) : (
-              <p className={Styles.empty}>Aucun frais supplémentaire pour le moment.</p>
+              <p className={Styles.empty}>
+                Aucun frais supplémentaire pour le moment.
+              </p>
             )}
           </div>
         </div>
-      ) : 
-      (
+      ) : (
         <div className={Styles.mainContainer}>
           <div className={Styles.row}>
-            
-                <input type="text" disabled={true} value={selectedExtraCost.category.name}/>
+            <input
+              type="text"
+              disabled={true}
+              value={selectedExtraCost.category.name}
+            />
 
-           
             <input
               type="number"
               name="Valeur du frais"
@@ -218,7 +226,6 @@ const ExtraCosts = ({ iv }) => {
               value={value}
             />
           </div>
-       
 
           <div className={Styles.row}>
             <FilesManager
@@ -240,7 +247,7 @@ const ExtraCosts = ({ iv }) => {
             <button
               onClick={() => {
                 setModificationMode(false);
-                setValue(null)
+                setValue(null);
                 setFileIsSelected(false);
               }}
               type="button"

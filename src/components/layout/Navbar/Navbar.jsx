@@ -4,13 +4,11 @@ import { UserContext } from "../../../../context/userContext";
 import { useNavigate } from "react-router";
 import { handleNameInitials } from "../../../utils/initials";
 function Navbar() {
-  const { signout, user} = useContext(UserContext);
+  const { signout, user } = useContext(UserContext);
   const [dropdown, setDropdown] = useState(false);
   const navigate = useNavigate();
   const wrapperRef = useRef(null);
   const serverUrl = import.meta.env.VITE_SERVER_URL;
-
-
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -22,9 +20,7 @@ function Navbar() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-    
   }, [user]);
-
 
   function handleLogout() {
     signout();
@@ -48,8 +44,9 @@ function Navbar() {
           )}
           {dropdown && (
             <div
-              className={`${styles.dropdownContent}, ${dropdown ? styles.dropdownVisible : ""
-                }`}
+              className={`${styles.dropdownContent}, ${
+                dropdown ? styles.dropdownVisible : ""
+              }`}
             >
               <div className={styles.dropdownItem}>
                 <p onClick={handleLogout}>Déconnexion</p>

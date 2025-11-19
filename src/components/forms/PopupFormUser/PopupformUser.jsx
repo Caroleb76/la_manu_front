@@ -10,61 +10,63 @@ import { popupFormUserSchema } from "./popupFormUserSchema.js";
 import { SUPERADMIN_ROLE } from "../../../utils/constants.js";
 
 export default function PopupFormUser({ onUserCreated }) {
-    const [roles, setRoles] = useState([]);
-    const {
-        register,
-        handleSubmit,
-        watch,
-        control,
-        formState: { errors },
-    } = useForm({
-        resolver: zodResolver(popupFormUserSchema),
-    });
-    useEffect(() => {
-        async function loadRoles() {
-            const response = await rolesHelper.getRoles();
-            var cleanedRoles= response.data.filter(it => it.name !== SUPERADMIN_ROLE );
-            setRoles(cleanedRoles);
-        }
-        loadRoles();
-    }, []);
-
-    async function onSubmit(data) {
-        const response = await usersHelper.createUser(data);
-        if (response.success) {
-            onUserCreated();
-        } else {
-            alert(response.message);
-        }
+  const [roles, setRoles] = useState([]);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    control,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(popupFormUserSchema),
+  });
+  useEffect(() => {
+    async function loadRoles() {
+      const response = await rolesHelper.getRoles();
+      var cleanedRoles = response.data.filter(
+        (it) => it.name !== SUPERADMIN_ROLE,
+      );
+      setRoles(cleanedRoles);
     }
+    loadRoles();
+  }, []);
 
-    return (
-        <div className={styles.borderPopup}>
-            <form action="" onSubmit={handleSubmit(onSubmit)}>
-                <section className={`${styles.grid} ${styles.popupSection}`}>
-                    <InputText
-                        label="Nom"
-                        placeholder="Nom de famille"
-                        {...register("lastName")}
-                        error={errors.lastName?.message}
-                    />
+  async function onSubmit(data) {
+    const response = await usersHelper.createUser(data);
+    if (response.success) {
+      onUserCreated();
+    } else {
+      alert(response.message);
+    }
+  }
 
-                    <InputText
-                        label="Prénom"
-                        placeholder="Ex : Pierre"
-                        {...register("firstName")}
-                        error={errors.firstName?.message}
-                    />
+  return (
+    <div className={styles.borderPopup}>
+      <form action="" onSubmit={handleSubmit(onSubmit)}>
+        <section className={`${styles.grid} ${styles.popupSection}`}>
+          <InputText
+            label="Nom"
+            placeholder="Nom de famille"
+            {...register("lastName")}
+            error={errors.lastName?.message}
+          />
 
-                    <InputText
-                        label="Email"
-                        type="email"
-                        placeholder="Ex : Pierredupont@gmail.fr"
-                        {...register("email")}
-                        error={errors.email?.message}
-                    />
+          <InputText
+            label="Prénom"
+            placeholder="Ex : Pierre"
+            {...register("firstName")}
+            error={errors.firstName?.message}
+          />
 
-                    {/* <InputText
+          <InputText
+            label="Email"
+            type="email"
+            placeholder="Ex : Pierredupont@gmail.fr"
+            {...register("email")}
+            error={errors.email?.message}
+          />
+
+          {/* <InputText
             label="Mot de passe"
             type="password"
             placeholder="minimum 8 caractères dont 1 maj et 1 chiffre"
@@ -72,22 +74,22 @@ export default function PopupFormUser({ onUserCreated }) {
             error={errors.password?.message}
           /> */}
 
-                    <InputSelect
-                        label="Rôle"
-                        {...register("role")}
-                        error={errors.role?.message}
-                    >
-                        {roles.map((role) => (
-                            <option key={role.id} value={role.id}>
-                                {role.name}
-                            </option>
-                        ))}
-                    </InputSelect>
-                </section>
-                <div className={styles.popupButtons}>
-                    <button className="btn btn-primary"> Créer </button>
-                </div>
-            </form>
+          <InputSelect
+            label="Rôle"
+            {...register("role")}
+            error={errors.role?.message}
+          >
+            {roles.map((role) => (
+              <option key={role.id} value={role.id}>
+                {role.name}
+              </option>
+            ))}
+          </InputSelect>
+        </section>
+        <div className={styles.popupButtons}>
+          <button className="btn btn-primary"> Créer </button>
         </div>
-    );
+      </form>
+    </div>
+  );
 }

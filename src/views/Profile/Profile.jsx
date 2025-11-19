@@ -4,10 +4,8 @@ import ProfileForm from "../../components/forms/ProfileForm/ProfileForm";
 import styles from "./Profile.module.css";
 import FilesManager from "../../components/filesManager/FilesManager";
 
-function Profile({userId}) {
+function Profile({ userId }) {
   const [activeTab, setActiveTab] = useState("profile");
-
-
 
   return (
     <div className={styles.profile_container}>
@@ -33,8 +31,3 @@ function Profile({userId}) {
 }
 
 export default Profile;
-
-
-
-
- 
