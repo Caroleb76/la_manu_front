@@ -3,6 +3,7 @@ import { jsPDF } from "jspdf";
 import { convertDateToFranceTimeZone } from "../../utils/date";
 import LogoIFEN from "../../assets/img/ifen.png";
 import AdresseIfen from "../../assets/img/adresse.png";
+import { useNavigate } from "react-router";
 
 
 
@@ -44,7 +45,7 @@ const styles = {
     },
 };
 const ContractPdf2 = ({ currentContract, totalHours }) => {
-    
+    const navigate = useNavigate();
     const printRef = useRef();
 
     const handleExportPDF = () => {
@@ -73,6 +74,8 @@ const ContractPdf2 = ({ currentContract, totalHours }) => {
 
     return (
         <div>
+            {/* back button  */}
+            <button className="btn" onClick={() => navigate(-1)}>Retour</button>
             <div
                 style={{
                     display: "flex",
@@ -93,7 +96,7 @@ const ContractPdf2 = ({ currentContract, totalHours }) => {
                             src={LogoIFEN}
                             alt="Logo IFEN"
                             aria-label="Logo de l'Institut de Formation"
-                            style={{ width: "auto", height: "auto", marginBottom: "60px" }}
+                            style={{ width: "auto", maxWidth: "200px", height: "auto", marginBottom: "60px" }}
                         />
 
                         <p style={{ ...styles.capitalize,  marginLeft: "400px", marginBottom: "40px" }}>

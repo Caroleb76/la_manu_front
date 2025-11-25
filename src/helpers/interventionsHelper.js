@@ -68,7 +68,7 @@ async function getTotalAmountPerMonth(){
 async function getTotalExtraCostPerMonth(){
 const date = dayjs(new Date()).format("YYYY-MM-DD");
     const response= await apiClient(`extraCosts/monthlyAmount/` + date,{method:"GET"});
-    console.log("total",response);
+    // console.log("total",response);
     return response;
 }
 

@@ -88,13 +88,13 @@ function Users() {
     const blockUser = async (data) => {
         const updatedUser = { ...data, blocked: !data.blocked };
         const response = await usersHelper.blockUser(updatedUser.id, updatedUser);
-        console.log(response)
+        // console.log(response)
         fetchData();
         notify("L'utilisateur a bien été bloqué", "success");
 
     };
     const editUser = async (data) => {
-        console.log("edit user", data);
+        // console.log("edit user", data);
         setSelectedUser(data.id);
         setUserCreationMode(false);
     };

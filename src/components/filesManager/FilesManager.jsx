@@ -28,8 +28,8 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
   const formDataRef = useRef(null);
   useEffect(() => {
     setMiniMode(type == filesManagerType.INTERVENTIONS);
-    console.log("filesManagerType", type);
-    console.log("miniMode", miniMode);
+    // console.log("filesManagerType", type);
+    // console.log("miniMode", miniMode);
     loadFiles();
   }, []);
 
@@ -161,7 +161,7 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
               <select
                 value={docType}
                 onChange={(e) => {
-                  console.log(e.target.value);
+                  // console.log(e.target.value);
                   
                   setDocType(e.target.value);
                   if (e.target.value !== "Autre") {
@@ -174,8 +174,8 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
                 }}
                 className={styles.select}
               >
-                {/* <option value="">Type de fichier</option> */}
-                <option value="Photo de profil">Photo de profil</option>
+                <option value="">Type de fichier</option>
+                {/* <option value="Photo de profil">Photo de profil</option> */}
                 <option value="CV de moins de 3 mois">CV de moins de 3 mois</option>
                 <option value="Carte grise">Carte grise</option>
                 <option value="Diplome">Diplôme</option>
@@ -216,7 +216,7 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
       )}
 
       {
-
+        miniMode &&
         <p> {miniModeFileDisplayName}</p>
       }
       {
@@ -232,7 +232,8 @@ const FilesManager = forwardRef(function FilesManager({ userId, type, extraCostI
             accept=".pdf,.doc,.docx,.jpg,.png"
             hidden
             onChange={onFileSelected}
-          /></>
+          />
+          </>
       }
 
       {

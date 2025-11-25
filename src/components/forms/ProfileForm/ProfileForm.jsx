@@ -88,7 +88,7 @@ export default function ProfileForm({ userId }) {
   
 
   if (!userId) {
-    console.log(updated)
+    // console.log(updated)
     updateUser(updated);
   }
 

@@ -52,19 +52,19 @@ export default function Home() {
             }
         };
         getEvents().then(() => {
-            console.info("events", events);
+            // console.info("events", events);
         });
     }, []);
     return (
         <section className={styles.widgetGrid}>
-            {user && isAdmin(user) && (
+            {user && user.isAdmin && (
                 <Widget titre="Statistiques" classString={styles.twoColumns + " " + styles.widget}>
                     {" "}
                     <StatsWidget/> 
                 </Widget>
             )}
 
-            {user && isFormateur(user) && (
+            {user && user.isFormateur && (
                 <Widget
                     titre="calendrier"
                     classString={styles.twoColumns + " " + styles.widget}
@@ -75,13 +75,13 @@ export default function Home() {
             )}
 
              {user &&  (
-            <Widget titre="alertes" classString={isAdmin(user)?styles.twoColumns:styles.oneColumn}>
+            <Widget titre="alertes" classString={user.isAdmin?styles.twoColumns:styles.oneColumn}>
                 {" "}
                 <AlertWidget />
             </Widget>
             )}
 
-            {user && isFormateur(user) && (
+            {user && user.isFormateur && (
             <Widget titre="widget" classString={styles.widget}>
                 {" "}
                 <Tasks />

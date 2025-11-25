@@ -6,6 +6,10 @@ import { Link } from "react-router";
 import { UserContext } from "../../../context/userContext";
 import { convertDateToFranceTimeZone } from "../../utils/date";
 import { useNavigate } from "react-router";
+import InterventionsList from "./contractInterventionsPopUp/InterventiionsList";
+import PopupWrapper from "../../components/popups/PopupWrapper";
+import InterventionsAdmin from "../InterventionsAdmin/InterventionsAdmin";
+import { ADMIN_ROLE } from "../../utils/constants";
 
 export default function Contracts() {
     let navigate = useNavigate();
@@ -25,13 +29,22 @@ export default function Contracts() {
             field: "Actions",
             filter: false,
             actions: [
-                {
-                    visible: false,
-                    label: "Editer",
-                    onClick: (data) => editContract(data),
+                // {
+                //     visible: false,
+                //     label: "Editer",
+                //     onClick: (data) => editContract(data),
+
+                //     icon: {
+                //         icon: "material-symbols:edit-outline",
+                //     },
+                // },
+                 {
+                    visible: user.role.name === ADMIN_ROLE,
+                    label: "Interventions",
+                    onClick: (data) => showInterventions(data),
 
                     icon: {
-                        icon: "material-symbols:edit-outline",
+                        icon: "material-symbols:list-alt",
                     },
                 },
                 {
@@ -58,6 +71,7 @@ export default function Contracts() {
     const [searchText, setSearchText] = useState("");
     const [pageSize, setPageSize] = useState(10);
     const [selectedContactId, setSelectedContractId] = useState(null);
+    const [showInterventionsList, setShowInterventionsList] = useState(null);
     const [rows, setRows] = useState([]);
 
     useEffect(() => {
@@ -141,7 +155,11 @@ export default function Contracts() {
         setSelectedContractId(data.id);
         navigate(`/dashboard/contracts/edit/${data.id}`);
     };
-
+    const showInterventions = async (data) => {
+        setSelectedContractId(data.id);
+        setShowInterventionsList(true);
+        
+    }
     const signContract = async (data) => {
         setSelectedContractId(data.id);
         navigate(`/dashboard/contracts/sign/${data.id}`);
@@ -153,6 +171,7 @@ export default function Contracts() {
 
     return (
         <>
+        {showInterventionsList && <PopupWrapper onClose={() => setShowInterventionsList(false)} title="Interventions"><InterventionsList contractId={selectedContactId}/></PopupWrapper>}
             <div className={styles.mainContainer}>
                 {user.isAdmin && (
                     <>

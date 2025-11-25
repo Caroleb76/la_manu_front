@@ -110,7 +110,7 @@ export default function InterventionCard({
                                     : "En attente formateur"
                             }
                         />
-                        <StatusPill
+                        {/* <StatusPill
                             ok={iv.validatedByAdmin}
                             label="Admin"
                             title={
@@ -118,7 +118,7 @@ export default function InterventionCard({
                                     ? "Validé par l’admin"
                                     : "En attente admin"
                             }
-                        />
+                        /> */}
                     </div>
                     <div className={styles.lowerRightCard}>
                         <button

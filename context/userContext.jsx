@@ -44,7 +44,8 @@ function normalizeUser(u) {
 }
 
 function updateUser(patch) {
-    if (!patch) return;
+    try{
+      if (!patch) return;
   
   setUser(prev => {
     if (!prev) {
@@ -65,6 +66,9 @@ function updateUser(patch) {
         : (prev.profilePicVersion ?? 0),
     };
   });
+    }finally{
+      setLoading(false);
+    }
 }
 
 

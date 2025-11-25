@@ -310,3 +310,150 @@ a {
         color: white !important;
     }
 }
+
+.bigCalendar {
+    height: 100%;
+    width: 100%;
+}
+
+.bigCalendar .rbc-calendar {
+    font-family: inherit;
+}
+
+/* Header styling */
+.bigCalendar .rbc-header {
+    padding: 8px 3px;
+    font-weight: 600;
+    font-size: 13px;
+    border-bottom: 2px solid #ddd;
+}
+
+/* Event styling - THIS IS KEY FOR PREVENTING OVERLAP */
+.bigCalendar .rbc-event {
+    padding: 2px 5px !important;
+    font-size: 11px !important;
+    border-radius: 4px !important;
+    border: none !important;
+    cursor: pointer;
+    line-height: 1.3;
+}
+
+.bigCalendar .rbc-event:hover {
+    opacity: 0.85;
+}
+
+/* Event content */
+.bigCalendar .rbc-event-content {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bigCalendar .rbc-event-label {
+    font-size: 10px;
+    font-weight: 400;
+}
+
+/* Time slot styling */
+.bigCalendar .rbc-time-slot {
+    min-height: 40px;
+}
+
+.bigCalendar .rbc-timeslot-group {
+    min-height: 80px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* Today highlighting */
+.bigCalendar .rbc-today {
+    background-color: #f0f7ff;
+}
+
+/* Week view specific */
+.bigCalendar .rbc-time-content {
+    border-top: 2px solid #ddd;
+}
+
+/* Reduce overlap by adjusting event margins */
+.bigCalendar .rbc-events-container {
+    margin-right: 0;
+}
+
+/* Multiple events in same slot - stacked properly */
+.bigCalendar .rbc-row-segment {
+    padding: 0 1px 1px 1px;
+}
+
+/* Selected event */
+.bigCalendar .rbc-event.rbc-selected {
+    background-color: #265985 !important;
+}
+
+/* Show more link styling */
+.bigCalendar .rbc-show-more {
+    color: #3174ad;
+    font-weight: 600;
+    font-size: 11px;
+    padding: 2px 5px;
+}
+
+.bigCalendar .rbc-show-more:hover {
+    color: #265985;
+}
+
+/* Toolbar styling */
+.bigCalendar .rbc-toolbar {
+    padding: 10px 0;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.bigCalendar .rbc-toolbar button {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    background-color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.bigCalendar .rbc-toolbar button:hover {
+    background-color: #f5f5f5;
+}
+
+.bigCalendar .rbc-toolbar button.rbc-active {
+    background-color: #3174ad;
+    color: white;
+    border-color: #3174ad;
+}
+
+/* Current time indicator */
+.bigCalendar .rbc-current-time-indicator {
+    background-color: #e74c3c;
+    height: 2px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .bigCalendar .rbc-toolbar {
+        font-size: 12px;
+    }
+    
+    .bigCalendar .rbc-toolbar button {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+    
+    .bigCalendar .rbc-header {
+        font-size: 11px;
+        padding: 5px 2px;
+    }
+    
+    .bigCalendar .rbc-event {
+        font-size: 10px !important;
+    }
+}

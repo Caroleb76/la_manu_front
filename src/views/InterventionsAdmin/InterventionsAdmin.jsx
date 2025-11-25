@@ -13,7 +13,7 @@ import { isAdmin } from "../../utils/userRole.js";
 import ExtraCosts from "../../components/extraCosts/ExtraCosts.jsx";
 import { set } from "zod/v4-mini";
 
-function InterventionsAdmin() {
+function InterventionsAdmin( ) {
     const { user } = useContext(UserContext);
     const [showDetails, setShowDetails] = useState(false);
     const [interventions, setInterventions] = useState([]);
@@ -45,7 +45,7 @@ function InterventionsAdmin() {
                     onClick: (row) => {
                         setShowDetails(true);
                         setSelectedInterventionFromRow(row);
-                        console.log(selectedIntervention);
+                        // console.log(selectedIntervention);
                     },
 
                     icon: {

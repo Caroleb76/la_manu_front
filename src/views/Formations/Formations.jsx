@@ -43,7 +43,7 @@ export default function Formations() {
     });
 
     const onModifyFormation = (formation) => {
-     console.log(formations)
+    //  console.log(formations)
         const selectedFormation = formations.find((s) => s.id === formation.id);
         setSelectedFormation(selectedFormation);
         popuRef.current.click();

@@ -1,0 +1,9 @@
+.bigCalendar .rbc-event {
+    padding: 2px 5px;
+    font-size: 12px;
+    border-radius: 4px;
+}
+
+.bigCalendar .rbc-event-label {
+    font-size: 11px;
+}

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import logo from "/src/assets/img/Logo.svg";
 import styles from "./Auth.module.css";
-import { login, resetPassword } from "../../helpers/auth";
+import { authMe, login, resetPassword } from "../../helpers/auth";
 import { UserContext } from "../../../context/userContext";
 import { useNavigate } from "react-router";
 import { useNotification } from "../../../context/notificationContext";
@@ -23,6 +23,9 @@ export default function Login() {
     useEffect(() => {
         if (user) navigate("/dashboard/main");
     }, []);
+        useEffect(() => {
+        if (user) navigate("/dashboard/main");
+    }, [user, navigate]);
     async function handleLogin(e) {
         e.preventDefault();
         setError(null);
@@ -31,10 +34,11 @@ export default function Login() {
             setError(response.message);
             return;
         } else {
+            localStorage.setItem(TOKEN_KEY, response.data.token);
             notify("Bienvenue dans votre espace vacataires", "success");
-            updateUser(response.data.user);
-            localStorage.setItem(TOKEN_KEY, response.data.user.token);
-            navigate("/dashboard/main");
+            var userData = await authMe();
+            updateUser(userData);
+            // navigate("/dashboard/main");
         }
     }
 
